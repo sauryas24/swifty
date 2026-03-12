@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from . import models
 from .database import engine
-
+from fastapi.middleware.cors import CORSMiddleware
 # Import your routers
 from .routers import venues
 from .routers import auth
@@ -16,7 +16,13 @@ from .routers import permission
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Swifty API", version="1.0")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allow your Live Server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Plug the routers into the main app
 app.include_router(venues.router)
 app.include_router(auth.router)
