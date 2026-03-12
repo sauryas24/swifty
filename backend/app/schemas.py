@@ -40,7 +40,6 @@ class Token(BaseModel):
     token_type: str
     role: str       # We send the role back so the frontend knows which dashboard to load.   
 
-
 class TransactionBase(BaseModel):
     amount: float
     description: str
@@ -64,6 +63,21 @@ class ClubFinanceStatus(BaseModel):
     utilization_percentage: float # (total_spent / total_allocated) * 100
     transactions: List[TransactionRead]
     
+class PermissionLetterCreate(BaseModel):
+    event_name: str
+    date: str
+    time: str
+    reason: str
+
+# What the backend sends back after successful submission
+class PermissionLetterResponse(BaseModel):
+    id: int               # The generated Permission Letter ID
+    event_name: str
+    status: str
+    
+    class Config:
+        from_attributes = True    
+
 # What the frontend sends when publishing an announcement
 class AnnouncementCreate(BaseModel):
     message: str
@@ -81,3 +95,4 @@ class AnnouncementResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
