@@ -1,7 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
 from .database import Base
-
+import datetime
 
 
 class User(Base):
@@ -41,3 +41,24 @@ class VenueBooking(Base):
     
     # Links the booking to the actual room details
     room = relationship("Room")
+
+class Club(Base):
+    __tablename__ = "clubs"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    total_allocated = Column(Float, default=500000.0) # From HTML: ₹5,00,000
+    total_spent = Column(Float, default=0.0)
+    
+    transactions = relationship("Transaction", back_populates="club")
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+    id = Column(Integer, primary_key=True, index=True)
+    club_id = Column(Integer, ForeignKey("clubs.id"))
+    amount = Column(Float) # Amount (₹) 
+    description = Column(String) # Description
+    receipt_url = Column(String, nullable=True) # File attachment path 
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow) # For log history 
+    
+    club = relationship("Club", back_populates="transactions")
+
