@@ -37,3 +37,18 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     role: str       # We send the role back so the frontend knows which dashboard to load.   
+
+class PermissionLetterCreate(BaseModel):
+    event_name: str
+    date: str
+    time: str
+    reason: str
+
+# What the backend sends back after successful submission
+class PermissionLetterResponse(BaseModel):
+    id: int               # The generated Permission Letter ID
+    event_name: str
+    status: str
+    
+    class Config:
+        from_attributes = True    

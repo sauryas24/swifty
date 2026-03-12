@@ -12,6 +12,7 @@ class User(Base):
     email_id = Column(String, unique=True, index=True)
     password = Column(String)  # This will store the hashed password
     role = Column(String)      # "coordinator" or "authority"
+    associate_council = Column(String, nullable=True)
     
     
 
@@ -41,3 +42,23 @@ class VenueBooking(Base):
     
     # Links the booking to the actual room details
     room = relationship("Room")
+    
+class PermissionLetter(Base):
+    __tablename__ = "permission_letters"
+
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # user-provided details
+    event_name = Column(String, index=True)
+    date = Column(String)
+    time = Column(String)
+    reason = Column(String)
+    
+    # Attached automatically by the backend
+    club_id = Column(Integer, ForeignKey("users.id"))
+    
+    # The Approval Tracker
+    status = Column(String, default="Pending GenSec") 
+    
+    # Relationship to fetch club details 
+    club = relationship("User")
