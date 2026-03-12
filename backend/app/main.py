@@ -5,6 +5,7 @@ from .database import engine
 # Import your routers
 from .routers import venues
 from .routers import auth
+from .routers import announcements
 
 
 # Create the database tables automatically when the server starts
@@ -15,6 +16,7 @@ app = FastAPI(title="Swifty API", version="1.0")
 # Plug the routers into the main app
 app.include_router(venues.router)
 app.include_router(auth.router)
+app.include_router(announcements.router)
 
 @app.get("/")
 def root():

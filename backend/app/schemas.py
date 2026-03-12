@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import List
+from typing import List, Optional
+from datetime import datetime
 
 # 1. How we send room details to the frontend
 class RoomInfo(BaseModel):
@@ -37,3 +39,21 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     role: str       # We send the role back so the frontend knows which dashboard to load.   
+
+# What the frontend sends when publishing an announcement
+class AnnouncementCreate(BaseModel):
+    message: str
+    target_clubs: Optional[List[str]] = None
+    # Example: ["robotics", "coding", "drama"]
+
+
+# What the backend returns when sending announcements to frontend
+class AnnouncementResponse(BaseModel):
+    id: int
+    sender_id: int
+    message: str
+    target_clubs: Optional[str]
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
