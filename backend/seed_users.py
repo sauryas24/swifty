@@ -12,7 +12,7 @@ def seed_users():
             # Sample Club Coordinator
             User(
                 username="Music Club",
-                email_id="m",
+                email_id="music@iitk.ac.in",
                 password=get_password_hash("music123"), # Scrambles the password!
                 role="coordinator"
             ),

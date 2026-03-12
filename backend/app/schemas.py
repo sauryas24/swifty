@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 from typing import List, Optional
 from datetime import datetime
 
@@ -62,6 +63,21 @@ class ClubFinanceStatus(BaseModel):
     remaining_balance: float # total_allocated - total_spent
     utilization_percentage: float # (total_spent / total_allocated) * 100
     transactions: List[TransactionRead]
+    
+# What the frontend sends when publishing an announcement
+class AnnouncementCreate(BaseModel):
+    message: str
+    target_clubs: Optional[List[str]] = None
+    # Example: ["robotics", "coding", "drama"]
+
+
+# What the backend returns when sending announcements to frontend
+class AnnouncementResponse(BaseModel):
+    id: int
+    sender_id: int
+    message: str
+    target_clubs: Optional[str]
+    timestamp: datetime
 
     class Config:
         from_attributes = True
