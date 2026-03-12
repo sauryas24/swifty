@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Venue Booking - SWIFTY</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#db2777", // Pink-600
+                        "baby-pink": "#fdf2f8",
+                        "accent-pink": "#fce7f3",
+                        "background-dark": "#1a1013",
+                        "swifty-blue": "#2563eb",
+                        "swifty-purple": "#7c3aed",
+                    },
+                    fontFamily: {
+                        display: ["Outfit", "Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        :root {
+            --bg-pink: #fdf2f8;
+            --sidebar-width: 280px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: var(--bg-pink);
+        }
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: var(--sidebar-width);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
+        .nav-item-active {
+            @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary .arrow-icon {
+            transform: rotate(180deg);
+        }
+        .arrow-icon {
+            transition: transform 0.2s ease-in-out;
+        }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(219, 39, 119, 0.2);
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+    
+    <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+    
+    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+            <span class="material-icons-round">menu</span>
+        </label>
+        <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
+        </div>
+    </header>
+
+    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
+        <div class="flex flex-col h-full">
+            <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 py-4 space-y-1">
+                <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl mb-2 transition-colors" href="#">
+                    <span class="material-icons-round text-xl">dashboard</span>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+
+                <details class="group space-y-1" open="">
+                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="material-icons-round text-xl">account_balance_wallet</span>
+                            <span class="text-sm">Finances</span>
+                        </div>
+                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
+                    </summary>
+                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
+                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
+                            Past Transactions
+                        </a>
+                    </div>
+                </details>
+
+                <details class="group space-y-1" open="">
+                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="material-icons-round text-xl">description</span>
+                            <span class="text-sm">Permission Letter</span>
+                        </div>
+                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
+                    </summary>
+                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
+                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
+                            New Request
+                        </a>
+                    </div>
+                </details>
+
+                <details class="group space-y-1" open="">
+                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="material-icons-round text-xl">assignment</span>
+                            <span class="text-sm">MOU Form</span>
+                        </div>
+                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
+                    </summary>
+                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
+                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
+                            New Request
+                        </a>
+                    </div>
+                </details>
+
+                <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mt-2 transition-colors" href="#">
+                    <span class="material-icons-round text-xl text-slate-900 dark:text-white">event_seat</span>
+                    <span class="text-sm">Venue Booking</span>
+                </a>
+                
+                <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
+                    <span class="material-icons-round text-xl">history</span>
+                    <span class="text-sm">Past Requests</span>
+                </a>
+            </nav>
+            <div class="p-4 border-t border-pink-50 dark:border-pink-900/10">
+                <button class="w-full flex items-center justify-center gap-2 py-2 text-sm text-slate-500 hover:text-pink-600 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-icons-round text-sm">dark_mode</span>
+                    <span>Switch Theme</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
+        
+        <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
+            <div>
+                <h1 class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Venue Booking</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Create a new booking request</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-slate-400 hover:text-pink-600 transition-colors">
+                    <span class="material-icons-round">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                </button>
+                <div class="h-8 w-px bg-pink-100 dark:bg-pink-900/30"></div>
+                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-200 dark:border-slate-700">
+                    <span class="material-icons-round">person</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-8 pb-32 max-w-6xl mx-auto relative z-10">
+            
+            <form class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
+                
+                <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white font-bold text-sm">1</span>
+                        <h3 class="text-slate-900 dark:text-white text-xl font-bold font-display">Select Date & Time</h3>
+                    </div>
+                    
+                    <div class="flex flex-col lg:flex-row gap-8 items-start">
+                        <div class="flex-1 max-w-sm mx-auto lg:mx-0 w-full">
+                            <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">Select Date</h4>
+                            <div class="bg-baby-pink dark:bg-slate-900/50 p-4 rounded-2xl border border-pink-100 dark:border-pink-900/20">
+                                <div class="flex items-center justify-between mb-4">
+                                    <button class="p-1 hover:bg-pink-200 dark:hover:bg-slate-800 rounded-full transition-colors" type="button">
+                                        <span class="material-icons-round text-slate-700 dark:text-slate-300">chevron_left</span>
+                                    </button>
+                                    <p class="text-slate-800 dark:text-white text-base font-bold">October 2023</p>
+                                    <button class="p-1 hover:bg-pink-200 dark:hover:bg-slate-800 rounded-full transition-colors" type="button">
+                                        <span class="material-icons-round text-slate-700 dark:text-slate-300">chevron_right</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-7 gap-1">
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">S</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">M</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">T</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">W</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">T</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">F</span>
+                                    <span class="text-xs text-center text-slate-400 font-bold py-2">S</span>
+                                    
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">28</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">29</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">30</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">1</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">2</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">3</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">4</button>
+                                    <button class="h-10 w-10 rounded-full text-sm bg-pink-600 text-white font-bold shadow-md shadow-pink-500/30" type="button">5</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">6</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">7</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">8</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">9</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">10</button>
+                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">11</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 w-full bg-pink-50/50 dark:bg-slate-800/20 p-5 rounded-2xl border border-dashed border-pink-200 dark:border-pink-900/30">
+                            <label class="flex items-center gap-2 text-sm font-bold text-pink-600 mb-4">
+                                <span class="material-icons-round text-[18px]">schedule</span>
+                                <span>Available Time Slots for Oct 5</span>
+                            </label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">09:00 AM - 11:00 AM</button>
+                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">11:00 AM - 01:00 PM</button>
+                                <button class="px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 transform scale-[1.02] ring-2 ring-pink-200 dark:ring-pink-900/50" type="button">02:00 PM - 04:00 PM</button>
+                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">04:00 PM - 06:00 PM</button>
+                                <button class="px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-300 dark:text-slate-600 cursor-not-allowed bg-slate-50 dark:bg-slate-800/50" type="button">06:00 PM - 08:00 PM</button>
+                            </div>
+                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-pink-600"></span>Selected</div>
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full border border-slate-300 bg-white dark:bg-slate-800"></span>Available</div>
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700"></span>Booked</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 bg-pink-50/20 dark:bg-slate-900/50">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white font-bold text-sm">2</span>
+                        <h3 class="text-slate-900 dark:text-white text-xl font-bold font-display">Select Room</h3>
+                    </div>
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex items-center gap-2 mb-4 text-emerald-600 dark:text-emerald-400">
+                                <span class="material-icons-round text-[20px]">check_circle</span>
+                                <h4 class="text-sm font-bold uppercase tracking-wider">Available Rooms</h4>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                                <label class="cursor-pointer relative group h-full">
+                                    <input checked="" class="peer sr-only" name="room" type="radio"/>
+                                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">L-20</h4>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
+                                        </div>
+                                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Lecture Hall Complex</p>
+                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                                            <span class="material-icons-round text-[16px]">group</span>
+                                            <span>Capacity: 60</span>
+                                        </div>
+                                        <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
+                                            <span class="material-icons-round fill-current">check_circle</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer relative group h-full">
+                                    <input class="peer sr-only" name="room" type="radio"/>
+                                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">L-18</h4>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
+                                        </div>
+                                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Lecture Hall Complex</p>
+                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                                            <span class="material-icons-round text-[16px]">group</span>
+                                            <span>Capacity: 45</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-2 mb-4 text-slate-400 dark:text-slate-500">
+                                <span class="material-icons-round text-[20px]">block</span>
+                                <h4 class="text-sm font-bold uppercase tracking-wider">Unavailable Rooms</h4>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">L-19</h4>
+                                            <span class="material-icons-round text-slate-400 text-[20px]">lock_clock</span>
+                                        </div>
+                                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Lecture Hall Complex</p>
+                                        <div class="mb-3 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded text-[11px] text-amber-800 dark:text-amber-200 font-medium flex gap-1 items-start">
+                                            <span class="material-icons-round text-[14px] mt-0.5">info</span>
+                                            Booked until 6:00 PM
+                                        </div>
+                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                                            <span class="material-icons-round text-[16px]">group</span>
+                                            <span>Capacity: 45</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative opacity-70 hover:opacity-100 transition-opacity">
+                                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">LHC Main</h4>
+                                            <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
+                                        </div>
+                                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Large Auditorium</p>
+                                        <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
+                                            <span class="material-icons-round text-[14px] mt-0.5">calendar_month</span>
+                                            Reserved for Jan 23
+                                        </div>
+                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                                            <span class="material-icons-round text-[16px]">group</span>
+                                            <span>Capacity: 400</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-pink-600 text-white font-bold text-sm">3</span>
+                        <h3 class="text-slate-900 dark:text-white text-xl font-bold font-display">Event Details</h3>
+                    </div>
+                    
+                    <div class="space-y-5 max-w-3xl">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="event-title">Event Title</label>
+                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="event-title" placeholder="e.g. End Semester Jam Session" type="text"/>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="event-type">Event Type</label>
+                                <select class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm" id="event-type">
+                                    <option>Practice Session</option>
+                                    <option>Official Performance</option>
+                                    <option>Workshop</option>
+                                    <option>Audition</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="attendees">Estimated Attendees</label>
+                                <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm" id="attendees" placeholder="0" type="number"/>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="details">Purpose / Additional Details</label>
+                            <textarea class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="details" placeholder="Please describe the equipment needed or any special requests..." rows="4"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="permission-id">Permission Letter ID</label>
+                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="permission-id" placeholder="Enter permission letter ID" type="text"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-pink-50/30 dark:bg-slate-900 border-t border-pink-100 dark:border-pink-900/10 flex items-center justify-between">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md">By clicking submit, you agree to the Institute Venue Policy. Request will be sent to the DOSA office for final approval.</p>
+                    <button class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-pink-500/30 transition-all flex items-center gap-2" type="button">
+                        <span>Submit Booking Request</span>
+                        <span class="material-icons-round text-[18px]">send</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</body>
+</html>

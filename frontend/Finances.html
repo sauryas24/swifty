@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Music Club Finances - SWIFTY</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#be185d",
+                        "soft-pink": "#fdf2f8",
+                        "professional-gray": "#f1f5f9",
+                        "background-light": "#f8fafc",
+                    },
+                    fontFamily: {
+                        display: ["Outfit", "Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --sidebar-width: 280px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: var(--sidebar-width);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .nav-item-active {
+            @apply bg-pink-50 text-pink-700 font-semibold border-r-4 border-pink-600;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-[#fdf2f8] text-slate-800 min-h-screen">
+<input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+<header class="fixed top-0 left-0 right-0 h-16 bg-[#1e1e2d] text-white flex items-center justify-between px-6 z-[60] shadow-sm">
+<div class="flex items-center">
+<label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+<span class="material-symbols-outlined">menu</span>
+</label>
+<div class="flex items-center gap-3">
+<div class="flex flex-col">
+<span class="font-display font-bold text-lg tracking-wider text-white">SWIFTY</span>
+</div>
+</div>
+</div>
+</header>
+<aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100%-4rem)] w-[280px] bg-white border-r border-slate-200 z-50 overflow-y-auto">
+<div class="flex flex-col h-full">
+<div class="p-6 border-b border-slate-50">
+<span class="font-display font-bold text-sm tracking-widest text-slate-400 uppercase">Management</span>
+</div>
+<nav class="flex-1 py-4 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-600 hover:bg-slate-50 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<div class="px-2">
+<button class="w-full flex items-center justify-between px-4 py-3 nav-item-active rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-pink-600">account_balance_wallet</span>
+<span class="text-sm">Finances</span>
+</div>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="pl-12 py-2 space-y-2">
+<a class="block text-xs font-semibold text-pink-600" href="#">Past Transactions</a>
+</div>
+<button class="w-full flex items-center justify-between px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm">Permission Letter</span>
+</div>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-sm">MOU Form</span>
+</div>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">event_seat</span>
+<span class="text-sm">Venue Booking</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-sm">Past Requests</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-slate-100">
+<button class="w-full flex items-center justify-center gap-2 py-2 text-sm text-slate-500 hover:text-slate-900 transition-colors">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+<span>Switch Theme</span>
+</button>
+</div>
+</div>
+</aside>
+<main class="main-content ml-0 mt-16 min-h-screen">
+<div class="bg-white border-b border-slate-200 w-full px-8 py-4 flex justify-between items-center relative z-10 shadow-sm">
+<div class="flex items-center gap-2 text-2xl font-display font-bold">
+<span class="text-slate-900 uppercase">Music Club</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="group focus:outline-none">
+<div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 transition-colors group-hover:bg-slate-200 group-hover:border-slate-300">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+</button>
+</div>
+</div>
+<div class="p-8 grid grid-cols-1 gap-8 max-w-[1400px] mx-auto">
+<div class="w-full space-y-8">
+<div class="bg-white rounded-2xl p-8 border border-slate-200 card-shadow">
+<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
+<div class="flex items-baseline gap-4 mb-6">
+<span class="text-4xl font-display font-bold text-slate-900">₹2,40,000</span>
+<span class="text-xl font-medium text-slate-400">/ ₹5,00,000</span>
+</div>
+<div class="relative w-full h-4 bg-slate-100 rounded-full overflow-hidden mb-3">
+<div class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 48%"></div>
+</div>
+<p class="text-xs font-bold text-slate-500 uppercase tracking-tight">48% of annual budget utilized</p>
+</div>
+<div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
+<div class="p-6 border-b border-slate-50 flex justify-between items-center">
+<h3 class="font-display font-bold text-lg text-slate-800">Previous Bills and Receipts</h3>
+<span class="material-symbols-outlined text-slate-400">receipt_long</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 bg-slate-50/50">
+<th class="px-6 py-4">Date</th>
+<th class="px-6 py-4">Description</th>
+<th class="px-6 py-4 text-right">Amount (₹)</th>
+<th class="px-6 py-4 text-center">Receipt Link</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 24, 2026</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-800">New PA System Rental</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">15,000</td>
+<td class="px-6 py-5 text-center">
+<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 12, 2026</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-800">Guitar Strings &amp; Repairs</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">4,500</td>
+<td class="px-6 py-5 text-center">
+<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 08, 2026</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-800">Workshop Guest Refreshments</td>
+<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">2,200</td>
+<td class="px-6 py-5 text-center">
+<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ADSA Music Club - Club Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#db2777",
+                        "baby-pink": "#fdf2f8",
+                        "accent-pink": "#fce7f3",
+                        "background-dark": "#1a1013",
+                    },
+                    fontFamily: {
+                        display: ["Outfit", "Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --bg-pink: #fdf2f8;
+            --sidebar-width: 280px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: var(--bg-pink);
+        }
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: var(--sidebar-width);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary .arrow-icon {
+            transform: rotate(180deg);
+        }
+        .arrow-icon {
+            transition: transform 0.2s ease-in-out;
+        }
+        .modal-toggle:checked + .modal-overlay {
+            display: flex;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4a1d33;
+        }
+    </style>
+</head>
+<body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+<input class="hidden modal-toggle" id="modal-requests" type="checkbox"/>
+<div class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4 md:p-8 modal-overlay">
+<div class="bg-white dark:bg-slate-900 w-full max-w-6xl h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-pink-100 dark:border-pink-900/30">
+<div class="px-8 py-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
+<div>
+<h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white">All Club Requests</h2>
+<p class="text-sm text-slate-500">Music Club History &amp; Pending Items</p>
+</div>
+<label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors" for="modal-requests">
+<span class="material-icons-round text-slate-400">close</span>
+</label>
+</div>
+<div class="flex-1 overflow-auto p-8">
+<table class="w-full text-left">
+<thead class="bg-pink-50/50 dark:bg-pink-900/10 sticky top-0">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Request Type</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-pink-50 dark:divide-pink-900/10">
+<tr class="hover:bg-pink-50/10 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">Oct 26, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Late Night Rehearsal</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Aud. Room 2 access from 8 PM to 11 PM</td>
+<td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-red-100 text-red-600 text-xs font-bold uppercase">Rejected</span></td>
+</tr>
+<tr class="hover:bg-pink-50/10 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">Oct 24, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Venue Booking</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">OAT Main Stage for 'Rhythms 2023' setup</td>
+<td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-600 text-xs font-bold uppercase">Approved</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-6 border-t border-pink-50 dark:border-pink-900/10 flex justify-end">
+<label class="px-6 py-2 bg-slate-900 text-white rounded-xl font-bold cursor-pointer hover:bg-slate-800 transition-all" for="modal-requests">Close</label>
+</div>
+</div>
+</div>
+<input class="hidden modal-toggle" id="modal-bill-view" type="checkbox"/>
+<div class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4 modal-overlay">
+<div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-pink-100 dark:border-pink-900/30">
+<div class="px-6 py-4 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
+<h3 class="font-display font-bold text-slate-900 dark:text-white">Bill Details</h3>
+<label class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer" for="modal-bill-view">
+<span class="material-icons-round text-slate-400">close</span>
+</label>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">Amount (₹)</label>
+<div class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 font-semibold">4,500</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">Comments</label>
+<div class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 h-24 overflow-auto">Guitar Strings &amp; Repairs for Oct rehearsal sessions.</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
+<div class="aspect-video bg-pink-50 dark:bg-slate-800 rounded-2xl flex flex-col items-center justify-center border-2 border-pink-100 dark:border-pink-900/20 overflow-hidden">
+<span class="material-icons-round text-4xl text-pink-300">image</span>
+<p class="text-xs text-pink-400 font-medium">receipt_guitar_repair.jpg</p>
+</div>
+</div>
+</div>
+<div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-pink-50 dark:border-pink-900/10 flex justify-end">
+<label class="px-6 py-2 bg-slate-900 text-white rounded-xl font-bold cursor-pointer hover:bg-slate-800 transition-all" for="modal-bill-view">Close</label>
+</div>
+</div>
+</div>
+<input class="hidden modal-toggle" id="modal-bill-add" type="checkbox"/>
+<div class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4 modal-overlay">
+<div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-pink-100 dark:border-pink-900/30">
+<div class="px-6 py-4 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
+<h3 class="font-display font-bold text-slate-900 dark:text-white">Add New Bill</h3>
+<label class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer" for="modal-bill-add">
+<span class="material-icons-round text-slate-400">close</span>
+</label>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">Amount (₹)</label>
+<input class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 focus:ring-pink-500 focus:border-pink-500" placeholder="0.00" type="number"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-1">Comments</label>
+<textarea class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 h-24 focus:ring-pink-500 focus:border-pink-500" placeholder="Enter bill description..."></textarea>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
+<button class="w-full border-2 border-dashed border-pink-200 dark:border-slate-700 rounded-2xl p-6 text-center group cursor-pointer hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-all flex flex-col items-center gap-2">
+<span class="material-icons-round text-4xl text-pink-500">cloud_upload</span>
+<span class="text-sm font-bold text-pink-600">Upload Bill</span>
+<p class="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
+</button>
+</div>
+</div>
+<div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-pink-50 dark:border-pink-900/10 flex justify-end gap-3">
+<label class="px-6 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-all" for="modal-bill-add">Close</label>
+<button class="px-6 py-2 bg-pink-600 text-white rounded-xl font-bold cursor-pointer hover:bg-pink-700 transition-all shadow-lg shadow-pink-200 dark:shadow-none">Submit</button>
+</div>
+</div>
+</div>
+<input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+<label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+<span class="material-icons-round">menu</span>
+</label>
+<div class="flex items-center gap-2">
+<span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase text-white">SWIFTY</span>
+</div>
+</header>
+<aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
+<div class="flex flex-col h-full">
+<div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
+<div class="flex flex-col">
+<span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
+</div>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl mb-2 transition-colors" href="#">
+<span class="material-icons-round text-xl">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<details class="group space-y-1" open="">
+<summary class="w-full flex items-center justify-between px-4 py-3 text-slate-900 dark:text-white font-semibold bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-icons-round text-xl">groups</span>
+<span class="text-sm">Select Club</span>
+</div>
+<span class="material-icons-round text-sm arrow-icon">expand_more</span>
+</summary>
+<div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Dance Club</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Debating Society (DebSoc)</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Dramatics Club</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Electronics Club</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Finance and Consulting</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Literary Society</a>
+<div class="bg-gray-100 dark:bg-slate-700/50 rounded-lg">
+<a class="block px-3 py-2 text-sm font-bold text-black dark:text-white" href="#">Music Club</a>
+</div>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Programming Club</a>
+<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Robotics Club</a>
+</div>
+</details>
+</nav>
+<div class="p-4 border-t border-pink-50 dark:border-pink-900/10">
+<button class="w-full flex items-center justify-center gap-2 py-2 text-sm text-slate-500 hover:text-pink-600 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-round text-sm">dark_mode</span>
+<span>Switch Theme</span>
+</button>
+</div>
+</div>
+</aside>
+<main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
+<div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
+<div>
+<h1 class="text-2xl md:text-3xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+                    ADSA / <span class="text-pink-600">Music Club</span>
+</h1>
+</div>
+</div>
+<div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 pb-12">
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h2 class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-widest mb-2">Club Budget Status</h2>
+<p class="text-4xl font-display font-black text-slate-900 dark:text-white">₹2,40,000 <span class="text-slate-300 dark:text-slate-600 mx-2">/</span> <span class="text-2xl text-slate-400 dark:text-slate-500">₹5,00,000</span></p>
+</div>
+<div class="flex-1 max-w-xs">
+<div class="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-slate-900 dark:bg-slate-600" style="width: 48%"></div>
+</div>
+<p class="text-[10px] text-slate-500 mt-2 font-bold uppercase">48% of annual budget utilized</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
+<div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center bg-white dark:bg-slate-900">
+<div class="flex items-center gap-2">
+<h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Previous Bills and Receipts</h3>
+</div>
+<span class="material-icons-round text-slate-400">receipt_long</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-pink-50/50 dark:bg-pink-900/10">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Description</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount (₹)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-pink-50 dark:divide-pink-900/10">
+<tr class="group hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer relative">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">Oct 24, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">New PA System Rental</td>
+<td class="px-6 py-4 text-sm font-bold text-right">15,000</td>
+<td class="absolute inset-0 z-0">
+<label class="absolute inset-0 cursor-pointer" for="modal-bill-view"></label>
+</td>
+</tr>
+<tr class="group hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer relative">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">Oct 12, 2023</td>
+<td class="px-6 py-4 text-sm font-semibold text-slate-800 dark:text-slate-200">Guitar Strings &amp; Repairs</td>
+<td class="px-6 py-4 text-sm font-bold text-right">4,500</td>
+<td class="absolute inset-0 z-0">
+<label class="absolute inset-0 cursor-pointer" for="modal-bill-view"></label>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-slate-50/50 dark:bg-slate-800/50 border-t border-pink-50 dark:border-pink-900/10">
+<label class="w-full flex items-center justify-center gap-2 py-4 bg-white dark:bg-slate-700 text-pink-600 dark:text-pink-400 border-2 border-dashed border-pink-200 dark:border-pink-900/30 rounded-xl text-sm font-bold hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all active:scale-[0.98] cursor-pointer" for="modal-bill-add">
+<span class="material-icons-round text-xl">add_circle</span>
+                            Add New Bill/Receipt
+                        </label>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-6 flex flex-col h-[600px]">
+<div class="flex items-center justify-between mb-6 shrink-0">
+<h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Previous Requests</h3>
+<label class="cursor-pointer hover:bg-pink-50 dark:hover:bg-pink-900/20 p-1 rounded-md" for="modal-requests">
+<span class="material-icons-round text-slate-400">verified</span>
+</label>
+</div>
+<div class="space-y-4 overflow-y-auto flex-1 pr-1 custom-scrollbar">
+<div class="p-4 rounded-xl border border-red-50 dark:border-red-900/10 bg-red-50/30 dark:bg-red-900/5 hover:border-red-200 transition-all group cursor-pointer">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 text-[9px] font-bold uppercase">Rejected</span>
+<span class="text-[10px] text-slate-400">Today</span>
+</div>
+<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-red-600 transition-colors text-sm">Late Night Rehearsal: Aud. Room 2</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">Request denied due to conflicting maintenance schedule in the Auditorium wing.</p>
+</div>
+<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold uppercase">Approved</span>
+<span class="text-[10px] text-slate-400">2 days ago</span>
+</div>
+<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Venue Booking: OAT Main Stage</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">Approval granted for 'Rhythms 2023' annual concert series setup.</p>
+</div>
+<div class="p-4 rounded-xl border border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/20 hover:border-pink-200 transition-all group cursor-pointer">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase">Pending</span>
+<span class="text-[10px] text-slate-400">1 week ago</span>
+</div>
+<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Instrument Purchase</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">Proposal for 2 new acoustic guitars for club use.</p>
+</div>
+<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
+<div class="flex items-center justify-between mb-2">
+<span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold uppercase">Approved</span>
+<span class="text-[10px] text-slate-400">Oct 15</span>
+</div>
+<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Guest Speaker Request</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">Travel approval for visiting artist workshop.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

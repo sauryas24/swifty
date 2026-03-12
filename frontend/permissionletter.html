@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Permission Letter Form - Music Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#df2080",
+                        "background-light": "#f8f6f7",
+                        "background-dark": "#211119",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* --- Sidebar Animation --- */
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-closed { transform: translateX(-100%); }
+        .sidebar-open { transform: translateX(0); }
+        
+        @media (min-width: 768px) {
+            .sidebar-closed { margin-left: -280px; transform: none; }
+            .sidebar-open { margin-left: 0; transform: none; }
+        }
+
+        /* --- Date & Time Input Fix --- */
+        /* This stretches the native picker over the whole input but makes it invisible. 
+           Clicking anywhere on the input now triggers the picker. */
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body class="bg-pink-50 dark:bg-background-dark text-[#171114] dark:text-white font-display overflow-hidden">
+
+<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 text-white z-[100] flex items-center px-4 md:px-6 shadow-md">
+    <button id="menuBtn" class="p-2 rounded-full hover:bg-white/10 transition-colors mr-4">
+        <span class="material-symbols-outlined block">menu</span>
+    </button>
+    <h1 class="text-lg font-bold uppercase tracking-widest">SWIFTY</h1>
+</header>
+
+<div class="flex h-screen pt-14">
+    
+    <aside id="sidebar" class="sidebar-open fixed md:static inset-y-0 left-0 w-[280px] bg-white dark:bg-background-dark border-r border-[#e5dce0] dark:border-gray-800 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-50 transition-all duration-300">
+        <div class="py-6 px-4 flex flex-col gap-6">
+            <nav class="flex flex-col gap-1">
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors group text-gray-600 dark:text-gray-400" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+                    <p class="text-sm font-medium leading-normal">Dashboard</p>
+                </a>
+
+                <div class="dropdown-container">
+                    <button class="dropdown-trigger flex items-center justify-between w-full px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors group text-left text-gray-600 dark:text-gray-400">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined group-hover:text-primary transition-colors">account_balance_wallet</span>
+                            <p class="text-sm font-medium leading-normal">Finances</p>
+                        </div>
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+                    </button>
+                    <div class="hidden flex flex-col gap-1 pl-12 mt-1">
+                        <a class="text-sm font-medium text-gray-500 hover:text-primary py-2" href="#">Past Transactions</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-container">
+                    <button class="dropdown-trigger flex items-center justify-between w-full px-4 py-3 rounded-xl bg-background-light dark:bg-white/5 text-left transition-colors text-gray-900 dark:text-white">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined">description</span>
+                            <p class="text-sm font-bold leading-normal">Permission Letter</p>
+                        </div>
+                        <span class="material-symbols-outlined text-lg">expand_less</span>
+                    </button>
+                    <div class="flex flex-col gap-1 pl-4 mt-1">
+                        <a class="flex items-center gap-3 px-4 py-2 rounded-xl bg-primary/10 text-primary border-l-2 border-primary" href="#">
+                            <span class="text-sm font-bold leading-normal">New Request</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="dropdown-container">
+                    <button class="dropdown-trigger flex items-center justify-between w-full px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors group text-left text-gray-600 dark:text-gray-400">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined group-hover:text-primary transition-colors">assignment</span>
+                            <p class="text-sm font-medium leading-normal">MOU Form</p>
+                        </div>
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+                    </button>
+                    <div class="hidden flex flex-col gap-1 pl-12 mt-1">
+                        <a class="text-sm font-medium text-gray-500 hover:text-primary py-2" href="#">New Request</a>
+                    </div>
+                </div>
+
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors group text-gray-600 dark:text-gray-400" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary transition-colors">event_seat</span>
+                    <p class="text-sm font-medium leading-normal">Venue Booking</p>
+                </a>
+                <a class="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors group text-gray-600 dark:text-gray-400" href="#">
+                    <span class="material-symbols-outlined group-hover:text-primary transition-colors">history</span>
+                    <p class="text-sm font-medium leading-normal">Past Requests</p>
+                </a>
+            </nav>
+        </div>
+        <div class="p-4 border-t border-[#e5dce0] dark:border-gray-800">
+            <button id="themeToggle" class="flex items-center gap-4 px-4 py-3 w-full rounded-xl hover:bg-background-light dark:hover:bg-white/5 transition-colors text-gray-600 dark:text-gray-400 group">
+                <span class="material-symbols-outlined">contrast</span>
+                <p class="text-sm font-medium leading-normal">Switch Theme</p>
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto relative bg-[#fdf2f8] dark:bg-background-dark">
+        <div class="bg-white dark:bg-[#2a1721] px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-[#e5dce0] dark:border-gray-800 sticky top-0 z-10">
+            <h1 class="text-[#171114] dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight">Music Club</h1>
+        </div>
+        <div class="flex-1 px-4 md:px-10 lg:px-16 py-10 flex justify-center">
+            <div class="w-full max-w-[960px] flex flex-col gap-6">
+                <div class="bg-white dark:bg-[#2a1721] rounded-2xl p-6 md:p-10 shadow-sm border border-[#e5dce0] dark:border-gray-800">
+                    <div class="mb-8 text-center border-b border-[#e5dce0] dark:border-gray-800 pb-6">
+                        <h2 class="text-[#171114] dark:text-white tracking-tight text-[28px] font-bold leading-tight">Permission Letter Form</h2>
+                        <p class="text-[#876475] dark:text-gray-400 mt-2 text-sm">Submit a new request for an upcoming club event</p>
+                    </div>
+                    <form class="flex flex-col gap-6">
+                        <div class="flex flex-col md:flex-row gap-6 w-full">
+                            <label class="flex flex-col flex-1 gap-2">
+                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Council Name</span>
+                                <div class="relative">
+                                    <input class="w-full rounded-xl text-[#876475] border border-[#e5dce0] dark:border-gray-700 bg-gray-50 dark:bg-white/5 h-14 px-4 text-base font-normal focus:outline-none focus:ring-0 cursor-not-allowed select-none" readonly="" value="Media &amp; Cultural Council"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">lock</span>
+                                </div>
+                            </label>
+                            <label class="flex flex-col flex-1 gap-2">
+                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Club Name</span>
+                                <div class="relative">
+                                    <input class="w-full rounded-xl text-[#876475] border border-[#e5dce0] dark:border-gray-700 bg-gray-50 dark:bg-white/5 h-14 px-4 text-base font-normal focus:outline-none focus:ring-0 cursor-not-allowed select-none" readonly="" value="Music Club"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">lock</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="flex flex-col w-full gap-2">
+                            <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Name of Event</label>
+                            <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-6 w-full">
+                            <label class="flex flex-col flex-1 gap-2 relative">
+                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Date</span>
+                                <div class="relative">
+                                    <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="date"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">calendar_month</span>
+                                </div>
+                            </label>
+                            <label class="flex flex-col flex-1 gap-2 relative">
+                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Time</span>
+                                <div class="relative">
+                                    <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="time"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">schedule</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex flex-col w-full gap-2">
+                            <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Reason to Conduct Event</label>
+                            <textarea class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
+                        </div>
+                        <div class="pt-4 flex justify-end gap-3">
+                            <button class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
+                                Cancel
+                            </button>
+                            <button class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
+                                <span>Submit Request</span>
+                                <span class="material-symbols-outlined text-lg">send</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const themeToggle = document.getElementById('themeToggle');
+    const dropdowns = document.querySelectorAll('.dropdown-trigger');
+
+    // 1. Sidebar Toggle Logic
+    function toggleSidebar() {
+        if (window.innerWidth < 768) {
+            // Mobile behavior
+            sidebar.classList.toggle('sidebar-closed'); 
+            sidebar.classList.toggle('sidebar-open');
+            sidebarOverlay.classList.toggle('hidden');
+        } else {
+            // Desktop behavior (Collapse width)
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+        }
+    }
+
+    menuBtn.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    // 2. Dropdown Logic
+    dropdowns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('.text-lg');
+            
+            content.classList.toggle('hidden');
+            
+            // Toggle Icon Arrow
+            if (content.classList.contains('hidden')) {
+                icon.innerText = 'expand_more';
+            } else {
+                icon.innerText = 'expand_less';
+            }
+        });
+    });
+
+    // 3. Theme Switch Logic
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        document.documentElement.classList.toggle('light');
+    });
+</script>
+</body>
+</html>

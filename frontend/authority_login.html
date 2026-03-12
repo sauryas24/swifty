@@ -1,0 +1,217 @@
+<!-- <!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Swifty DOSA Login Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#db2777",
+                        "background-light": "#fff1f2",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                },
+            },
+        };
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }.no-shadow {
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background-light dark:bg-background-dark transition-colors duration-300">
+<header class="w-full bg-[#0d0f14] dark:bg-black text-white px-6 py-4 flex items-center justify-between shadow-md">
+<div class="flex items-center gap-3">
+<span class="text-xl font-bold tracking-tight uppercase">SWIFTY</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="flex items-center gap-2 text-sm font-medium hover:text-gray-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+            Back to Calendar
+        </a>
+<button class="p-2 rounded-full hover:bg-gray-800 transition-colors" onclick="toggleDarkMode()">
+<span class="material-symbols-outlined text-lg block dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined text-lg hidden dark:block text-yellow-400">light_mode</span>
+</button>
+</div>
+</header>
+<main class="flex items-center justify-center p-6 mt-12">
+<div class="bg-white dark:bg-slate-900 w-full max-w-[480px] rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-10 md:p-14 text-center no-shadow">
+<div class="flex justify-center mb-6">
+<div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">lock</span>
+</div>
+</div>
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Login</h1>
+<p class="text-slate-500 dark:text-slate-400 mb-10">Please enter your credentials</p>
+<form class="space-y-6 text-left" onsubmit="event.preventDefault();">
+<div>
+<label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Role</label>
+<div class="relative group">
+<select class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-5 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary appearance-none transition-all cursor-pointer">
+<option>Faculty Advisor</option>
+<option>Student Gymkhana President</option>
+<option>General Secretary</option>
+<option>DOSA Office</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex flex-col">
+<span class="material-symbols-outlined text-slate-400 text-sm h-3 leading-none">expand_less</span>
+<span class="material-symbols-outlined text-slate-400 text-sm h-3 leading-none">expand_more</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Password</label>
+<div class="relative">
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-2xl py-4 px-5 text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-primary transition-all" type="password" value="password123"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+</div>
+<button class="w-full bg-black dark:bg-slate-700 hover:bg-primary dark:hover:bg-primary text-white py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all duration-300 group mt-4" type="submit">
+                Login
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+</div>
+</main>
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40 dark:opacity-10">
+<svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="grid" patternUnits="userSpaceOnUse" width="40">
+<path class="text-pink-200 dark:text-pink-900" d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+
+</body></html> -->
+
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Authority Login - SWIFTY</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#db2777",
+                        "baby-pink": "#fdf2f8",
+                        "accent-pink": "#fce7f3",
+                        "background-dark": "#1a1013",
+                    },
+                    fontFamily: {
+                        display: ["Outfit", "Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        :root { --bg-pink: #fdf2f8; }
+        body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 watermark-bg flex flex-col">
+
+    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
+        <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg tracking-widest uppercase">SWIFTY</span>
+            <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">AUTHORITY</span>
+        </div>
+        <div class="flex items-center gap-4">
+             <a class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+                <span class="material-icons-round text-sm">calendar_today</span>
+                Calendar
+            </a>
+            <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                <span class="material-icons-round text-xl">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center p-6 mt-14">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-[480px] rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm p-10 md:p-14 text-center">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center border border-pink-100 dark:border-pink-900/10">
+                    <span class="material-icons-round text-primary text-3xl">admin_panel_settings</span>
+                </div>
+            </div>
+            <h1 class="text-3xl font-display font-black text-slate-900 dark:text-white mb-2 tracking-tight uppercase">Authority Login</h1>
+            <p class="text-slate-500 dark:text-slate-400 mb-10 text-sm">Secure access for council members & administration</p>
+            
+            <form class="space-y-6 text-left" onsubmit="event.preventDefault();">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Role</label>
+<div class="relative group">
+    <select class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
+        <option>Faculty Advisor</option>
+        <option>Student Gymkhana President</option>
+        <option>General Secretary</option>
+        <option>DOSA Office</option>
+    </select>
+    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+        <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+    </div>
+</div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Password</label>
+                    <div class="relative">
+                        <input class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" value="password123"/>
+                        <button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" type="button">
+                            <span class="material-icons-round text-lg">visibility</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="w-full bg-slate-900 dark:bg-primary hover:bg-primary dark:hover:bg-pink-700 text-white py-4 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-slate-900/10 group mt-6" type="submit">
+                    Access Dashboard
+                    <span class="material-icons-round text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
