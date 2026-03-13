@@ -24,9 +24,6 @@ if not os.path.exists("static/receipts"):
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Plug the routers into the main app
-app.include_router(venues.router)
-app.include_router(auth.router)
-app.include_router(finances.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # Allow your Live Server
@@ -37,11 +34,12 @@ app.add_middleware(
 # Plug the routers into the main app
 app.include_router(venues.router)
 app.include_router(auth.router)
-# app.include_router(announcements.router)
-# app.include_router(approvals.router)
+app.include_router(finances.router)
+app.include_router(announcements.router)
+app.include_router(approvals.router)
 # app.include_router(requests.router)
 # app.include_router(finances.router)
-# app.include_router(permission.router)
+app.include_router(permission.router)
 
 
 @app.get("/")

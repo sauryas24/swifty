@@ -73,8 +73,9 @@ class PermissionLetterCreate(BaseModel):
 class PermissionLetterResponse(BaseModel):
     id: int               # The generated Permission Letter ID
     event_name: str
+    date : str
     status: str
-    
+    rejection_comment: Optional[str] = None
     class Config:
         from_attributes = True    
 

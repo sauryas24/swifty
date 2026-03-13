@@ -79,6 +79,8 @@ class PermissionLetter(Base):
     
     # The Approval Tracker
     status = Column(String, default="Pending GenSec") 
+    #in case of rejection
+    rejection_comment = Column(String, nullable=True)
     
     # Relationship to fetch club details 
     club = relationship("User")
