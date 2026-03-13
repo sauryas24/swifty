@@ -76,8 +76,7 @@ class PermissionLetterResponse(BaseModel):
     
     model_config = ConfigDict(from_attributes=True)    
     rejection_comment: Optional[str] = None
-    class Config:
-        from_attributes = True    
+    model_config = ConfigDict(from_attributes=True)    
 
 # What the frontend sends when publishing an announcement
 class AnnouncementCreate(BaseModel):
@@ -109,8 +108,7 @@ class MoUResponse(BaseModel):
     status: str
     comments: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MoUApproval(BaseModel):
     mou_id: int
