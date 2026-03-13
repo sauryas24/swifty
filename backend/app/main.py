@@ -40,8 +40,7 @@ app.include_router(auth.router)
 
 app.include_router(finances.router)
 app.include_router(announcements.router)
-app.include_router(approvals.router)
-app.include_router(announcements.router)
+
 app.include_router(MoU.router)
 # app.include_router(approvals.router)
 # app.include_router(requests.router)
