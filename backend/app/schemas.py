@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 from typing import List, Optional
 from datetime import datetime
@@ -9,8 +9,7 @@ class RoomInfo(BaseModel):
     name: str
     capacity: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # 2. The response for the Availability Check
 class AvailabilityResponse(BaseModel):
@@ -52,8 +51,7 @@ class TransactionRead(TransactionBase):
     timestamp: datetime
     receipt_url: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ClubFinanceStatus(BaseModel):
     name: str
@@ -75,6 +73,8 @@ class PermissionLetterResponse(BaseModel):
     event_name: str
     date : str
     status: str
+    
+    model_config = ConfigDict(from_attributes=True)    
     rejection_comment: Optional[str] = None
     class Config:
         from_attributes = True    
@@ -94,8 +94,7 @@ class AnnouncementResponse(BaseModel):
     target_clubs: Optional[str]
     timestamp: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MoUCreate(BaseModel):
     organization_name: str

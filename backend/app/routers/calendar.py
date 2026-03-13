@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List
 
 # Assuming these are your local imports based on main.py structure
@@ -14,6 +14,7 @@ router = APIRouter(
 
 # --- Pydantic Schemas ---
 # This defines the data structure sent to your frontend UI
+
 class CalendarEventResponse(BaseModel):
     id: int
     date: str
@@ -22,8 +23,8 @@ class CalendarEventResponse(BaseModel):
     event_type: str
     venue_name: str
 
-    class Config:
-        orm_mode = True
+    # 2. Replace 'class Config' with 'model_config'
+    model_config = ConfigDict(from_attributes=True)
 
 # --- API Endpoints ---
 @router.get("/events", response_model=List[CalendarEventResponse])
