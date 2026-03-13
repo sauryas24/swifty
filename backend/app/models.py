@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from .database import Base
 import datetime
+
 
 
 class User(Base):
@@ -83,3 +85,42 @@ class PermissionLetter(Base):
     # Relationship to fetch club details 
     club = relationship("User")
 
+
+class Announcement(Base):
+    __tablename__ = "announcements"
+
+    # Required attributes from the SRS Data Dictionary
+    id = Column(Integer, primary_key=True, index=True)
+    sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    message = Column(String, nullable=False)
+    
+    # Since SQLite doesn't natively support arrays easily, we store target_clubs as a comma-separated string
+    target_clubs = Column(String, nullable=True) 
+    
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+    sender = relationship("User")
+
+
+class MoURequest(Base):
+    __tablename__ = "mou_requests"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    coordinator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    organization_name = Column(String, nullable=False)
+    purpose = Column(String, nullable=False)
+
+    document_url = Column(String, nullable=False)
+
+    status = Column(String, default="pending_gensec")
+    # pending_gensec
+    # pending_faculty
+    # pending_adsa
+    # approved
+    # rejected
+
+    comments = Column(String, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
