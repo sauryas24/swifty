@@ -97,3 +97,25 @@ class AnnouncementResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class MoUCreate(BaseModel):
+    organization_name: str
+    purpose: str
+    document_url: str
+
+class MoUResponse(BaseModel):
+    id: int
+    organization_name: str
+    purpose: str
+    document_url: str
+    status: str
+    comments: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+class MoUApproval(BaseModel):
+    mou_id: int
+    action: str  # approve / reject
+    comments: Optional[str] = None
+
+#suppose approval ppl change this, then there may be changes required in MoU.py
