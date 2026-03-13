@@ -4,3 +4,5 @@ __pycache__/
 .env
 venv/
 myenv/
+.DS_Store
+*.pyc
