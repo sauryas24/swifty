@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import List
+from typing import List, Optional
+from datetime import datetime
 
 # 1. How we send room details to the frontend
 class RoomInfo(BaseModel):
@@ -37,3 +39,83 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     role: str       # We send the role back so the frontend knows which dashboard to load.   
+
+class TransactionBase(BaseModel):
+    amount: float
+    description: str
+
+class TransactionCreate(TransactionBase):
+    club_id: int
+
+class TransactionRead(TransactionBase):
+    id: int
+    timestamp: datetime
+    receipt_url: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+class ClubFinanceStatus(BaseModel):
+    name: str
+    total_allocated: float
+    total_spent: float
+    remaining_balance: float # total_allocated - total_spent
+    utilization_percentage: float # (total_spent / total_allocated) * 100
+    transactions: List[TransactionRead]
+    
+class PermissionLetterCreate(BaseModel):
+    event_name: str
+    date: str
+    time: str
+    reason: str
+
+# What the backend sends back after successful submission
+class PermissionLetterResponse(BaseModel):
+    id: int               # The generated Permission Letter ID
+    event_name: str
+    date : str
+    status: str
+    rejection_comment: Optional[str] = None
+    class Config:
+        from_attributes = True    
+
+# What the frontend sends when publishing an announcement
+class AnnouncementCreate(BaseModel):
+    message: str
+    target_clubs: Optional[List[str]] = None
+    # Example: ["robotics", "coding", "drama"]
+
+
+# What the backend returns when sending announcements to frontend
+class AnnouncementResponse(BaseModel):
+    id: int
+    sender_id: int
+    message: str
+    target_clubs: Optional[str]
+    timestamp: datetime
+
+    class Config:
+        from_attributes = True
+
+class MoUCreate(BaseModel):
+    organization_name: str
+    purpose: str
+    document_url: str
+
+class MoUResponse(BaseModel):
+    id: int
+    organization_name: str
+    purpose: str
+    document_url: str
+    status: str
+    comments: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+class MoUApproval(BaseModel):
+    mou_id: int
+    action: str  # approve / reject
+    comments: Optional[str] = None
+
+#suppose approval ppl change this, then there may be changes required in MoU.py
