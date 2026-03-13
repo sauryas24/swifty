@@ -4,3 +4,10 @@ __pycache__/
 .env
 venv/
 myenv/
+.DS_Store
+*.pyc
+# Pytest cache folder (created when you run your tests)
+.pytest_cache/
+
+# If you have React or node packages in this repo later
+node_modules/
