@@ -79,3 +79,4 @@ def approve_and_publish_event(booking_id: int, db: Session):
     db.refresh(booking)
     
     return booking
+

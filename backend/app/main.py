@@ -13,7 +13,9 @@ from .routers import approvals
 from .routers import requests
 from .routers import finances
 from .routers import permission
+from .routers import calendar # Add this to your imports
 
+# Add this below your existing app.include_router() calls
 # Create the database tables automatically when the server starts
 models.Base.metadata.create_all(bind=engine)
 
@@ -43,6 +45,7 @@ app.include_router(auth.router)
 # app.include_router(finances.router)
 # app.include_router(permission.router)
 
+app.include_router(calendar.router)
 
 @app.get("/")
 def root():
