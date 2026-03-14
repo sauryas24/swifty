@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from datetime import datetime, timezone
 from .database import Base
 import datetime
 
@@ -128,3 +129,11 @@ class MoURequest(Base):
     comments = Column(String, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+class OTP(Base):
+    __tablename__ = "otps"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email_id = Column(String, unique=True, index=True)  # One active OTP per email
+    otp_code = Column(String)                           # The 6-digit code
+    expires_at = Column(String)                         # Store as ISO string for SQLite    

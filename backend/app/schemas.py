@@ -35,6 +35,7 @@ class LoginRequest(BaseModel):
 
 # What the backend replies with
 class Token(BaseModel):
+    username: str
     access_token: str
     token_type: str
     role: str       # We send the role back so the frontend knows which dashboard to load.   
@@ -87,7 +88,7 @@ class AnnouncementCreate(BaseModel):
 # What the backend returns when sending announcements to frontend
 class AnnouncementResponse(BaseModel):
     id: int
-    sender_id: int
+    sender_username: str
     message: str
     target_clubs: Optional[str]
     timestamp: datetime
@@ -126,6 +127,7 @@ class CalendarEventResponse(BaseModel):
     venue_name: str
 
     model_config = ConfigDict(from_attributes=True)
+
 # Add this to app/schemas.py
 class RequestRecordResponse(BaseModel):
     id: int
@@ -137,3 +139,16 @@ class RequestRecordResponse(BaseModel):
     comments: Optional[str] = None
     
     model_config = ConfigDict(from_attributes=True)
+
+    
+    
+# When the user types their email and clicks "Send OTP"
+class OTPRequest(BaseModel):
+    email_id: str
+
+# When the user types the 6-digit code and clicks "Verify"
+class OTPVerify(BaseModel):
+    email_id: str
+    otp_code: str    
+
+
