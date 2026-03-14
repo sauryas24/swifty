@@ -116,3 +116,8 @@ class MoUApproval(BaseModel):
     comments: Optional[str] = None
 
 #suppose approval ppl change this, then there may be changes required in MoU.py
+
+
+# Used when an authority clicks "Reject"
+class RejectionCreate(BaseModel):
+    reason: str
