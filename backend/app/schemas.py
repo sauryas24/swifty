@@ -109,15 +109,10 @@ class MoUResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-class MoUApproval(BaseModel):
-    mou_id: int
-    action: str  # approve / reject
-    comments: Optional[str] = None
-
-#suppose approval ppl change this, then there may be changes required in MoU.py
-
-
-
+# --- Schemas ---
+class ApprovalAction(BaseModel):
+    action: str  # Must be "approve" or "reject"
+    message: Optional[str] = None  # Optional reason for rejection
 # Used when an authority clicks "Reject"
 class RejectionCreate(BaseModel):
     reason: str
@@ -131,4 +126,14 @@ class CalendarEventResponse(BaseModel):
     venue_name: str
 
     model_config = ConfigDict(from_attributes=True)
-
+# Add this to app/schemas.py
+class RequestRecordResponse(BaseModel):
+    id: int
+    type: str       # 'MOU', 'PERMISSION', 'VENUE'
+    date: str       # e.g., 'Feb 15, 2026'
+    details: str    # e.g., 'Outdoor Speaker setup at OAT'
+    status: str     # 'Pending', 'Approved', 'Rejected'
+    raw_status: str # Keeping the original (e.g., 'Pending GenSec') just in case!
+    comments: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)

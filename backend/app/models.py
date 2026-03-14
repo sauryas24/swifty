@@ -41,7 +41,8 @@ class VenueBooking(Base):
     permission_letter_id = Column(String)   # This will be provided to the user after the permission letter is approved.
     
     status = Column(String, default="Pending GenSec") # Starts the approval chain
-    
+    # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
+    comments = Column(String, nullable=True) # Stores the rejection message
     # Links the booking to the actual room details
     room = relationship("Room")
 
@@ -82,7 +83,8 @@ class PermissionLetter(Base):
     # The Approval Tracker
     status = Column(String, default="Pending GenSec") 
     #in case of rejection
-    rejection_comment = Column(String, nullable=True)
+    # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
+    comments = Column(String, nullable=True) # Stores the rejection message
     
     # Relationship to fetch club details 
     club = relationship("User")

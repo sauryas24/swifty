@@ -29,13 +29,18 @@ def check_availability(
     """
     all_rooms = db.query(models.Room).all()
     
-    # Find all the bookings that overlap with given date and time
+    # Find all the bookings that overlap with given date and time 
     conflicting_bookings = db.query(models.VenueBooking).filter(
         models.VenueBooking.date == date,
         models.VenueBooking.time == time,
-        # We only care about bookings that are either pending or approved. 
-        # If a booking was rejected, the room is technically free!
-        models.VenueBooking.status.in_(["Pending FacAd", "Pending ADSA", "Approved"])
+        # UPDATE: Include the new pipeline steps to prevent double-booking!
+        models.VenueBooking.status.in_([
+            "Pending GenSec", 
+            "Pending President", 
+            "Pending FacAd", 
+            "Pending ADSA", 
+            "Approved"
+        ])
     ).all()
     
     # Extract the room IDs from the overlaps
@@ -92,12 +97,19 @@ def submit_venue_booking(
         )
 
     # --- 3. Concurrency / Conflict Check ---
-    # Double-check that no one booked the room in the milliseconds since the user checked availability
+    # Double-check that no one booked the room 
     conflict = db.query(models.VenueBooking).filter(
         models.VenueBooking.date == booking_data.date,
         models.VenueBooking.time == booking_data.time,
         models.VenueBooking.room_id == booking_data.room_id,
-        models.VenueBooking.status.in_(["Pending FacAd", "Pending ADSA", "Approved"])
+        # UPDATE: Match the availability list here too
+        models.VenueBooking.status.in_([
+            "Pending GenSec", 
+            "Pending President", 
+            "Pending FacAd", 
+            "Pending ADSA", 
+            "Approved"
+        ])
     ).first()
     
     if conflict:
@@ -114,9 +126,9 @@ def submit_venue_booking(
         event_title=booking_data.event_title,
         event_type=booking_data.event_type,
         expected_attendees=booking_data.expected_attendees,
-        description=booking_data.description,
+        description=booking_data.description,               # <--- Nice and clean!
         permission_letter_id=booking_data.permission_letter_id,
-        status="Pending FacAd" # Standardize your starting states
+        status="Pending GenSec" 
     )
     
     db.add(new_booking)
