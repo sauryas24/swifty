@@ -116,3 +116,12 @@ class MoUApproval(BaseModel):
     comments: Optional[str] = None
 
 #suppose approval ppl change this, then there may be changes required in MoU.py
+class CalendarEventResponse(BaseModel):
+    id: int
+    date: str
+    time: str
+    event_title: str
+    event_type: str
+    venue_name: str
+
+    model_config = ConfigDict(from_attributes=True)

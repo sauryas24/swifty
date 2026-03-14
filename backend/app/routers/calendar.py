@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import List
 
 # Assuming these are your local imports based on main.py structure
-from .. import models
+from .. import models, schemas
 from ..database import get_db
 
 router = APIRouter(
@@ -23,11 +23,10 @@ class CalendarEventResponse(BaseModel):
     event_type: str
     venue_name: str
 
-    # 2. Replace 'class Config' with 'model_config'
     model_config = ConfigDict(from_attributes=True)
 
 # --- API Endpoints ---
-@router.get("/events", response_model=List[CalendarEventResponse])
+@router.get("/events", response_model=List[schemas.CalendarEventResponse])
 def get_public_calendar_events(db: Session = Depends(get_db)):
     """
     Fetches all upcoming approved events for the Public Calendar UI.
@@ -46,7 +45,7 @@ def get_public_calendar_events(db: Session = Depends(get_db)):
         venue_name = room.name if room else "Venue TBA"
 
         public_events.append(
-            CalendarEventResponse(
+            schemas.CalendarEventResponse(
                 id=booking.id,
                 date=booking.date,
                 time=booking.time,
