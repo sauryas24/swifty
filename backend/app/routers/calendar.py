@@ -12,19 +12,6 @@ router = APIRouter(
     tags=["Public Calendar"]
 )
 
-# --- Pydantic Schemas ---
-# This defines the data structure sent to your frontend UI
-
-class CalendarEventResponse(BaseModel):
-    id: int
-    date: str
-    time: str
-    event_title: str
-    event_type: str
-    venue_name: str
-
-    model_config = ConfigDict(from_attributes=True)
-
 # --- API Endpoints ---
 @router.get("/events", response_model=List[schemas.CalendarEventResponse])
 def get_public_calendar_events(db: Session = Depends(get_db)):
