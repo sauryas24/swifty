@@ -1,249 +1,3 @@
-<!-- <!DOCTYPE html>
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Public Calendar - Refined Neutral Theme</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#334155", // Slate 700
-                        brand: {
-                            pink: "#fdf2f8", // Very soft pink bg
-                            "pink-accent": "#f472b6", // Muted pink for UI highlights
-                            "pink-hover": "#fce7f3", // Hover state for cards
-                        },
-                        "background-light": "#f8fafc",
-                        "background-dark": "#0f172a",
-                    },
-                    fontFamily: {
-                        display: ["Inter", "sans-serif"],
-                        body: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                        'xl': '1.25rem'
-                    },
-                },
-            },
-        };
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-    </script>
-<style type="text/tailwindcss">
-        @layer base {
-            body {
-                font-family: 'Inter', sans-serif;
-            }
-        }
-        .event-card-hover:hover {
-            border-color: #f472b6;
-            background-color: #fdf2f8;
-        }
-        .dark .event-card-hover:hover {
-            background-color: rgba(244, 114, 182, 0.05);
-            border-color: #f472b6;
-        }
-        .date-hover {
-            @apply transition-colors duration-200 cursor-pointer;
-        }
-        .date-hover:hover:not(.active-date) {
-            background-color: #fce7f3;
-            border-radius: 9999px;
-        }
-        .dark .date-hover:hover:not(.active-date) {
-            background-color: rgba(244, 114, 182, 0.2);
-            border-radius: 9999px;
-        }
-    </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
-<header class="bg-[#0f172a] text-white py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-<div class="flex items-center space-x-2">
-<span class="font-bold text-xl tracking-tight uppercase">SWIFTY</span>
-</div>
-<div class="flex items-center space-x-6">
-<button class="text-slate-300 hover:text-white transition-colors flex items-center" onclick="toggleDarkMode()">
-<span class="material-symbols-outlined">dark_mode</span>
-</button>
-<button class="flex items-center space-x-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 px-4 py-2 rounded-lg transition-all text-sm font-medium">
-<span class="material-symbols-outlined text-sm">login</span>
-<span>OFFICIAL LOGIN</span>
-</button>
-</div>
-</header>
-<main class="max-w-7xl mx-auto px-6 py-12 lg:py-20">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-<div class="lg:col-span-4 space-y-10">
-<div class="space-y-4">
-<span class="inline-block px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-xs font-bold tracking-widest uppercase rounded">
-                    Public Gateway
-                </span>
-<h1 class="text-5xl font-extrabold text-slate-900 dark:text-white leading-tight">
-                    Public <br/>
-<span class="text-primary dark:text-slate-400">Calendar</span>
-</h1>
-<p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed max-w-sm">
-                    Browse the latest Students' Gymkhana activities and campus events for 2026.
-                </p>
-<div class="flex items-center space-x-2 pt-2">
-<span class="w-2 h-2 rounded-full bg-brand-pink-accent"></span>
-<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">January 2026 Schedule</span>
-</div>
-</div>
-<div class="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
-<div class="flex justify-between items-center mb-6">
-<span class="font-bold text-xs uppercase tracking-widest text-slate-500">January 2026</span>
-<div class="flex space-x-4">
-<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary">chevron_left</span>
-<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary">chevron_right</span>
-</div>
-</div>
-<div class="grid grid-cols-7 gap-y-4 text-center text-xs font-semibold text-slate-400 mb-2">
-<div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
-</div>
-<div class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium">
-<div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">28</div>
-<div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">29</div>
-<div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">30</div>
-<div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">31</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">1</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">2</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">3</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">4</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">5</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">6</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">7</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">8</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">9</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">10</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">11</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">12</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">13</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">14</div>
-<div class="active-date bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto">15</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">16</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">17</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">18</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">19</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">20</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">21</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">22</div>
-<div class="active-date bg-brand-pink-accent text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto shadow-sm">23</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">24</div>
-<div class="active-date border-2 border-brand-pink-accent text-brand-pink-accent rounded-full w-8 h-8 flex items-center justify-center mx-auto">25</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">26</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">27</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">28</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">29</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">30</div>
-<div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">31</div>
-</div>
-</div>
-</div>
-<div class="lg:col-span-8 space-y-6">
-<div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
-<div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Jan</span>
-<span class="text-3xl font-black text-slate-800 dark:text-white">15</span>
-<span class="text-[10px] text-slate-400">2026</span>
-</div>
-<div class="flex-grow">
-<div class="flex space-x-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Athletics</span>
-</div>
-<h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">Sports Trials</h3>
-<div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
-                            MAIN STADIUM
-                        </div>
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
-                            06:30 AM
-                        </div>
-</div>
-</div>
-<div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
-<span class="material-symbols-outlined text-3xl">chevron_right</span>
-</div>
-</div>
-<div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
-<div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Jan</span>
-<span class="text-3xl font-black text-slate-800 dark:text-white">23</span>
-<span class="text-[10px] text-slate-400">2026</span>
-</div>
-<div class="flex-grow">
-<div class="flex space-x-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Featured</span>
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Discussion</span>
-</div>
-<h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">Debbuddy Session</h3>
-<div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
-                            OAT
-                        </div>
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
-                            05:00 PM
-                        </div>
-</div>
-</div>
-<div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
-<span class="material-symbols-outlined text-3xl">chevron_right</span>
-</div>
-</div>
-<div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
-<div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Jan</span>
-<span class="text-3xl font-black text-slate-800 dark:text-white">25</span>
-<span class="text-[10px] text-slate-400">2026</span>
-</div>
-<div class="flex-grow">
-<div class="flex space-x-2 mb-2">
-<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Workshop</span>
-</div>
-<h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">BCS Intro Workshop</h3>
-<div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
-                            LHC-7
-                        </div>
-<div class="flex items-center">
-<span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
-                            06:00 PM
-                        </div>
-</div>
-</div>
-<div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
-<span class="material-symbols-outlined text-3xl">chevron_right</span>
-</div>
-</div>
-</div>
-</div>
-</main>
-<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 px-8 bg-white dark:bg-slate-900">
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-slate-500 dark:text-slate-400 text-sm">
-<div>© 2026 Students' Gymkhana Council. All rights reserved.</div>
-<div class="flex space-x-8 mt-4 md:mt-0">
-<a class="hover:text-brand-pink-accent transition-colors" href="#">Terms</a>
-<a class="hover:text-brand-pink-accent transition-colors" href="#">Privacy</a>
-<a class="hover:text-brand-pink-accent transition-colors" href="#">Campus Guidelines</a>
-</div>
-</div>
-</footer>
-
-</body></html> -->
-
-
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
@@ -339,8 +93,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div class="lg:col-span-4 space-y-10">
                 <div class="space-y-4">
-                    <span class="inline-block px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-xs font-bold tracking-widest uppercase rounded">
-                             
+                    <span class="inline-block px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-xs font-bold tracking-widest uppercase rounded">          
                     </span>
                     <h1 class="text-5xl font-extrabold text-slate-900 dark:text-white leading-tight">
                         Public <br/>
@@ -405,7 +158,10 @@
                 </div>
             </div>
             <div class="lg:col-span-8 space-y-6">
-                <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
+                <div id="events-container" class="flex flex-col gap-4">
+                    <p class="text-slate-500">Loading events...</p>
+                </div>
+                <!--<div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
                     <div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Jan</span>
                         <span class="text-3xl font-black text-slate-800 dark:text-white">15</span>
@@ -483,7 +239,7 @@
                     <div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
                         <span class="material-symbols-outlined text-3xl">chevron_right</span>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </main>
@@ -497,6 +253,55 @@
             </div>
         </div>
     </footer>
-   
 </body>
+<script>
+    
+    async function loadEvents() {
+        try{
+            const response = await fetch("http://127.0.0.1:8000/calendar/events");
+            const result = await response.json();
+            const container = document.getElementById("events-container");
+            container.innerHTML= "";
+            result.forEach((event)=>{
+                const cardHTML=`
+                <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
+                    <div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">${event.date.split(' ')[0]}</span>
+                        <span class="text-3xl font-black text-slate-800 dark:text-white">${event.date.split(' ')[1]}</span>
+                        <span class="text-[10px] text-slate-400">${event.date.split(' ')[2]}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex space-x-2 mb-2">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Featured</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Discussion</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">${event.event_title}</h3>
+                        <div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                                ${event.venue_name}
+                            </div>
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
+                                ${event.time}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
+                        <span class="material-symbols-outlined text-3xl">chevron_right</span>
+                    </div>
+                </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+            
+
+
+        }catch (error) {
+        console.error("Failed to load events:", error);
+        document.getElementById("events-container").innerHTML = "<p>Failed to load events.</p>";
+    }
+        
+    }
+</script>
 </html>

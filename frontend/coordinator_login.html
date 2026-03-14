@@ -49,13 +49,13 @@
             <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">COORDINATOR</span>
         </div>
         <div class="flex items-center gap-4">
+            <a id="goBack"class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+                <span class="material-icons-round text-sm">calendar_today</span>
+                Calendar
+            </a>
             <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
                 <span class="material-icons-round text-xl">dark_mode</span>
             </button>
-            <a class="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:text-white transition-opacity" href="#">
-                <span class="material-icons-round text-sm">arrow_back</span>
-                Back
-            </a>
         </div>
     </header>
 
@@ -107,9 +107,14 @@
     </main>
 </body>
 <script>
+    const back = document.getElementById('goBack');
     const passwordInput = document.getElementById('passwordEntered');
     const togglePassword = document.getElementById('visibilityToggle');
-
+if(back){
+    back.addEventListener("click",function(){
+        window.location.href="publiccalender.html";
+    })
+}
 if (togglePassword && passwordInput) {
     togglePassword.addEventListener('click', function () {
 
@@ -152,6 +157,18 @@ if (enteredOrNot) {
                 body: JSON.stringify(loginData)
             });
             console.log("Response received:", response.status);
+            const result = await response.json();
+            if(response.ok){
+                localStorage.setItem("token", result.access_token);
+                localStorage.setItem("userRole", result.role);
+                localStorage.setItem("club", result.username)
+                if(result.role=== "club_coordinator"){
+                    window.location.href = "Coordinator_homepage.html";
+                }
+                else{
+                    alert(result.detail || "Login Failed");
+                }
+            }
 
         } catch (e) {
             console.error("Fetch failed entirely:", e);

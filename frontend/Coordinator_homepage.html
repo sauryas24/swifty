@@ -161,7 +161,7 @@
 <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
 <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
 <div>
-<h1 class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Music Club</h1>
+<h1 id= "clubName"class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
 </div>
 <div class="flex items-center gap-4">
 <button class="relative p-2 text-slate-400 hover:text-pink-600 transition-colors">
@@ -285,4 +285,13 @@
 </div>
 </div>
 </main>
-</body></html>
+</body>
+<script>
+    const clubName = document.getElementById("clubName");
+    const enterName = localStorage.getItem("club");
+    const getToken = localStorage.getItem("token");
+    if(clubName){
+        clubName.textContent= enterName.toUpperCase();
+    }
+</script>
+</html>
