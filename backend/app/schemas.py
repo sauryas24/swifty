@@ -67,18 +67,17 @@ class PermissionLetterCreate(BaseModel):
     time: str
     reason: str
 
-# What the backend sends back after successful submission
 class PermissionLetterResponse(BaseModel):
-    id: int               # The generated Permission Letter ID
+    id: int
     event_name: str
-    date : str
+    date: str
+    time: str
+    reason: str
+    club_id: int
     status: str
-    
-    model_config = ConfigDict(from_attributes=True)    
-    rejection_comment: Optional[str] = None
-    model_config = ConfigDict(from_attributes=True)    
 
-# What the frontend sends when publishing an announcement
+    # Using the clean V2 syntax we fixed earlier!
+    model_config = ConfigDict(from_attributes=True)
 class AnnouncementCreate(BaseModel):
     message: str
     target_clubs: Optional[List[str]] = None
