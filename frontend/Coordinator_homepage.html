@@ -95,57 +95,28 @@
 </div>
 </div>
 <nav class="flex-1 px-4 py-4 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-2" href="#">
+<a id="dashboard"class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-2" href="#">
 <span class="material-icons-round text-xl text-slate-900 dark:text-white">dashboard</span>
 <span class="text-sm">Dashboard</span>
 </a>
-<details class="group space-y-1" open="">
-<summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-<div class="flex items-center gap-3">
-<span class="material-icons-round text-xl">account_balance_wallet</span>
-<span class="text-sm">Finances</span>
-</div>
-<span class="material-icons-round text-sm arrow-icon">expand_more</span>
-</summary>
-<div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-<a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                                Past Transactions
-                            </a>
-</div>
-</details>
-<details class="group space-y-1" open="">
-<summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-<div class="flex items-center gap-3">
-<span class="material-icons-round text-xl">description</span>
-<span class="text-sm">Permission Letter</span>
-</div>
-<span class="material-icons-round text-sm arrow-icon">expand_more</span>
-</summary>
-<div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-<a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                                New Request
-                            </a>
-</div>
-</details>
-<details class="group space-y-1" open="">
-<summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-<div class="flex items-center gap-3">
-<span class="material-icons-round text-xl">assignment</span>
-<span class="text-sm">MOU Form</span>
-</div>
-<span class="material-icons-round text-sm arrow-icon">expand_more</span>
-</summary>
-<div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-<a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                                New Request
-                            </a>
-</div>
-</details>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+
+<a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+    <span class="material-icons-round text-xl">account_balance_wallet</span>
+    <span class="text-sm">Finances</span>
+    </a>
+<a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+    <span class="material-icons-round text-xl">description</span>
+    <span class="text-sm">Permission Letter</span>
+    </a>
+<a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+    <span class="material-icons-round text-xl">assignment</span>
+    <span class="text-sm">MOU Form</span>
+    </a>
+<a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
 <span class="material-icons-round text-xl">event_seat</span>
 <span class="text-sm">Venue Booking</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
+<a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
 <span class="material-icons-round text-xl">history</span>
 <span class="text-sm">Past Requests</span>
 </a>
@@ -164,14 +135,9 @@
 <h1 id= "clubName"class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
 </div>
 <div class="flex items-center gap-4">
-<button class="relative p-2 text-slate-400 hover:text-pink-600 transition-colors">
-<span class="material-icons-round">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-</button>
-<div class="h-8 w-px bg-pink-100 dark:bg-pink-900/30"></div>
-<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-200 dark:border-slate-700">
-<span class="material-icons-round">person</span>
-</div>
+
+
+
 </div>
 </div>
 <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
@@ -179,7 +145,7 @@
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
 <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center bg-white dark:bg-slate-900">
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Recent Requests and Status</h3>
-<a class="text-sm text-slate-900 dark:text-white font-semibold hover:underline" href="#">View All</a>
+<a class="past_requests text-slate-900 dark:text-white font-semibold hover:underline" href="#">View All</a>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left">
@@ -225,25 +191,25 @@
 <div class="space-y-4 pb-12">
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Quick Access</h3>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-<a class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-pink-100 dark:border-pink-900/20 rounded-2xl shadow-sm hover:border-pink-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
+<a class="venue_booking flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-pink-100 dark:border-pink-900/20 rounded-2xl shadow-sm hover:border-pink-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
 <div class="w-14 h-14 rounded-2xl bg-pink-50 dark:bg-pink-900/30 text-pink-600 flex items-center justify-center mb-3 group-hover:bg-pink-600 group-hover:text-white transition-colors duration-300 shadow-sm">
 <span class="material-icons-round text-3xl">event_seat</span>
 </div>
 <span class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">Book Venue</span>
 </a>
-<a class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-purple-100 dark:border-purple-900/20 rounded-2xl shadow-sm hover:border-purple-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
+<a class="MOU_form flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-purple-100 dark:border-purple-900/20 rounded-2xl shadow-sm hover:border-purple-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
 <div class="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 flex items-center justify-center mb-3 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300 shadow-sm">
 <span class="material-icons-round text-3xl">assignment</span>
 </div>
 <span class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">New MOU</span>
 </a>
-<a class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/20 rounded-2xl shadow-sm hover:border-emerald-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
+<a class="permission_letter flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/20 rounded-2xl shadow-sm hover:border-emerald-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
 <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 flex items-center justify-center mb-3 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300 shadow-sm">
 <span class="material-icons-round text-3xl">description</span>
 </div>
 <span class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">New Permission</span>
 </a>
-<a class="flex flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-amber-100 dark:border-amber-900/20 rounded-2xl shadow-sm hover:border-amber-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
+<a class="finances flex-col items-center justify-center p-6 bg-white dark:bg-slate-900 border-2 border-amber-100 dark:border-amber-900/20 rounded-2xl shadow-sm hover:border-amber-500 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all group cursor-pointer" href="#">
 <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center mb-3 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300 shadow-sm">
 <span class="material-icons-round text-3xl">account_balance_wallet</span>
 </div>
@@ -278,7 +244,7 @@
 </div>
 </div>
 </div>
-<button class="w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
+<button id="Announcements"class="w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
                     View All Announcements
                 </button>
 </div>
@@ -287,6 +253,59 @@
 </main>
 </body>
 <script>
+    const finances = document.querySelectorAll(".finances");
+    const permission_letter= document.querySelectorAll(".permission_letter");
+    const MOU_form= document.querySelectorAll(".MOU_form");
+    const venue_booking= document.querySelectorAll(".venue_booking");
+    const past_requests=document.querySelectorAll(".past_requests");
+    const dashboard= document.getElementById("dashboard");
+    const Announcements= document.getElementById("Announcements")
+    if(dashboard){
+        dashboard.addEventListener("click", function(){
+            window.location.href= "Coordinator_homepage.html";
+        });
+    }
+    if(Announcements){
+        Announcements.addEventListener("click", function(){
+            window.location.href= "Announcements.html";
+        });
+    }
+    finances.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Finances.html";
+    });
+});
+MOU_form.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Mou.html";
+    });
+});
+venue_booking.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Venue_booking.html";
+    });
+});
+permission_letter.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "permissionletter.html";
+    });
+});
+
+past_requests.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "past requests.html";
+    });
+});
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
