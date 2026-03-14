@@ -40,7 +40,7 @@ class VenueBooking(Base):
     description = Column(String)
     permission_letter_id = Column(String)   # This will be provided to the user after the permission letter is approved.
     
-    status = Column(String, default="Pending FacAd") # Starts the approval chain
+    status = Column(String, default="Pending GenSec") # Starts the approval chain
     
     # Links the booking to the actual room details
     room = relationship("Room")
@@ -116,7 +116,7 @@ class MoURequest(Base):
 
     document_url = Column(String, nullable=False)
 
-    status = Column(String, default="pending_gensec")
+    status = Column(String, default="Pending Gensec")
     # pending_gensec
     # pending_faculty
     # pending_adsa
