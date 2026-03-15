@@ -113,92 +113,42 @@
                 </div>
             </div>
             <nav class="flex-1 px-4 py-4 space-y-1">
-                <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl mb-2 transition-colors" href="#">
+                <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">dashboard</span>
                     <span class="text-sm">Dashboard</span>
-                </a>
-
-                <details class="group space-y-1" open="">
-                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-                        <div class="flex items-center gap-3">
-                            <span class="material-icons-round text-xl">account_balance_wallet</span>
-                            <span class="text-sm">Finances</span>
-                        </div>
-                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
-                    </summary>
-                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                            Past Transactions
-                        </a>
-                    </div>
-                </details>
-
-                <details class="group space-y-1" open="">
-                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-                        <div class="flex items-center gap-3">
-                            <span class="material-icons-round text-xl">description</span>
-                            <span class="text-sm">Permission Letter</span>
-                        </div>
-                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
-                    </summary>
-                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                            New Request
-                        </a>
-                    </div>
-                </details>
-
-                <details class="group space-y-1" open="">
-                    <summary class="w-full flex items-center justify-between px-4 py-3 text-slate-800 dark:text-slate-200 font-medium bg-pink-50/50 dark:bg-pink-900/5 hover:bg-pink-100 dark:hover:bg-pink-900/20 rounded-xl transition-colors cursor-pointer">
-                        <div class="flex items-center gap-3">
-                            <span class="material-icons-round text-xl">assignment</span>
-                            <span class="text-sm">MOU Form</span>
-                        </div>
-                        <span class="material-icons-round text-sm arrow-icon">expand_more</span>
-                    </summary>
-                    <div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-                        <a class="block px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">
-                            New Request
-                        </a>
-                    </div>
-                </details>
-
-                <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mt-2 transition-colors" href="#">
-                    <span class="material-icons-round text-xl text-slate-900 dark:text-white">event_seat</span>
-                    <span class="text-sm">Venue Booking</span>
-                </a>
+                    </a>
                 
-                <a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-                    <span class="material-icons-round text-xl">history</span>
-                    <span class="text-sm">Past Requests</span>
+                <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                    <span class="material-icons-round text-xl">account_balance_wallet</span>
+                    <span class="text-sm">Finances</span>
+                    </a>
+                <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                    <span class="material-icons-round text-xl">description</span>
+                    <span class="text-sm">Permission Letter</span>
+                    </a>
+                <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                    <span class="material-icons-round text-xl">assignment</span>
+                    <span class="text-sm">MOU Form</span>
+                    </a>
+                <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">event_seat</span>
+                <span class="text-sm">Venue Booking</span>
                 </a>
-            </nav>
-            <div class="p-4 border-t border-pink-50 dark:border-pink-900/10">
-                <button class="w-full flex items-center justify-center gap-2 py-2 text-sm text-slate-500 hover:text-pink-600 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
-                    <span class="material-icons-round text-sm">dark_mode</span>
-                    <span>Switch Theme</span>
-                </button>
-            </div>
+                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
+                <span class="material-icons-round text-xl">history</span>
+                <span class="text-sm">Past Requests</span>
+                </a>
+                </nav>
+            
         </div>
     </aside>
 
     <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
         
-        <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-            <div>
-                <h1 class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Venue Booking</h1>
-                <p class="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Create a new booking request</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <button class="relative p-2 text-slate-400 hover:text-pink-600 transition-colors">
-                    <span class="material-icons-round">notifications</span>
-                    <span class="absolute top-2 right-2 w-2 h-2 bg-pink-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-                </button>
-                <div class="h-8 w-px bg-pink-100 dark:bg-pink-900/30"></div>
-                <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-200 dark:border-slate-700">
-                    <span class="material-icons-round">person</span>
-                </div>
-            </div>
+        <div class="bg-white dark:bg-surface-dark px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-border-light dark:border-gray-800 sticky top-0 z-10">
+            <h1 id="clubName"class="text-text-main dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
+        </div>
+            
         </div>
 
         <div class="px-8 pb-32 max-w-6xl mx-auto relative z-10">
@@ -413,4 +363,61 @@
         </div>
     </main>
 </body>
+<script>
+    const finances = document.querySelectorAll(".finances");
+    const permission_letter= document.querySelectorAll(".permission_letter");
+    const MOU_form= document.querySelectorAll(".MOU_form");
+    const venue_booking= document.querySelectorAll(".venue_booking");
+    const past_requests=document.querySelectorAll(".past_requests");
+    const dashboard= document.getElementById("dashboard");
+    
+    if(dashboard){
+        dashboard.addEventListener("click", function(){
+            window.location.href= "Coordinator_homepage.html";
+        });
+    }
+    
+    finances.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Finances.html";
+    });
+});
+MOU_form.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Mou.html";
+    });
+});
+venue_booking.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "Venue_booking.html";
+    });
+});
+permission_letter.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "permissionletter.html";
+    });
+});
+
+past_requests.forEach((button) => {
+    button.addEventListener("click", function(event) {
+
+        event.preventDefault(); 
+        window.location.href = "past requests.html";
+    });
+});
+    const clubName = document.getElementById("clubName");
+    const enterName = localStorage.getItem("club");
+    const getToken = localStorage.getItem("token");
+    if(clubName){
+        clubName.textContent= enterName.toUpperCase();
+    }
+</script>
 </html>
