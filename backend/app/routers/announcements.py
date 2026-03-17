@@ -83,10 +83,12 @@ def get_announcements(
 
     # Query both the Announcement AND the sender's username at the same time
     announcements_with_senders = db.query(
-        models.Announcement, 
-        models.User.username.label("sender_username")
+    models.Announcement, 
+    models.User.username.label("sender_username")
     ).join(
-        models.User, models.Announcement.sender_id == models.User.id
+    models.User, models.Announcement.sender_id == models.User.id
+    ).order_by(
+    models.Announcement.id.desc()   # or created_at.desc()
     ).all()
 
     relevant_announcements = []
