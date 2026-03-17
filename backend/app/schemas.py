@@ -81,6 +81,7 @@ class PermissionLetterResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 class AnnouncementCreate(BaseModel):
     message: str
+    heading: str 
     target_clubs: Optional[List[str]] = None
     # Example: ["robotics", "coding", "drama"]
 
@@ -89,6 +90,7 @@ class AnnouncementCreate(BaseModel):
 class AnnouncementResponse(BaseModel):
     id: int
     sender_username: str
+    heading: str
     message: str
     target_clubs: Optional[str]
     timestamp: datetime

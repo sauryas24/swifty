@@ -29,6 +29,7 @@ def publish_announcement(
     
     new_announcement = models.Announcement(
         sender_id=current_user.id,
+        heading=announcement_data.heading,
         message=announcement_data.message,
         target_clubs=target_string
     )
@@ -60,6 +61,7 @@ def publish_announcement(
     return {
         "id": new_announcement.id,
         "sender_username": current_user.username,
+        "heading": new_announcement.heading, 
         "message": new_announcement.message,
         "target_clubs": announcement_data.target_clubs
     }
@@ -100,6 +102,7 @@ def get_announcements(
             relevant_announcements.append({
                 "id": ann.id,
                 "sender_username": sender_username,
+                "heading": ann.heading, 
                 "message": ann.message,
                 "target_clubs": []
             })
@@ -110,6 +113,7 @@ def get_announcements(
                 relevant_announcements.append({
                     "id": ann.id,
                     "sender_username": sender_username,
+                    "heading": ann.heading, 
                     "message": ann.message,
                     "target_clubs": clubs
                 })

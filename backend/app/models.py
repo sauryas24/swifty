@@ -98,6 +98,7 @@ class Announcement(Base):
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     message = Column(String, nullable=False)
+    heading = Column(String, nullable=False)
     
     # Since SQLite doesn't natively support arrays easily, we store target_clubs as a comma-separated string
     target_clubs = Column(String, nullable=True) 
