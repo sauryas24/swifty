@@ -76,6 +76,7 @@ class PermissionLetterResponse(BaseModel):
     reason: str
     club_id: int
     status: str
+    generated_id: Optional[str] = None   # Populated once fully approved
 
     # Using the clean V2 syntax we fixed earlier!
     model_config = ConfigDict(from_attributes=True)

@@ -87,6 +87,9 @@ class PermissionLetter(Base):
     # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
     comments = Column(String, nullable=True) # Stores the rejection message
     
+    # Auto-generated upon final approval, e.g. "PL-2026-0001"
+    generated_id = Column(String, nullable=True, unique=True)
+
     # Relationship to fetch club details 
     club = relationship("User")
 
