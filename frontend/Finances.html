@@ -124,13 +124,13 @@
 <div class="bg-white rounded-2xl p-8 border border-slate-200 card-shadow">
 <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
 <div class="flex items-baseline gap-4 mb-6">
-<span class="text-4xl font-display font-bold text-slate-900">₹2,40,000</span>
-<span class="text-xl font-medium text-slate-400">/ ₹5,00,000</span>
+<span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">₹2,40,000</span>
+<span id="totalBudget" class="text-xl font-medium text-slate-400">/ ₹5,00,000</span>
 </div>
 <div class="relative w-full h-4 bg-slate-100 rounded-full overflow-hidden mb-3">
-<div class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 48%"></div>
+<div id="progressBar" class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 48%"></div>
 </div>
-<p class="text-xs font-bold text-slate-500 uppercase tracking-tight">48% of annual budget utilized</p>
+<p id="budgetUtilized" class="text-xs font-bold text-slate-500 uppercase tracking-tight">48% of annual budget utilized</p>
 </div>
 <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
 <div class="p-6 border-b border-slate-50 flex justify-between items-center">
@@ -147,7 +147,7 @@
 <th class="px-6 py-4 text-center">Receipt Link</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-100">
+<tbody id="transactionsTable" class="divide-y divide-slate-100">
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 24, 2026</td>
 <td class="px-6 py-5 text-sm font-bold text-slate-800">New PA System Rental</td>
@@ -240,7 +240,70 @@ past_requests.forEach((button) => {
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
     if(clubName){
-        clubName.textContent= enterName.toUpperCase();
+        clubName.textContent= enterName? enterName.toUpperCase(): "MUSIC CLUB";
     }
+
+async function loadFinances() {
+    try {
+        // NOTE: The finances API requires an integer club_id. 
+        // If you don't have it in localStorage yet, we will default to 1 (Music Club) for testing.
+        const clubId = localStorage.getItem("clubId") || 1; 
+        
+        const response = await fetch(`http://127.0.0.1:8000/finances/${clubId}`);
+        if (!response.ok) throw new Error("Failed to fetch finances");
+        
+        const data = await response.json();
+
+        // 1. Update the Budget Numbers
+        // Using toLocaleString('en-IN') formats the numbers with Indian commas (e.g., 1,50,000)
+        document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
+        document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
+        
+        // 2. Update the Progress Bar
+        const roundedPercentage = Math.round(data.utilization_percentage);
+        document.getElementById("progressBar").style.width = `${roundedPercentage}%`;
+        document.getElementById("budgetUtilized").textContent = `${roundedPercentage}% of annual budget utilized`;
+
+        // 3. Update the Transactions Table
+        const tableBody = document.getElementById("transactionsTable");
+        tableBody.innerHTML = ""; // Clear the "Loading..." text
+        
+        if (data.transactions.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">No transactions found.</td></tr>`;
+            return;
+        }
+
+        data.transactions.forEach((tx) => {
+            // Format the date to look like "Feb 24, 2026"
+            const dateObj = new Date(tx.timestamp || new Date()); 
+            const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+            
+            // Format the URL so the button actually opens the PDF!
+            const receiptUrl = `http://127.0.0.1:8000/${tx.receipt_url}`;
+
+            const rowHTML = `
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="px-6 py-5 text-sm font-medium text-slate-500">${formattedDate}</td>
+                    <td class="px-6 py-5 text-sm font-bold text-slate-800">${tx.description}</td>
+                    <td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">${tx.amount.toLocaleString('en-IN')}</td>
+                    <td class="px-6 py-5 text-center">
+                        <button onclick="window.open('${receiptUrl}', '_blank')" class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors" title="View Receipt">
+                            <span class="material-symbols-outlined text-xl">visibility</span>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tableBody.innerHTML += rowHTML;
+        });
+
+    } catch (error) {
+        console.error("Error loading finances:", error);
+        document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500">Failed to load financial data.</td></tr>`;
+    }
+}
+
+// Call the function when the script runs!
+loadFinances();
+
 </script>
 </html>
