@@ -221,29 +221,14 @@
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Announcements</h3>
 <span class="material-icons-round text-slate-400">campaign</span>
 </div>
-<div class="space-y-4">
-<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
-<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Revised Booking Policy for OAT</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">New guidelines for booking the Open Air Theatre during peak festival months have been issued.</p>
-<div class="flex items-center justify-between mt-3">
-<p class="text-[10px] text-slate-400 flex items-center gap-1">
-<span class="material-icons-round text-[12px]">schedule</span> 2 hours ago
-                            </p>
+<div id ="addAnnouncements">
+Loading Announcements...
 </div>
+
 </div>
-<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
-<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Equipment Audit Scheduled</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">The annual equipment inventory check will take place this weekend.</p>
-<div class="flex items-center justify-between mt-3">
-<p class="text-[10px] text-slate-400 flex items-center gap-1">
-<span class="material-icons-round text-[12px]">schedule</span> Yesterday
-                            </p>
-</div>
-</div>
-</div>
-<button id="Announcements"class="w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
-                    View All Announcements
-                </button>
+<button id="Announcements"class="bg-white w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
+View All Announcements
+</button>
 </div>
 </div>
 </div>
@@ -257,6 +242,43 @@
     const past_requests=document.querySelectorAll(".past_requests");
     const dashboard= document.getElementById("dashboard");
     const Announcements= document.getElementById("Announcements")
+    
+    async function addAnnouncements() {
+        try{
+            const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announements");
+            const result = await response.json();
+            const container = document.getElementById("addAnnouncements");
+            container.innerHTML="";
+            const enterName= localStorage.getItem("club");
+            const firstTwo = result.slice(0,2);
+            const filteredAnnouncements = result
+            .filter(announcement => announcement.target_clubs.includes(enterName)) 
+            .slice(0, 2);
+            filteredAnnouncements.forEach((announcement)=>{
+                const cardHTML= `
+                <div class="space-y-4">
+                <div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
+                <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm"></h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">${announcement.message}</p>
+                <div class="flex items-center justify-between mt-3">
+                <p class="text-[10px] text-slate-400 flex items-center gap-1">
+                <span class="material-icons-round text-[12px]">schedule</span> ${announcement.datetime}
+                </p>
+                </div>
+                </div>
+
+                `;
+                container.innerHTML+= cardHTML;
+            
+            });
+        }
+        catch(e){
+        console.error("Failed to load announcements:", error);
+        document.getElementById("insertAnnouncement").innerHTML = "<p>Failed to load events.</p>";
+    }
+        
+    }
+    addAnnouncements();
     if(dashboard){
         dashboard.addEventListener("click", function(){
             window.location.href= "Coordinator_homepage.html";
