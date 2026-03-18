@@ -15,7 +15,12 @@ from .routers import finances
 from .routers import permission
 from .routers import MoU
 from .routers import calendar # Add this to your imports
+<<<<<<< HEAD
 #from .routers import otp
+=======
+# from .routers import otp
+
+>>>>>>> dc627ee76274fda5da8c91628a421e0113ebc3bc
 
 
 # Add this below your existing app.include_router() calls
@@ -48,7 +53,11 @@ app.include_router(approvals.router)
 app.include_router(requests.router)
 app.include_router(finances.router)
 app.include_router(permission.router)
+<<<<<<< HEAD
 #app.include_router(otp.router)
+=======
+# app.include_router(otp.router)
+>>>>>>> dc627ee76274fda5da8c91628a421e0113ebc3bc
 
 app.include_router(calendar.router)
 

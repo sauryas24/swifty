@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 from .. import database, models, schemas
 from ..utils import security, email_service
@@ -166,3 +167,147 @@ def process_mou_approval(
             
     else:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
+
+
+# ---------------------------------------------------------
+# 3. PERMISSION LETTER APPROVALS
+# ---------------------------------------------------------
+
+def _generate_permission_letter_id(db: Session) -> str:
+    """
+    Generates a unique, human-readable ID for an approved permission letter.
+    Format: PL-{YEAR}-{4-digit-sequence}
+    Example: PL-2026-0001, PL-2026-0042
+    """
+    year = datetime.now().year
+    prefix = f"PL-{year}-"
+
+    # Count how many letters have already been approved this year
+    approved_this_year = (
+        db.query(models.PermissionLetter)
+        .filter(models.PermissionLetter.generated_id.like(f"{prefix}%"))
+        .count()
+    )
+
+    sequence = approved_this_year + 1
+    return f"{prefix}{sequence:04d}"   # Zero-padded to 4 digits: PL-2026-0001
+
+
+@router.put("/permission/{letter_id}/process")
+def process_permission_approval(
+    letter_id: int,
+    action_data: schemas.ApprovalAction,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    """Processes an approve/reject action for a Permission Letter."""
+    letter = db.query(models.PermissionLetter).filter(
+        models.PermissionLetter.id == letter_id
+    ).first()
+
+    if not letter:
+        raise HTTPException(status_code=404, detail="Permission letter not found")
+
+    current_status = letter.status
+
+    # Security Check
+    required_role = ROLE_AUTHORIZATION_MAP.get(current_status)
+    if not required_role:
+        raise HTTPException(
+            status_code=400,
+            detail="This request is already fully processed or rejected."
+        )
+    if current_user.role != required_role:
+        raise HTTPException(
+            status_code=403,
+            detail=f"Not authorized. Current status requires role: {required_role}"
+        )
+
+    # Handle Rejection
+    if action_data.action == "reject":
+        letter.status = f"Rejected by {current_user.role}"
+        letter.comments = action_data.message
+        db.commit()
+
+        email_service.send_email(
+            to="coordinator@institute.edu",
+            subject=f"Update: Permission Letter '{letter.event_name}' Rejected",
+            body=(
+                f"Your permission letter for '{letter.event_name}' was rejected "
+                f"by {current_user.role}. Reason: {action_data.message}"
+            )
+        )
+        return {"message": "Permission letter rejected successfully."}
+
+    # Handle Approval
+    elif action_data.action == "approve":
+        if current_status not in SHARED_PIPELINE:
+            raise HTTPException(
+                status_code=400,
+                detail="Request is already fully processed or rejected."
+            )
+
+        next_status = SHARED_PIPELINE[current_status]
+        letter.status = next_status
+        db.commit()
+
+        # ── Final Approval: generate the Permission Letter ID ──
+        if next_status == "Approved":
+            generated_id = _generate_permission_letter_id(db)
+            letter.generated_id = generated_id
+            db.commit()
+
+            email_service.send_email(
+                to="coordinator@institute.edu",
+                subject=f"Permission Letter '{letter.event_name}' Approved",
+                body=(
+                    f"Your permission letter for '{letter.event_name}' has been fully approved.\n\n"
+                    f"Your Permission Letter ID is: {generated_id}\n\n"
+                    f"Please use this ID when submitting a Venue Booking request."
+                )
+            )
+            return {
+                "message": "Final approval granted. Permission Letter ID generated.",
+                "generated_id": generated_id
+            }
+
+        # ── Intermediate Approval ──
+        else:
+            email_service.send_email(
+                to="coordinator@institute.edu",
+                subject=f"Progress: Permission Letter '{letter.event_name}' moved to {next_status}",
+                body=(
+                    f"Your permission letter was approved by {current_user.role} "
+                    f"and is now {next_status}."
+                )
+            )
+            return {"message": f"Permission letter approved and moved to {next_status}."}
+
+    else:
+        raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
+
+
+# ---------------------------------------------------------
+# 4. HELPER: Look up a Permission Letter by its generated ID
+# ---------------------------------------------------------
+@router.get("/permission/lookup/{generated_id}", response_model=schemas.PermissionLetterResponse)
+def lookup_permission_letter(
+    generated_id: str,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    """
+    Validates a Permission Letter ID (e.g. PL-2026-0001) before a venue booking is submitted.
+    Returns the letter details so the frontend can confirm it belongs to the right event.
+    """
+    letter = db.query(models.PermissionLetter).filter(
+        models.PermissionLetter.generated_id == generated_id
+    ).first()
+
+    if not letter:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No approved permission letter found with ID '{generated_id}'."
+        )
+
+    return letter
