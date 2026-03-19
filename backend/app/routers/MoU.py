@@ -32,19 +32,8 @@ def submit_mou(
 
     return new_mou
 
-# Endpoint 2: Get all MoU requests
-@router.get("/all", response_model=list[schemas.MoUResponse])
-def get_all_mous(
-    db: Session = Depends(database.get_db),
-    current_user: models.User = Depends(security.get_current_user)
-):
-    """
-    Fetches all MoU requests from the database.
-    """
-    mous = db.query(models.MoURequest).all()
-    return mous
 
-# Endpoint 3: Get specific MoU status
+# Endpoint 2: Get specific MoU status
 @router.get("/{mou_id}", response_model=schemas.MoUResponse)
 def get_mou(
     mou_id: int,

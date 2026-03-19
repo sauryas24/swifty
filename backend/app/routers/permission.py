@@ -43,27 +43,9 @@ def submit_permission_letter(
     return new_letter
 
 
-# ============================================================
-# ENDPOINT 2: Get all permission letters for the logged-in club
-# ============================================================
-@router.get("/club", response_model=List[schemas.PermissionLetterResponse])
-def get_my_letters(
-    db: Session = Depends(database.get_db),
-    current_user: models.User = Depends(security.get_current_user)
-):
-    """
-    Returns all permission letters submitted by the currently logged-in coordinator.
-    Used for their "Past Requests" history page.
-    """
-    letters = db.query(models.PermissionLetter).filter(
-        models.PermissionLetter.club_id == current_user.id
-    ).order_by(models.PermissionLetter.id.desc()).all()
-
-    return letters
-
 
 # ============================================================
-# ENDPOINT 3: Get a single permission letter by ID
+# ENDPOINT 2: Get a single permission letter by ID
 # ============================================================
 @router.get("/{letter_id}", response_model=schemas.PermissionLetterResponse)
 def get_single_letter(letter_id: int, db: Session = Depends(database.get_db)):
