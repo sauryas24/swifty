@@ -79,21 +79,29 @@ def submit_venue_booking(
         )
 
     # --- 2. Permission Letter Validation (CRITICAL SECURITY STEP) ---
-    # We must ensure the permission letter exists AND belongs to the logged-in club
+    
+    # UPDATE: Search using generated_id
     linked_permission = db.query(models.PermissionLetter).filter(
-        models.PermissionLetter.id == booking_data.permission_letter_id
+        models.PermissionLetter.generated_id == booking_data.permission_letter_id
     ).first()
 
     if not linked_permission:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail="Permission letter not found."
+            detail="Permission letter not found or invalid ID."
         )
         
     if linked_permission.club_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="You cannot book a venue using another club's permission letter."
+        )
+        
+    # NEW: Ensure the letter is actually approved before letting them book!
+    if linked_permission.status != "Approved":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="This permission letter has not been fully approved yet."
         )
 
     # --- 3. Concurrency / Conflict Check ---
