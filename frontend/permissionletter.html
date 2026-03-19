@@ -120,39 +120,24 @@
                         <p class="text-[#876475] dark:text-gray-400 mt-2 text-sm">Submit a new request for an upcoming club event</p>
                     </div>
                     <form class="flex flex-col gap-6">
-                        <div class="flex flex-col md:flex-row gap-6 w-full">
-                            <label class="flex flex-col flex-1 gap-2">
-                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Council Name</span>
-                                <div class="relative">
-                                    <input class="w-full rounded-xl text-[#876475] border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-white/5 h-14 px-4 text-base font-normal focus:outline-none focus:ring-0 placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g. Media and Cultural Council" type="text" />
-                                    
-                                </div>
-                            </label>
-                            <label class="flex flex-col flex-1 gap-2">
-                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Club Name</span>
-                                <div class="relative">
-                                    <input class="w-full rounded-xl text-[#876475] border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-white/5 h-14 px-4 text-base font-normal focus:outline-none focus:ring-0 placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g. Music Club" type="text" />
-                                    
-                                </div>
-                            </label>
-                        </div>
+                        
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Name of Event</label>
-                            <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
+                            <input id="eventName" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
                         </div>
                         
                         <div class="flex flex-col md:flex-row gap-6 w-full">
                             <label class="flex flex-col flex-1 gap-2 relative">
                                 <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Date</span>
                                 <div class="relative">
-                                    <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="date"/>
+                                    <input id="eventDate"class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="date"/>
                                     <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">calendar_month</span>
                                 </div>
                             </label>
                             <label class="flex flex-col flex-1 gap-2 relative">
                                 <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Time</span>
                                 <div class="relative">
-                                    <input class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="time"/>
+                                    <input id="eventTime"class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="time"/>
                                     <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">schedule</span>
                                 </div>
                             </label>
@@ -160,13 +145,13 @@
 
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Reason to Conduct Event</label>
-                            <textarea class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
+                            <textarea id="reason" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
                         </div>
                         <div class="pt-4 flex justify-end gap-3">
-                            <button class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
+                            <button type ="reset"id="cancelButton"class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
                                 Cancel
                             </button>
-                            <button class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
+                            <button id="submitButton" class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
                                 <span>Submit Request</span>
                                 <span class="material-symbols-outlined text-lg">send</span>
                             </button>
@@ -261,6 +246,40 @@ past_requests.forEach((button) => {
     if(clubName){
         clubName.textContent= enterName.toUpperCase();
     }
+
+const submitButton=document.getElementById("submitButton");
+const cancelButton=document.getElementById("cancelButton");
+if(submitButton){
+    submitButton.addEventListener("click", async(event)=>{
+        const eventName= document.getElementById("eventName");
+        const eventDate= document.getElementById("eventDate");
+        const eventTime= document.getElementById("eventTime");
+        const reason= document.getElementById("reason");
+        const getToken = localStorage.getItem("token");
+        const PermissionLetter= {
+            event_name: eventName.value,
+            date: eventDate.value,
+            time: eventTime.value,
+            reason: reason.value
+        };
+        try{
+            const response = await fetch("http://127.0.0.1:8000/api/permission/submit",{
+                method: "POST",
+                headers: { "Content-Type": "application/json" ,
+                    "Authorization": `Bearer ${getToken}`
+                },
+                body: JSON.stringify(PermissionLetter)
+            });
+            if(response.ok){
+                alert("Permission letter sent!");
+            }
+        }
+        catch(e){
+            console.error("Fetch failed entirely:", e);
+        }
+        
+    });
+}
 </script>
 </body>
 </html>
