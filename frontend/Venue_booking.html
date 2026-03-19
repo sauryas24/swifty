@@ -164,7 +164,7 @@
                     <div class="flex flex-col lg:flex-row gap-8 items-start">
                         <div class="flex-1 max-w-sm mx-auto lg:mx-0 w-full">
                             <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">Select Date</h4>
-                            <div class="bg-baby-pink dark:bg-slate-900/50 p-4 rounded-2xl border border-pink-100 dark:border-pink-900/20">
+                            <!--<div class="bg-baby-pink dark:bg-slate-900/50 p-4 rounded-2xl border border-pink-100 dark:border-pink-900/20">
                                 <div class="flex items-center justify-between mb-4">
                                     <button class="p-1 hover:bg-pink-200 dark:hover:bg-slate-800 rounded-full transition-colors" type="button">
                                         <span class="material-icons-round text-slate-700 dark:text-slate-300">chevron_left</span>
@@ -198,6 +198,9 @@
                                     <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">10</button>
                                     <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">11</button>
                                 </div>
+                            </div>-->
+                            <div class="relative">
+                                <input id="booking-date" class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white h-14 px-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 shadow-sm transition-all dark:[color-scheme:dark] cursor-pointer" type="date"/>
                             </div>
                         </div>
 
@@ -234,7 +237,7 @@
                                 <span class="material-icons-round text-[20px]">check_circle</span>
                                 <h4 class="text-sm font-bold uppercase tracking-wider">Available Rooms</h4>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <div id="available-rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                 <label class="cursor-pointer relative group h-full">
                                     <input checked="" class="peer sr-only" name="room" type="radio"/>
                                     <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
@@ -274,7 +277,7 @@
                                 <span class="material-icons-round text-[20px]">block</span>
                                 <h4 class="text-sm font-bold uppercase tracking-wider">Unavailable Rooms</h4>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <div id="unavailable-rooms-grid"class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="relative opacity-70 hover:opacity-100 transition-opacity">
                                     <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
                                         <div class="flex justify-between items-start mb-2">
@@ -363,7 +366,7 @@
         </div>
     </main>
 </body>
-<script>
+<!--<script>
     // ==========================================
     // 1. NAVIGATION & INITIALIZATION
     // ==========================================
@@ -595,5 +598,215 @@
             submitBtn.disabled = false;
         }
     });
-</script>
+</script>-->
+<script>
+// ==========================================
+    // 1. NAVIGATION & INITIALIZATION
+    // ==========================================
+    const finances = document.querySelectorAll(".finances");
+    const permission_letter = document.querySelectorAll(".permission_letter");
+    const MOU_form = document.querySelectorAll(".MOU_form");
+    const venue_booking = document.querySelectorAll(".venue_booking");
+    const past_requests = document.querySelectorAll(".past_requests");
+    const dashboard = document.getElementById("dashboard");
+    
+    if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
+    finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
+    MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
+    venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Venue_booking.html"; }));
+    permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
+    past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
+
+    const clubName = document.getElementById("clubName");
+    const enterName = localStorage.getItem("club");
+    const getToken = localStorage.getItem("token"); // Critical for our API calls!
+    
+    if(clubName && enterName){
+        clubName.textContent = enterName.toUpperCase();
+    }
+
+    // ==========================================
+    // 2. STATE MANAGEMENT & SETUP
+    // ==========================================
+    let selectedDate = null;
+    let selectedTime = null;
+    const API_BASE_URL = "http://localhost:8000/api/venues"; 
+
+    // ==========================================
+    // 3. DATE & TIME SELECTION LOGIC
+    // ==========================================
+    
+    // --- Native Date Picker Logic ---
+    const dateInput = document.getElementById('booking-date');
+    if (dateInput) {
+        // Set the minimum date to today so users can't book in the past
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+
+        dateInput.addEventListener('change', (e) => {
+            selectedDate = e.target.value; // Outputs "YYYY-MM-DD" natively
+            checkAvailability(); 
+        });
+    }
+
+    // --- Cleaned-up Time Buttons Logic ---
+    const timeButtons = document.querySelectorAll('.grid.grid-cols-2 button:not(.cursor-not-allowed)');
+    timeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Reset all time buttons to default styling
+            timeButtons.forEach(b => {
+                b.className = "px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all";
+            });
+            
+            // Highlight the clicked time slot
+            e.target.className = "px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50";
+            
+            selectedTime = e.target.innerText;
+            checkAvailability(); 
+        });
+    });
+
+    // ==========================================
+    // 4. FETCH & RENDER ROOM AVAILABILITY
+    // ==========================================
+    async function checkAvailability() {
+        // Only fetch if BOTH date and time have been selected by the user
+        if(!selectedDate || !selectedTime) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/availability?date=${selectedDate}&time=${selectedTime}`);
+            if(!response.ok) throw new Error("Failed to fetch rooms");
+            
+            const data = await response.json();
+            renderRooms(data.available_rooms, data.unavailable_rooms);
+        } catch (error) {
+            console.error("Error fetching availability:", error);
+            // alert("Could not check room availability. Is your backend running?");
+        }
+    }
+
+    function renderRooms(available, unavailable) {
+        // Using the reliable IDs we added to the HTML
+        const availableContainer = document.getElementById('available-rooms-grid');
+        const unavailableContainer = document.getElementById('unavailable-rooms-grid');
+        
+        if (!availableContainer || !unavailableContainer) return;
+
+        availableContainer.innerHTML = '';
+        unavailableContainer.innerHTML = '';
+
+        // Render Clickable Available Rooms
+        available.forEach(room => {
+            availableContainer.innerHTML += `
+                <label class="cursor-pointer relative group h-full">
+                    <input class="peer sr-only" name="room" type="radio" value="${room.id}"/>
+                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">${room.name}</h4>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Campus Venue</p>
+                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                            <span class="material-icons-round text-[16px]">group</span>
+                            <span>Capacity: ${room.capacity}</span>
+                        </div>
+                        <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
+                            <span class="material-icons-round fill-current">check_circle</span>
+                        </div>
+                    </div>
+                </label>
+            `;
+        });
+
+        // Render Disabled Unavailable Rooms
+        unavailable.forEach(room => {
+            unavailableContainer.innerHTML += `
+                <div class="relative opacity-70">
+                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">${room.name}</h4>
+                            <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
+                        </div>
+                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Campus Venue</p>
+                        <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
+                            <span class="material-icons-round text-[14px] mt-0.5">lock</span>
+                            Booked for this slot
+                        </div>
+                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                            <span class="material-icons-round text-[16px]">group</span>
+                            <span>Capacity: ${room.capacity}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // ==========================================
+    // 5. SUBMIT BOOKING REQUEST TO BACKEND
+    // ==========================================
+    const submitBtn = document.getElementById('submit-booking-btn');
+    
+    if (submitBtn) {
+        submitBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            // Gather all the data from the form
+            const selectedRoomRadio = document.querySelector('input[name="room"]:checked');
+            const eventTitle = document.getElementById('event-title').value;
+            const eventType = document.getElementById('event-type').value;
+            const attendees = parseInt(document.getElementById('attendees').value) || 0;
+            const description = document.getElementById('details').value;
+            const permissionId = document.getElementById('permission-id').value; 
+
+            // Basic Validation
+            if(!selectedDate || !selectedTime) return alert("Please select a date and time.");
+            if(!selectedRoomRadio) return alert("Please select an available room from the list.");
+            if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
+
+            // Create the payload matching your schemas.BookingCreate
+            const bookingData = {
+                date: selectedDate,
+                time: selectedTime,
+                room_id: parseInt(selectedRoomRadio.value),
+                event_title: eventTitle,
+                event_type: eventType,
+                expected_attendees: attendees,
+                description: description,
+                permission_letter_id: permissionId
+            };
+
+            // Change button to loading state
+            submitBtn.innerHTML = `<span>Submitting...</span><span class="material-icons-round animate-spin">refresh</span>`;
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/book`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${getToken}` 
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+
+                if(response.ok) {
+                    alert(`Success! ${result.message}`);
+                    window.location.href = "past requests.html"; 
+                } else {
+                    alert(`Error: ${result.detail}`);
+                }
+            } catch (error) {
+                console.error("Booking submission error:", error);
+                alert("A network error occurred. Please try again.");
+            } finally {
+                // Restore button state
+                submitBtn.innerHTML = `<span>Submit Booking Request</span><span class="material-icons-round text-[18px]">send</span>`;
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    </script>
 </html>
