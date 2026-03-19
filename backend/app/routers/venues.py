@@ -141,32 +141,3 @@ def submit_venue_booking(
         "status": new_booking.status
     }
 
-# ==========================================
-# 3. GET MY BOOKINGS (Protected Route)
-# ==========================================
-# (Template for how you can fetch specific data for a single user in other routers)
-@router.get("/my-bookings")
-def get_my_venue_bookings(
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    """
-    Fetches all venue bookings associated with the currently logged-in user.
-    """
-    # 1. First get all permission letters owned by the user
-    user_perm_ids = db.query(models.PermissionLetter.id).filter(
-        models.PermissionLetter.club_id == current_user.id
-    ).all()
-    
-    # Flatten the list of tuples returned by SQLAlchemy
-    perm_id_list = [str(pid[0]) for pid in user_perm_ids]
-
-    if not perm_id_list:
-        return []
-
-    # 2. Now get all venue bookings linked to those permission letters
-    my_bookings = db.query(models.VenueBooking).filter(
-        models.VenueBooking.permission_letter_id.in_(perm_id_list)
-    ).all()
-
-    return my_bookings
