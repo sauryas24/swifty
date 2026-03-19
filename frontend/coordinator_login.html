@@ -161,7 +161,8 @@ if (enteredOrNot) {
             if(response.ok){
                 localStorage.setItem("token", result.access_token);
                 localStorage.setItem("userRole", result.role);
-                localStorage.setItem("club", result.username)
+                localStorage.setItem("club", result.username);
+                localStorage.setItem("club_id", result.club_id);
                 if(result.role=== "club_coordinator"){
                     window.location.href = "Coordinator_homepage.html";
                 }

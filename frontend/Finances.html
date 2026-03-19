@@ -124,13 +124,13 @@
 <div class="bg-white rounded-2xl p-8 border border-slate-200 card-shadow">
 <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
 <div class="flex items-baseline gap-4 mb-6">
-<span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">₹2,40,000</span>
-<span id="totalBudget" class="text-xl font-medium text-slate-400">/ ₹5,00,000</span>
+<span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">Loading...</span>
+<span id="totalBudget" class="text-xl font-medium text-slate-400">/ Loading...</span>
 </div>
 <div class="relative w-full h-4 bg-slate-100 rounded-full overflow-hidden mb-3">
 <div id="progressBar" class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 48%"></div>
 </div>
-<p id="budgetUtilized" class="text-xs font-bold text-slate-500 uppercase tracking-tight">48% of annual budget utilized</p>
+<p id="budgetUtilized" class="text-xs font-bold text-slate-500 uppercase tracking-tight">X% of annual budget utilized</p>
 </div>
 <div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
 <div class="p-6 border-b border-slate-50 flex justify-between items-center">
@@ -149,14 +149,15 @@
 </thead>
 <tbody id="transactionsTable" class="divide-y divide-slate-100">
 <tr class="hover:bg-slate-50/50 transition-colors">
-<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 24, 2026</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-800">New PA System Rental</td>
+
+<td class="px-6 py-5 text-sm font-medium text-slate-500">Loading...</td>
+<!--<td class="px-6 py-5 text-sm font-bold text-slate-800">New PA System Rental</td>
 <td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">15,000</td>
 <td class="px-6 py-5 text-center">
 <button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
 <span class="material-symbols-outlined text-xl">visibility</span>
 </button>
-</td>
+</td>-->
 </tr>
 <tr class="hover:bg-slate-50/50 transition-colors">
 <td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 12, 2026</td>
@@ -247,7 +248,7 @@ async function loadFinances() {
     try {
         // NOTE: The finances API requires an integer club_id. 
         // If you don't have it in localStorage yet, we will default to 1 (Music Club) for testing.
-        const clubId = localStorage.getItem("clubId") || 1; 
+        const clubId = localStorage.getItem("club_id") || 1; 
         
         const response = await fetch(`http://127.0.0.1:8000/finances/${clubId}`);
         if (!response.ok) throw new Error("Failed to fetch finances");
