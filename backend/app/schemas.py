@@ -35,6 +35,7 @@ class LoginRequest(BaseModel):
 
 # What the backend replies with
 class Token(BaseModel):
+    id : int
     username: str
     access_token: str
     token_type: str
