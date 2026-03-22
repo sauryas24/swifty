@@ -14,21 +14,21 @@ from .routers import requests
 from .routers import finances
 from .routers import permission
 from .routers import MoU
-from .routers import calendar # Add this to your imports
+from .routers import calendar
 from .routers import otp
 
 
-
-# Add this below your existing app.include_router() calls
 # Create the database tables automatically when the server starts
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Swifty API", version="1.0")
-# Mount static files to serve receipt images/PDFs
+# Mount static files to serve receipt images/PDFs and MoU documents
 if not os.path.exists("static/receipts"):
     os.makedirs("static/receipts")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+if not os.path.exists("static/mou_documents"):      
+    os.makedirs("static/mou_documents")               
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Plug the routers into the main app
 app.add_middleware(
     CORSMiddleware,
@@ -41,7 +41,6 @@ app.add_middleware(
 app.include_router(venues.router)
 app.include_router(auth.router)
 
-app.include_router(finances.router)
 app.include_router(announcements.router)
 
 app.include_router(MoU.router)

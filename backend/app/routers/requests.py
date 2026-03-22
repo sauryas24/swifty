@@ -36,12 +36,13 @@ def get_all_user_requests(
         unified_records.append({
             "id": mou.id,
             "type": "MOU",
-            # Fallback to "N/A" if you don't have a date column yet
-            "date": getattr(mou, 'date', "N/A"), 
+            "date": mou.created_at.strftime("%b %d, %Y") if mou.created_at else "N/A",
             "details": mou.organization_name,
+            "purpose": mou.purpose, 
+            "document_url": mou.document_url, 
             "status": simplify_status(mou.status),
             "raw_status": mou.status,
-            "comments": mou.comments # This now perfectly pulls the rejection reason!
+            "comments": mou.comments
         })
 
     # 2. Fetch Permission Letters
