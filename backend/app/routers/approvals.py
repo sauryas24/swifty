@@ -61,7 +61,7 @@ def process_venue_approval(
         
         db.commit()
         
-        email_service.send_email(
+        email_service.send_notification_email(
             to="coordinator@institute.edu", 
             subject=f"Update: Request '{booking.event_title}' Rejected",
             body=f"Your venue request was rejected by {current_user.role}. Reason: {action_data.message}"
@@ -81,7 +81,7 @@ def process_venue_approval(
         if next_status == "Approved":
             approve_and_publish_event(booking.id, db)
             
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Success! Request '{booking.event_title}' Approved",
                 body="Your venue request has been fully approved and is now on the public calendar."
@@ -90,7 +90,7 @@ def process_venue_approval(
             
         # Intermediate Approval
         else:
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Progress: Request '{booking.event_title}' moved to {next_status}",
                 body=f"Your venue request was approved by {current_user.role} and is now {next_status}."
@@ -131,7 +131,7 @@ def process_mou_approval(
             mou.comments = action_data.message
         db.commit()
         
-        email_service.send_email(
+        email_service.send_notification_email(
             to="coordinator@institute.edu", 
             subject=f"Update: MoU Request '{mou.organization_name}' Rejected",
             body=f"Your MoU request was rejected by {current_user.role}. Reason: {action_data.message}"
@@ -149,7 +149,7 @@ def process_mou_approval(
         
         # Final Approval
         if next_status == "Approved":
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Success! MoU Request '{mou.organization_name}' Approved",
                 body="Your MoU request has been fully approved."
@@ -158,7 +158,7 @@ def process_mou_approval(
             
         # Intermediate Approval
         else:
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Progress: MoU '{mou.organization_name}' moved to {next_status}",
                 body=f"Your MoU request was approved by {current_user.role} and is now {next_status}."
@@ -229,7 +229,7 @@ def process_permission_approval(
         letter.comments = action_data.message
         db.commit()
 
-        email_service.send_email(
+        email_service.send_notification_email(
             to="coordinator@institute.edu",
             subject=f"Update: Permission Letter '{letter.event_name}' Rejected",
             body=(
@@ -257,7 +257,7 @@ def process_permission_approval(
             letter.generated_id = generated_id
             db.commit()
 
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Permission Letter '{letter.event_name}' Approved",
                 body=(
@@ -273,7 +273,7 @@ def process_permission_approval(
 
         # ── Intermediate Approval ──
         else:
-            email_service.send_email(
+            email_service.send_notification_email(
                 to="coordinator@institute.edu",
                 subject=f"Progress: Permission Letter '{letter.event_name}' moved to {next_status}",
                 body=(

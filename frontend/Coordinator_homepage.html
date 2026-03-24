@@ -2,8 +2,26 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 <title>SWIFTY</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries">
+      
+</script>
+<script>
+      if (!localStorage.getItem("token")) {
+
+            window.location.replace("select_role_login.html"); 
+        }
+        window.addEventListener('pageshow', function(event) {
+            // event.persisted is true if the page was loaded from the bfcache (Back button)
+            if (event.persisted && !localStorage.getItem("token")) {
+                window.location.replace("select_role_login.html");
+            }
+        });
+    
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -86,6 +104,10 @@
 <div class="flex items-center gap-2">
 <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
 </div>
+<button id="logoutBtn" style="margin-left: auto;display: flex; align-items: center; background-color: #4b5563; color: white; border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500; text-transform: uppercase; border: none; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); outline: none;">
+  <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px;">logout</span>
+  <span>Logout</span>
+</button>
 </header>
 <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
 <div class="flex flex-col h-full">
@@ -235,6 +257,10 @@ View All Announcements
 </main>
 </body>
 <script>
+    
+    
+    // (If the token exists, the page will continue loading normally)
+
     const finances = document.querySelectorAll(".finances");
     const permission_letter= document.querySelectorAll(".permission_letter");
     const MOU_form= document.querySelectorAll(".MOU_form");
@@ -242,7 +268,17 @@ View All Announcements
     const past_requests=document.querySelectorAll(".past_requests");
     const dashboard= document.getElementById("dashboard");
     const Announcements= document.getElementById("Announcements")
-    
+    const logoutBtn= document.getElementById("logoutBtn");
+    if(logoutBtn){
+        logoutBtn.addEventListener("click",function(){
+           
+            localStorage.removeItem("token");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("club");
+        localStorage.removeItem("club_id");
+         window.location.href="select_role_login.html";
+        });
+    }
     async function addAnnouncements() {
         try{
             const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announements");

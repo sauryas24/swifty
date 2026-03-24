@@ -63,6 +63,8 @@ class ClubFinanceStatus(BaseModel):
     utilization_percentage: float # (total_spent / total_allocated) * 100
     transactions: List[TransactionRead]
     
+    model_config = ConfigDict(from_attributes=True)
+    
 class PermissionLetterCreate(BaseModel):
     event_name: str
     date: str

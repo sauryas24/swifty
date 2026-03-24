@@ -50,6 +50,8 @@ class VenueBooking(Base):
 class Club(Base):
     __tablename__ = "clubs"
     id = Column(Integer, primary_key=True, index=True)
+    # ADD THIS LINE: This links the ledger directly to the coordinator's login!
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
     name = Column(String, unique=True, index=True)
     total_allocated = Column(Float, default=500000.0) # From HTML: ₹5,00,000
     total_spent = Column(Float, default=0.0)
@@ -63,7 +65,7 @@ class Transaction(Base):
     amount = Column(Float) # Amount (₹) 
     description = Column(String) # Description
     receipt_url = Column(String, nullable=True) # File attachment path 
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow) # For log history 
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC)) # For log history 
     
     club = relationship("Club", back_populates="transactions")
     
