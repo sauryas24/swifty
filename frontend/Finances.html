@@ -266,7 +266,7 @@ async function loadFinances() {
         document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
         
         // 2. Update the Progress Bar
-        const roundedPercentage = Math.round(data.utilization_percentage);
+        const roundedPercentage = Math.round(data.total_spent/data.total_allocated*100);
         document.getElementById("progressBar").style.width = `${roundedPercentage}%`;
         document.getElementById("budgetUtilized").textContent = `${roundedPercentage}% of annual budget utilized`;
 

@@ -19,8 +19,8 @@
                             "pink-accent": "#f472b6", 
                             "pink-hover": "#fce7f3", 
                         },
-                        "baby-pink": "#fdf2f8", // Added to match Coordinator
-                        "background-dark": "#1a1013", // Updated to match Coordinator
+                        "baby-pink": "#fdf2f8", 
+                        "background-dark": "#1a1013", 
                     },
                     fontFamily: {
                         display: ["Inter", "sans-serif"],
@@ -43,7 +43,6 @@
                 font-family: 'Inter', sans-serif;
             }
         }
-        /* Added Watermark Background to match Coordinator Page */
         .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
         }
@@ -72,7 +71,7 @@
         }
     </style>
 </head>
-<body class="bg-baby-pink dark:bg-background-dark watermark-bg text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<body class="bg-baby-pink dark:bg-background-dark watermark-bg text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
     
     <header class="bg-[#0f172a] text-white py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-sm">
         <div class="flex items-center space-x-2">
@@ -89,7 +88,7 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-12 lg:py-20">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div class="lg:col-span-4 space-y-10">
                 <div class="space-y-4">
@@ -104,57 +103,23 @@
                     </p>
                     <div class="flex items-center space-x-2 pt-2">
                         <span class="w-2 h-2 rounded-full bg-brand-pink-accent"></span>
-                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">January 2026 Schedule</span>
+                        <span id="side-month-display" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Loading Schedule...</span>
+                        <button id="clear-filter-btn" onclick="displayEvents(null)" class="hidden ml-4 text-xs bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-2 py-1 rounded transition-colors">Clear Filter</button>
                     </div>
                 </div>
                 <div class="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
-                        <span class="font-bold text-xs uppercase tracking-widest text-slate-500">January 2026</span>
+                        <span id="current-month-display" class="font-bold text-xs uppercase tracking-widest text-slate-500">Loading...</span>
                         <div class="flex space-x-4">
-                            <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary">chevron_left</span>
-                            <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary">chevron_right</span>
+                            <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" onclick="changeMonth(-1)">chevron_left</span>
+                            <span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" onclick="changeMonth(1)">chevron_right</span>
                         </div>
                     </div>
                     <div class="grid grid-cols-7 gap-y-4 text-center text-xs font-semibold text-slate-400 mb-2">
                         <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
                     </div>
-                    <div class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium">
-                        <div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">28</div>
-                        <div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">29</div>
-                        <div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">30</div>
-                        <div class="text-slate-300 w-8 h-8 flex items-center justify-center mx-auto">31</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">1</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">2</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">3</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">4</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">5</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">6</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">7</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">8</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">9</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">10</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">11</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">12</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">13</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">14</div>
-                        <div class="active-date bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto">15</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">16</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">17</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">18</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">19</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">20</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">21</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">22</div>
-                        <div class="active-date bg-brand-pink-accent text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto shadow-sm">23</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">24</div>
-                        <div class="active-date border-2 border-brand-pink-accent text-brand-pink-accent rounded-full w-8 h-8 flex items-center justify-center mx-auto">25</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">26</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">27</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">28</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">29</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">30</div>
-                        <div class="text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto">31</div>
-                    </div>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-y-2 text-center text-sm font-medium">
+                        </div>
                 </div>
             </div>
             <div class="lg:col-span-8 space-y-6">
@@ -164,37 +129,91 @@
             </div>
         </div>
     </main>
-    <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 px-8 bg-white dark:bg-slate-900">
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-10 px-8 bg-white dark:bg-slate-900">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-slate-500 dark:text-slate-400 text-sm">
             <div>© 2026 Students' Gymkhana Council. All rights reserved.</div>
-            <div class="flex space-x-8 mt-4 md:mt-0">
-                <a class="hover:text-brand-pink-accent transition-colors" href="#">Terms</a>
-                <a class="hover:text-brand-pink-accent transition-colors" href="#">Privacy</a>
-                <a class="hover:text-brand-pink-accent transition-colors" href="#">Campus Guidelines</a>
-            </div>
         </div>
     </footer>
-</body>
-<script>
-    
-    async function loadEvents() {
-        try{
-            const response = await fetch("http://127.0.0.1:8000/calendar/events");
-            const result = await response.json();
+
+    <script>
+        let currentDate = new Date();
+        let allEvents = [];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const monthName = monthNames[month];
+
+            document.getElementById('current-month-display').innerText = `${monthName} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+
+            for (let i = 0; i < firstDay; i++) {
+                const dayNum = daysInPrevMonth - firstDay + i + 1;
+                calendarGrid.innerHTML += `<div class="text-slate-300 dark:text-slate-600 w-8 h-8 flex items-center justify-center mx-auto">${dayNum}</div>`;
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const monthStr = String(month + 1).padStart(2, '0');
+                const dayStr = String(i).padStart(2, '0');
+                const cellDateStr = `${year}-${monthStr}-${dayStr}`;
+
+                const hasEvent = allEvents.some(event => event.date === cellDateStr);
+
+                let classes = "text-slate-900 dark:text-slate-200 date-hover w-8 h-8 flex items-center justify-center mx-auto cursor-pointer";
+                
+                if (hasEvent) {
+                    classes = "active-date bg-brand-pink-accent text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto shadow-sm cursor-pointer";
+                }
+
+                calendarGrid.innerHTML += `<div class="${classes}" onclick="displayEvents('${cellDateStr}')">${i}</div>`;
+            }
+        }
+
+        function displayEvents(filterDateStr = null) {
             const container = document.getElementById("events-container");
-            container.innerHTML= "";
-            result.forEach((event)=>{
-                const cardHTML=`
+            const clearBtn = document.getElementById("clear-filter-btn");
+            container.innerHTML = "";
+            
+            let filteredEvents = [];
+            
+            if (filterDateStr) {
+                filteredEvents = allEvents.filter(event => event.date === filterDateStr);
+                document.getElementById('side-month-display').innerText = `Schedule for ${filterDateStr}`;
+                clearBtn.classList.remove('hidden');
+            } else {
+                filteredEvents = [...allEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+                document.getElementById('side-month-display').innerText = `All Upcoming Events`;
+                clearBtn.classList.add('hidden');
+            }
+
+            if (filteredEvents.length === 0) {
+                container.innerHTML = "<p class='text-slate-500'>No events scheduled for this period.</p>";
+                return;
+            }
+
+            filteredEvents.forEach((event) => {
+                const [year, month, day] = event.date.split('-');
+                const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+                const monthShort = monthNames[parseInt(month, 10) - 1];
+
+                const cardHTML = `
                 <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
                     <div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">${event.date.split('-')[0]}</span>
-                        <span class="text-3xl font-black text-slate-800 dark:text-white">${event.date.split('-')[1]}</span>
-                        <span class="text-[10px] text-slate-400">${event.date.split('-')[2]}</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">${monthShort}</span>
+                        <span class="text-3xl font-black text-slate-800 dark:text-white">${day}</span>
+                        <span class="text-[10px] text-slate-400">${year}</span>
                     </div>
                     <div class="flex-grow">
                         <div class="flex space-x-2 mb-2">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Featured</span>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">Discussion</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">${event.event_type}</span>
                         </div>
                         <h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">${event.event_title}</h3>
                         <div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -208,22 +227,32 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-shrink-0 text-slate-300 group-hover:text-brand-pink-accent transition-colors">
-                        <span class="material-symbols-outlined text-3xl">chevron_right</span>
-                    </div>
                 </div>
                 `;
                 container.innerHTML += cardHTML;
             });
-            
+        }
 
+        function changeMonth(offset) {
+            currentDate.setMonth(currentDate.getMonth() + offset);
+            renderCalendar();
+        }
 
-        }catch (error) {
-        console.error("Failed to load events:", error);
-        document.getElementById("events-container").innerHTML = "<p>Failed to load events.</p>";
-    }
-    
-    }
-    loadEvents();
-</script>
+        async function loadEvents() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/calendar/events");
+                allEvents = await response.json();
+                
+                renderCalendar();
+                displayEvents(null); 
+
+            } catch (error) {
+                console.error("Failed to load events:", error);
+                document.getElementById("events-container").innerHTML = "<p class='text-red-500'>Failed to load events.</p>";
+            }
+        }
+
+        loadEvents();
+    </script>
+</body>
 </html>

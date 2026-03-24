@@ -126,35 +126,29 @@
         });
     }
 
-    // THE LOUD LOGIN LOGIC
+    // CLEANED UP LOGIN LOGIC
     const loginBtn = document.getElementById("loginButton");
 
-    if (!loginBtn) {
-        alert("CRITICAL UI ERROR: Could not find the login button!");
-    } else {
+    if (loginBtn) {
         loginBtn.addEventListener("click", async (event) => {
             event.preventDefault();
-            
-            alert("STEP 1: Button clicked successfully!");
 
             const emailEl = document.getElementById("clubDrop");
             const passEl = document.getElementById("passwordEntered");
 
             if (!emailEl.value) {
-                alert("STOPPING: You must select a club from the dropdown.");
+                alert("Please select a club from the dropdown.");
                 return;
             }
             if (!passEl.value) {
-                alert("STOPPING: You must enter a password.");
+                alert("Please enter a password.");
                 return;
-            }
+            } // <--- The missing bracket is fixed here!
 
             const loginData = {
                 email_id: emailEl.value,
                 password: passEl.value
             };
-
-            alert("STEP 2: Inputs grabbed. Contacting backend at 127.0.0.1:8000...");
 
             const originalText = loginBtn.innerHTML;
             loginBtn.innerHTML = `<span>Authenticating...</span><span class="material-icons-round animate-spin">refresh</span>`;
@@ -171,25 +165,24 @@
                 const loginResult = await loginResponse.json();
                 
                 // STEP 2: CHECK IF BACKEND REQUESTS OTP
-                // We check for requires_2fa instead of the role!
                 if (loginResponse.ok && loginResult.requires_2fa === true) {
                     
                     // Save ONLY the email for now so the OTP page knows who to verify
                     localStorage.setItem("userEmail", loginResult.email_id);
 
-                    // The backend ALREADY sent the email (it told us in the message!)
-                    // So we skip the background fetch and instantly redirect.
+                    // Redirect to the OTP verification page
                     window.location.href = "./otp.html";
 
                 } else {
-                    // If password was wrong, it will hit this
-                    alert("LOGIN REJECTED: " + (loginResult.detail || loginResult.message || "Invalid credentials"));
+                    // If password was wrong or role is incorrect
+                    alert(loginResult.detail || loginResult.message || "Invalid credentials");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;
                 }
 
             } catch (e) {
-                alert("CRITICAL FETCH ERROR: Cannot reach backend.");
+                console.error("Fetch Error:", e);
+                alert("Network error. Cannot reach backend.");
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
             }

@@ -50,7 +50,7 @@
             <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">AUTHORITY</span>
         </div>
         <div class="flex items-center gap-4">
-            <a id="goBack"class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
                 <span class="material-icons-round text-sm">calendar_today</span>
                 Calendar
             </a>
@@ -73,29 +73,29 @@
             <form class="space-y-6 text-left" onsubmit="event.preventDefault();">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Role</label>
-<div class="relative group">
-    <select id="roleSelect" class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
-        <option disabled="" selected="" value="">Choose your role</option>
-        <option>Faculty Advisor</option>
-        <option>Student Gymkhana President</option>
-        <option value="gensec@iitk.ac.in">General Secretary</option>
-        <option>DOSA Office</option>
-    </select>
-    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-        <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
-    </div>
-</div>
+                    <div class="relative group">
+                        <select id="roleSelect" class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
+                            <option disabled="" selected="" value="">Choose your role</option>
+                            <option>Faculty Advisor</option>
+                            <option>Student Gymkhana President</option>
+                            <option value="gensec@iitk.ac.in">General Secretary</option>
+                            <option>DOSA Office</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Password</label>
                     <div class="relative">
-                        <input id="passInput"class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" value="password123"/>
+                        <input id="passInput" class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" placeholder="••••••••"/>
                         <button id="visToggle" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" type="button">
                             <span class="material-icons-round text-lg">visibility</span>
                         </button>
                     </div>
                 </div>
-                <button id="LetMeIn"class="w-full bg-slate-900 dark:bg-primary hover:bg-primary dark:hover:bg-pink-700 text-white py-4 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-slate-900/10 group mt-6" type="submit">
+                <button id="LetMeIn" class="w-full bg-slate-900 dark:bg-primary hover:bg-primary dark:hover:bg-pink-700 text-white py-4 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-slate-900/10 group mt-6" type="submit">
                     Access Dashboard
                     <span class="material-icons-round text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
@@ -104,82 +104,92 @@
     </main>
 </body>
 <script>
-const back = document.getElementById("goBack");
-const passEntered = document.getElementById("passInput");
-const visToggle = document.getElementById("visToggle");
-const LetMeIn = document.getElementById("LetMeIn");
-if(back){
-    back.addEventListener("click",function(){
-        window.location.href= "publiccalender.html";
-    })
-}
-if(passEntered&&visToggle){
-    visToggle.addEventListener("click", function(){
-        const type = passEntered.getAttribute('type') === 'password' ? 'text' : 'password';
-        passEntered.setAttribute('type', type);
-        this.textContent = type === 'password' ? 'visibility' : 'visibility_off';
-    });
-}
-if(LetMeIn){
-    LetMeIn.addEventListener("click", async(event)=>{
-        event.preventDefault();
-        
-        const roleSelect = document.getElementById("roleSelect");
-        const passEntered1 = document.getElementById("passInput");
-        
-        const loginData={
-            email_id: roleSelect.value,
-            password: passEntered1.value
-        }
+    // Navigation
+    const back = document.getElementById("goBack");
+    if(back){
+        back.addEventListener("click", function(e){
+            e.preventDefault();
+            window.location.href = "publiccalender.html";
+        });
+    }
 
-        const originalText = LetMeIn.innerHTML;
-        LetMeIn.innerHTML = `Authenticating...`;
-        LetMeIn.disabled = true;
+    // Password Visibility Toggle
+    const passEntered = document.getElementById("passInput");
+    const visToggle = document.getElementById("visToggle");
 
-        try{
-            // STEP 1: Verify Password
-            const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
-                method: "POST",
-                headers: {"Content-type": "application/json"},
-                body: JSON.stringify(loginData)
-            });
-            const result = await response.json();
+    if(passEntered && visToggle){
+        visToggle.addEventListener("click", function(){
+            const type = passEntered.getAttribute('type') === 'password' ? 'text' : 'password';
+            passEntered.setAttribute('type', type);
+        
+            const iconSpan = this.querySelector('span');
+            if (iconSpan) {
+                iconSpan.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            }
+        });
+    }
+
+    // CLEANED UP LOGIN LOGIC
+    const LetMeIn = document.getElementById("LetMeIn");
+
+    if(LetMeIn){
+        LetMeIn.addEventListener("click", async(event) => {
+            event.preventDefault();
             
-            if(response.ok){
-                if(result.role === "authority"){
-                    // Save details temporarily
-                    localStorage.setItem("pending_token", result.access_token);
-                    localStorage.setItem("userRole", result.role);
-                    localStorage.setItem("userEmail", loginData.email_id); // Needed for OTP
+            const roleSelect = document.getElementById("roleSelect");
+            const passEntered1 = document.getElementById("passInput");
+            
+            if (!roleSelect.value || !passEntered1.value) {
+                alert("Please select a role and enter a password.");
+                return;
+            }
 
-                    // STEP 2: Send OTP
-                    LetMeIn.innerHTML = `Sending OTP...`;
-                    await fetch("http://127.0.0.1:8000/api/otp/send", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email_id: loginData.email_id })
-                    });
+            const loginData = {
+                email_id: roleSelect.value,
+                password: passEntered1.value
+            };
 
-                    // STEP 3: Redirect to OTP page
-                    window.location.href = "otp.html";
-                }
-                else{
-                    alert(result.detail || "Access Denied: Authority role required.");
+            const originalText = LetMeIn.innerHTML;
+            LetMeIn.innerHTML = `<span>Authenticating...</span><span class="material-icons-round animate-spin">refresh</span>`;
+            LetMeIn.disabled = true;
+
+            try {
+                // STEP 1: VERIFY PASSWORD
+                const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
+                    method: "POST",
+                    headers: {"Content-type": "application/json"},
+                    body: JSON.stringify(loginData)
+                });
+                
+                const result = await response.json();
+                
+                // STEP 2: CHECK IF BACKEND REQUESTS OTP (True 2FA Flow)
+                if(response.ok && result.requires_2fa === true){
+                    
+                    // Save the email for the OTP page
+                    localStorage.setItem("userEmail", loginData.email_id);
+                    
+                    // Save the display name for the dashboard greeting later
+                    const selectedText = roleSelect.options[roleSelect.selectedIndex].text;
+                    localStorage.setItem("displayRoleName", selectedText);
+
+                    // Redirect to OTP page immediately
+                    window.location.href = "./otp.html";
+                    
+                } else {
+                    // If password was wrong or backend rejected it
+                    alert(result.detail || result.message || "Invalid credentials");
                     LetMeIn.innerHTML = originalText;
                     LetMeIn.disabled = false;
                 }
-            } else {
-                alert(result.detail || "Login Failed");
+                
+            } catch(e) {
+                console.error("Fetch failed entirely:", e);
+                alert("Network error. Cannot reach backend.");
                 LetMeIn.innerHTML = originalText;
                 LetMeIn.disabled = false;
             }
-        }catch(e){
-            console.error("Fetch failed entirely:", e);
-            alert("Network error. Is the backend running?");
-            LetMeIn.innerHTML = originalText;
-            LetMeIn.disabled = false;
-        }
-    })
-}
+        });
+    }
 </script>
 </html>
