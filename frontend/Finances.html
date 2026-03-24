@@ -248,8 +248,13 @@ async function loadFinances() {
     try {
         // NOTE: The finances API requires an integer club_id. 
         // If you don't have it in localStorage yet, we will default to 1 (Music Club) for testing.
-        const clubId = localStorage.getItem("club_id") || 1; 
-        
+        let rawClubId = localStorage.getItem("club_id");
+        let clubId;
+        if (!rawClubId || rawClubId === "undefined" || rawClubId === "null") {
+            clubId = 1; // Fallback to Music Club
+        } else {
+            clubId = parseInt(rawClubId, 10);
+        }
         const response = await fetch(`http://127.0.0.1:8000/finances/${clubId}`);
         if (!response.ok) throw new Error("Failed to fetch finances");
         
