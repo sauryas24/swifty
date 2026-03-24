@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>OTP Verification - SWIFTY</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#db2777",
+                        "baby-pink": "#fdf2f8",
+                        "accent-pink": "#fce7f3",
+                        "background-dark": "#1a1013",
+                    },
+                    fontFamily: {
+                        display: ["Outfit", "Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        :root { --bg-pink: #fdf2f8; }
+        body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
+        .otp-input {
+            width: 3rem;
+            height: 3.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #db2777 !important;
+        }
+        /* Remove number input spinners */
+        .otp-input::-webkit-outer-spin-button,
+        .otp-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .otp-input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 watermark-bg flex flex-col">
+
+    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
+        <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-lg tracking-widest uppercase">SWIFTY</span>
+            <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">COORDINATOR</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider cursor-pointer" href="#">
+                <span class="material-icons-round text-sm">arrow_back</span>
+                Back
+            </a>
+            <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+                <span class="material-icons-round text-xl">dark_mode</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center p-6 mt-14">
+        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-10 md:p-14 text-center">
+            <div class="flex justify-center mb-8">
+                <div class="bg-pink-50 dark:bg-pink-900/30 p-4 rounded-full border border-pink-100 dark:border-pink-900/10">
+                    <span class="material-icons-round text-primary text-4xl">verified_user</span>
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-display font-black text-slate-900 dark:text-white mb-2 uppercase tracking-tight">Verify OTP</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mb-2 font-medium">We've sent a 6-digit verification code to</p>
+            <p id="userEmail" class="text-primary dark:text-pink-400 text-sm font-bold mb-10">music@iitk.ac.in</p>
+            
+            <form id="otpForm" class="space-y-6 text-left">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase text-center mb-4">
+                        Enter Verification Code
+                    </label>
+                    <div class="flex justify-center gap-2" id="otpContainer">
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="0" />
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="1" />
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="2" />
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="3" />
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="4" />
+                        <input type="number" maxlength="1" class="otp-input bg-pink-50/50 dark:bg-slate-800 border-2 border-pink-100 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white transition-all" data-index="5" />
+                    </div>
+                    <p id="errorMsg" class="text-red-500 text-sm mt-3 font-medium text-center hidden"></p>
+                </div>
+                
+                <button id="verifyButton" class="w-full bg-slate-900 dark:bg-primary text-white h-12 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center space-x-3 hover:bg-primary dark:hover:bg-pink-700 transition-all mt-8 shadow-lg shadow-slate-900/10" type="submit">
+                    <span>Verify & Continue</span>
+                    <span class="material-icons-round text-sm">check_circle</span>
+                </button>
+
+                <div class="text-center">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">
+                        Didn't receive the code? 
+                        <button type="button" id="resendButton" class="text-primary dark:text-pink-400 font-bold hover:underline transition-all">
+                            Resend OTP
+                        </button>
+                    </p>
+                </div>
+            </form>
+            
+        </div>
+    </main>
+</body>
+<script>
+    // Get stored email from localStorage
+    const storedEmail = localStorage.getItem('userEmail') || 'your-email@iitk.ac.in';
+    document.getElementById('userEmail').textContent = storedEmail;
+
+    // Back button functionality
+    const back = document.getElementById('goBack');
+    if (back) {
+        back.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = "coordinator_login.html";
+        });
+    }
+
+    // OTP Input handling
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const errorMsg = document.getElementById('errorMsg');
+    
+    otpInputs.forEach((input, index) => {
+        // Handle input
+        input.addEventListener('input', function(e) {
+            // Only allow single digit
+            if (this.value.length > 1) {
+                this.value = this.value.slice(0, 1);
+            }
+            
+            // Move to next input
+            if (this.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+            
+            // Clear error message
+            errorMsg.classList.add('hidden');
+        });
+
+        // Handle backspace
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+
+        // Handle paste
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').trim();
+            
+            if (/^\d{6}$/.test(pastedData)) {
+                pastedData.split('').forEach((digit, i) => {
+                    if (otpInputs[i]) {
+                        otpInputs[i].value = digit;
+                    }
+                });
+                otpInputs[5].focus();
+            }
+        });
+    });
+
+    // Resend OTP
+    const resendButton = document.getElementById('resendButton');
+    if (resendButton) {
+        resendButton.addEventListener('click', async function() {
+            // Clear all inputs
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+            errorMsg.classList.add('hidden');
+            
+            try {
+                // Call actual API to resend OTP
+                await fetch("http://127.0.0.1:8000/api/otp/send", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email_id: storedEmail })
+                });
+                alert('A new OTP has been resent to ' + storedEmail);
+            } catch (error) {
+                alert('Failed to resend OTP. Please check your connection.');
+            }
+        });
+    }
+
+    // Form submission
+    const otpForm = document.getElementById('otpForm');
+    const verifyButton = document.getElementById('verifyButton');
+
+    if (otpForm && verifyButton) {
+        otpForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get OTP value
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+
+            // Validate OTP Length
+            if (otp.length !== 6) {
+                errorMsg.textContent = 'Please enter complete 6-digit OTP';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            // Show loading state
+            const originalText = verifyButton.innerHTML;
+            verifyButton.innerHTML = '<span>Verifying...</span>';
+            verifyButton.disabled = true;
+
+            try {
+                // Call your actual Python endpoint defined in otp.py
+                const response = await fetch("http://127.0.0.1:8000/api/otp/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email_id: storedEmail,
+                        otp_code: otp // Updated to match schemas.OTPVerify
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    console.log("OTP Verified! Backend released the tokens:", result);
+                    
+                    // 1. Catch the tokens
+                    if (result.access_token) {
+                        localStorage.setItem("token", result.access_token);
+                    }
+                    
+                    // 2. Extract and clean the role (force lowercase, remove invisible spaces)
+                    // If the backend didn't send a role, default to "missing"
+                    const rawRole = result.role || "missing";
+                    const safeRole = rawRole.trim().toLowerCase();
+                    
+                    localStorage.setItem("userRole", safeRole);
+                    
+                    if (result.username) localStorage.setItem("club", result.username);
+                    if (result.club_id) localStorage.setItem("club_id", result.club_id);
+
+                    // 3. The Bulletproof Routing
+                    if (safeRole === "coordinator") {
+                        window.location.href = "Coordinator_homepage.html";
+                    } else if (safeRole === "authority") {
+                        window.location.href = "adsa_dashboard.html";
+                    } else {
+                        // Let's explicitly alert you if the backend messed up!
+                        alert(`Wait! The backend sent your role as: "${rawRole}". I don't know where to send you!`);
+                        window.location.href = "publiccalender.html"; 
+                    }
+                    
+                } else {
+                    errorMsg.textContent = result.detail || result.message || 'Invalid OTP. Please try again.';
+                    errorMsg.classList.remove('hidden');
+                    verifyButton.innerHTML = originalText;
+                    verifyButton.disabled = false;
+                }
+
+            } catch (error) {
+                console.error("Verification failed:", error);
+                errorMsg.textContent = 'Network error. Please try again.';
+                errorMsg.classList.remove('hidden');
+                verifyButton.innerHTML = originalText;
+                verifyButton.disabled = false;
+            }
+        });
+    }
+
+    // Auto-focus first input on load
+    window.addEventListener('load', function() {
+        otpInputs[0].focus();
+    });
+</script>
+</html>

@@ -122,35 +122,64 @@ if(passEntered&&visToggle){
 }
 if(LetMeIn){
     LetMeIn.addEventListener("click", async(event)=>{
-        console.log("you touched me");
+        event.preventDefault();
+        
         const roleSelect = document.getElementById("roleSelect");
         const passEntered1 = document.getElementById("passInput");
+        
         const loginData={
             email_id: roleSelect.value,
             password: passEntered1.value
         }
+
+        const originalText = LetMeIn.innerHTML;
+        LetMeIn.innerHTML = `Authenticating...`;
+        LetMeIn.disabled = true;
+
         try{
+            // STEP 1: Verify Password
             const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
                 method: "POST",
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify(loginData)
             });
             const result = await response.json();
+            
             if(response.ok){
-                localStorage.setItem("token", result.access_token);
-                localStorage.setItem("userRole", result.role);
-                if(result.role==="authority"){
-                    window.location.href="adsa_dashboard.html";
+                if(result.role === "authority"){
+                    // Save details temporarily
+                    localStorage.setItem("pending_token", result.access_token);
+                    localStorage.setItem("userRole", result.role);
+                    localStorage.setItem("userEmail", loginData.email_id); // Needed for OTP
+
+                    // STEP 2: Send OTP
+                    LetMeIn.innerHTML = `Sending OTP...`;
+                    await fetch("http://127.0.0.1:8000/api/otp/send", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email_id: loginData.email_id })
+                    });
+
+                    // STEP 3: Redirect to OTP page
+                    window.location.href = "otp.html";
                 }
                 else{
-                    alert(result.detail || "Login Failed");
+                    alert(result.detail || "Access Denied: Authority role required.");
+                    LetMeIn.innerHTML = originalText;
+                    LetMeIn.disabled = false;
                 }
+            } else {
+                alert(result.detail || "Login Failed");
+                LetMeIn.innerHTML = originalText;
+                LetMeIn.disabled = false;
             }
         }catch(e){
             console.error("Fetch failed entirely:", e);
+            alert("Network error. Is the backend running?");
+            LetMeIn.innerHTML = originalText;
+            LetMeIn.disabled = false;
         }
     })
-
 }
 </script>
 </html>

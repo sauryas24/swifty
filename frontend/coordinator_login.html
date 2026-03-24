@@ -49,7 +49,7 @@
             <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">COORDINATOR</span>
         </div>
         <div class="flex items-center gap-4">
-            <a id="goBack"class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
                 <span class="material-icons-round text-sm">calendar_today</span>
                 Calendar
             </a>
@@ -69,23 +69,23 @@
             <h1 class="text-3xl md:text-4xl font-display font-black text-slate-900 dark:text-white mb-2 uppercase tracking-tight">Coordinator</h1>
             <p class="text-slate-500 dark:text-slate-400 text-sm mb-10 font-medium">Please verify your club credentials to proceed.</p>
             
-            <form class="space-y-6 text-left">
+            <div id="loginForm" class="space-y-6 text-left">
                 <div class="space-y-2">
-    <label class="block text-[11px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
-        Club Affiliation
-    </label>
-    <div class="relative">
-        <select id="clubDrop" class="w-full bg-none h-12 bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 text-slate-800 dark:text-white appearance-none transition-all cursor-pointer font-medium text-sm">
-            <option disabled="" selected="" value="">Choose your club</option>
-            <option value="music@iitk.ac.in">Music Club</option>
-            <option value="dance@iitk.ac.in">Dance Club</option>
-            <option value="dramatics@iitk.ac.in">Dramatics Club</option>
-        </select>
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
-        </div>
-    </div>
-</div>
+                    <label class="block text-[11px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
+                        Club Affiliation
+                    </label>
+                    <div class="relative">
+                        <select id="clubDrop" class="w-full bg-none h-12 bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 text-slate-800 dark:text-white appearance-none transition-all cursor-pointer font-medium text-sm">
+                            <option disabled selected value="">Choose your club</option>
+                            <option value="vanshikaag24@iitk.ac.in">Music Club (Test Email)</option>
+                            <option value="dance@iitk.ac.in">Dance Club</option>
+                            <option value="dramatics@iitk.ac.in">Dramatics Club</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="space-y-2">
                     <label class="block text-[11px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
                         Club Password
@@ -97,84 +97,103 @@
                         </button>
                     </div>
                 </div>
-                <button id="loginButton" class="w-full bg-slate-900 dark:bg-primary text-white h-12 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center space-x-3 hover:bg-primary dark:hover:bg-pink-700 transition-all mt-8 shadow-lg shadow-slate-900/10" type="submit">
+                <button id="loginButton" class="w-full bg-slate-900 dark:bg-primary text-white h-12 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center space-x-3 hover:bg-primary dark:hover:bg-pink-700 transition-all mt-8 shadow-lg shadow-slate-900/10" type="button">
                     <span>Continue to Dashboard</span>
                     <span class="material-icons-round text-sm">arrow_forward</span>
                 </button>
-            </form>
+            </div>
             
         </div>
     </main>
 </body>
 <script>
+    // Navigation and UI Toggles
     const back = document.getElementById('goBack');
+    if (back) {
+        back.addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = "publiccalender.html";
+        });
+    }
+
     const passwordInput = document.getElementById('passwordEntered');
     const togglePassword = document.getElementById('visibilityToggle');
-if(back){
-    back.addEventListener("click",function(){
-        window.location.href="publiccalender.html";
-    })
-}
-if (togglePassword && passwordInput) {
-    togglePassword.addEventListener('click', function () {
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        });
+    }
 
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        
+    // THE LOUD LOGIN LOGIC
+    const loginBtn = document.getElementById("loginButton");
 
-        this.textContent = type === 'password' ? 'visibility' : 'visibility_off';
-    });
-}
-const enteredOrNot = document.getElementById("loginButton");
-console.log("Button found:", enteredOrNot);
+    if (!loginBtn) {
+        alert("CRITICAL UI ERROR: Could not find the login button!");
+    } else {
+        loginBtn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            
+            alert("STEP 1: Button clicked successfully!");
 
-if (enteredOrNot) {
-    enteredOrNot.addEventListener("click", async (event) => {
-        event.preventDefault();
-        console.log("Button clicked!");
+            const emailEl = document.getElementById("clubDrop");
+            const passEl = document.getElementById("passwordEntered");
 
-        const emailEl = document.getElementById("clubDrop");
-        const passEl = document.getElementById("passwordEntered");
-
-        console.log("Elements found:", { emailEl, passEl });
-
-        if (!emailEl || !passEl) {
-            alert("Error: HTML IDs 'clubDrop' or 'passwordEntered' not found!");
-            return;
-        }
-
-        const loginData = {
-            email_id: emailEl.value,
-            password: passEl.value
-        };
-        
-        console.log("Sending data:", loginData);
-
-        try {
-            const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(loginData)
-            });
-            console.log("Response received:", response.status);
-            const result = await response.json();
-            if(response.ok){
-                localStorage.setItem("token", result.access_token);
-                localStorage.setItem("userRole", result.role);
-                localStorage.setItem("club", result.username);
-                localStorage.setItem("club_id", result.club_id);
-                if(result.role=== "coordinator"){
-                    window.location.href = "Coordinator_homepage.html";
-                }
-                else{
-                    alert(result.detail || "Login Failed");
-                }
+            if (!emailEl.value) {
+                alert("STOPPING: You must select a club from the dropdown.");
+                return;
+            }
+            if (!passEl.value) {
+                alert("STOPPING: You must enter a password.");
+                return;
             }
 
-        } catch (e) {
-            console.error("Fetch failed entirely:", e);
-        }
-    });
-}
+            const loginData = {
+                email_id: emailEl.value,
+                password: passEl.value
+            };
+
+            alert("STEP 2: Inputs grabbed. Contacting backend at 127.0.0.1:8000...");
+
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = `<span>Authenticating...</span><span class="material-icons-round animate-spin">refresh</span>`;
+            loginBtn.disabled = true;
+
+            try {
+                // STEP 1: VERIFY PASSWORD
+                const loginResponse = await fetch("http://127.0.0.1:8000/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const loginResult = await loginResponse.json();
+                
+                // STEP 2: CHECK IF BACKEND REQUESTS OTP
+                // We check for requires_2fa instead of the role!
+                if (loginResponse.ok && loginResult.requires_2fa === true) {
+                    
+                    // Save ONLY the email for now so the OTP page knows who to verify
+                    localStorage.setItem("userEmail", loginResult.email_id);
+
+                    // The backend ALREADY sent the email (it told us in the message!)
+                    // So we skip the background fetch and instantly redirect.
+                    window.location.href = "./otp.html";
+
+                } else {
+                    // If password was wrong, it will hit this
+                    alert("LOGIN REJECTED: " + (loginResult.detail || loginResult.message || "Invalid credentials"));
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+
+            } catch (e) {
+                alert("CRITICAL FETCH ERROR: Cannot reach backend.");
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }
+        });
+    }
 </script>
 </html>
