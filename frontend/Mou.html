@@ -30,7 +30,7 @@
             },
         }
     </script>
-<style>
+    <style>
         body { font-family: 'Inter', sans-serif; }
         
         /* --- Sidebar Animation --- */
@@ -120,32 +120,30 @@
                         <p class="text-text-muted dark:text-gray-400 mt-2 text-sm">Submit a new request for sponsorships or collaborations</p>
                     </div>
                     
-                    <form class="flex flex-col gap-6">
+                    <form class="flex flex-col gap-6" id="mouForm">
                         
-
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-text-main dark:text-gray-200 text-sm font-medium">Partner Organization Name</label>
-                            <input class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600" placeholder="Enter the name of the organization" type="text"/>
+                            <!-- Added id="orgName" -->
+                            <input id="orgName" class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600" placeholder="Enter the name of the organization" type="text" required/>
                         </div>
-
-                        
-
-                        
 
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-text-main dark:text-gray-200 text-sm font-medium">Detailed Scope of Work</label>
-                            <textarea class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600 resize-y" placeholder="Describe the deliverables, responsibilities, and terms of the agreement..."></textarea>
+                            <!-- Added id="purpose" -->
+                            <textarea id="purpose" class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600 resize-y" placeholder="Describe the deliverables, responsibilities, and terms of the agreement..." required></textarea>
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <span class="text-text-main dark:text-gray-200 text-sm font-medium">Attach Files</span>
                             <div class="relative w-full border-2 border-dashed border-border-light dark:border-gray-700 rounded-xl bg-background-light dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition-colors p-8 flex flex-col items-center justify-center gap-3 text-center cursor-pointer group">
-                                <input class="absolute inset-0 opacity-0 cursor-pointer" multiple="" type="file"/>
+                                <!-- Added id="docFile" -->
+                                <input id="docFile" class="absolute inset-0 opacity-0 cursor-pointer" type="file" accept=".pdf,.docx" required/>
                                 <div class="size-12 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
                                     <span class="material-symbols-outlined text-primary text-[24px]">cloud_upload</span>
                                 </div>
                                 <div class="flex flex-col gap-1">
-                                    <p class="text-text-main dark:text-white text-sm font-bold">Click to upload or drag and drop</p>
+                                    <p class="text-text-main dark:text-white text-sm font-bold" id="fileNameDisplay">Click to upload or drag and drop</p>
                                     <p class="text-text-muted dark:text-gray-500 text-xs">PDF, DOCX up to 10MB (Draft MOU, Proposals)</p>
                                 </div>
                             </div>
@@ -155,7 +153,8 @@
                             <button class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-text-muted dark:text-gray-300 font-medium transition-colors" type="button">
                                 Cancel
                             </button>
-                            <button class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
+                            <!-- Added id="submitBtn" -->
+                            <button id="submitBtn" class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
                                 <span>Submit Request</span>
                                 <span class="material-symbols-outlined text-lg">send</span>
                             </button>
@@ -207,46 +206,132 @@
     }
     
     finances.forEach((button) => {
-    button.addEventListener("click", function(event) {
+        button.addEventListener("click", function(event) {
 
-        event.preventDefault(); 
-        window.location.href = "Finances.html";
+            event.preventDefault(); 
+            window.location.href = "Finances.html";
+        });
     });
-});
-MOU_form.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    MOU_form.forEach((button) => {
+        button.addEventListener("click", function(event) {
 
-        event.preventDefault(); 
-        window.location.href = "Mou.html";
+            event.preventDefault(); 
+            window.location.href = "Mou.html";
+        });
     });
-});
-venue_booking.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    venue_booking.forEach((button) => {
+        button.addEventListener("click", function(event) {
 
-        event.preventDefault(); 
-        window.location.href = "Venue_booking.html";
+            event.preventDefault(); 
+            window.location.href = "Venue_booking.html";
+        });
     });
-});
-permission_letter.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    permission_letter.forEach((button) => {
+        button.addEventListener("click", function(event) {
 
-        event.preventDefault(); 
-        window.location.href = "permissionletter.html";
+            event.preventDefault(); 
+            window.location.href = "permissionletter.html";
+        });
     });
-});
 
-past_requests.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    past_requests.forEach((button) => {
+        button.addEventListener("click", function(event) {
 
-        event.preventDefault(); 
-        window.location.href = "past requests.html";
+            event.preventDefault(); 
+            window.location.href = "past requests.html";
+        });
     });
-});
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
-    if(clubName){
-        clubName.textContent= enterName.toUpperCase();
+    if (clubName && enterName) {
+    clubName.textContent = enterName.toUpperCase();
+    } else if (clubName) {
+        clubName.textContent = "CLUB DASHBOARD";
+    }
+
+    // 1. Update UI when a file is selected
+    const docFileInput = document.getElementById("docFile");
+    const fileNameDisplay = document.getElementById("fileNameDisplay");
+    
+    if (docFileInput) {
+        docFileInput.addEventListener("change", function(e) {
+            if(e.target.files.length > 0) {
+                fileNameDisplay.textContent = e.target.files[0].name;
+                fileNameDisplay.classList.add("text-primary"); // Optional: highlight the selected file name
+            } else {
+                fileNameDisplay.textContent = "Click to upload or drag and drop";
+                fileNameDisplay.classList.remove("text-primary");
+            }
+        });
+    }
+
+    // 2. Handle the Submit Button Click
+    const submitBtn = document.getElementById("submitBtn");
+
+    if (submitBtn) {
+        submitBtn.addEventListener("click", async function(event) {
+            event.preventDefault(); // Prevent any default page reload
+
+            // Grab the values from the inputs
+            const orgName = document.getElementById("orgName").value;
+            const purpose = document.getElementById("purpose").value;
+            const docFile = document.getElementById("docFile").files[0];
+
+            // Basic Validation
+            if (!orgName || !purpose || !docFile) {
+                alert("Please fill in all fields and attach a document.");
+                return;
+            }
+
+            // Pack the data into FormData (Required for sending files!)
+            const formData = new FormData();
+            formData.append("organization_name", orgName);
+            formData.append("purpose", purpose);
+            formData.append("document", docFile);
+
+            // Change button state to show loading
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>Submitting...</span>`;
+
+            try {
+                // NOTE: 'getToken' is already defined higher up in your script!
+                const response = await fetch("http://localhost:8000/api/mou/submit", {
+                    method: "POST",
+                    headers: {
+                        // CRITICAL: Do NOT set "Content-Type" here. 
+                        // The browser automatically sets it to multipart/form-data for FormData.
+                        "Authorization": `Bearer ${getToken}` 
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("MoU Request submitted successfully!");
+                    // Clear the form and reset UI
+                    document.getElementById("mouForm").reset(); 
+                    fileNameDisplay.textContent = "Click to upload or drag and drop";
+                    fileNameDisplay.classList.remove("text-primary");
+                    
+                    // Optional: Redirect to the Past Requests page so they can see it's pending
+                    //window.location.href = "past requests.html"; 
+                } else if (response.status === 401 || response.status === 403) {
+                    alert("Authorization failed. Please make sure you are logged in as a Coordinator.");
+                } else {
+                    alert(`Error: ${data.detail || "Failed to submit MoU"}`);
+                }
+            } catch (error) {
+                console.error("Submission Error:", error);
+                alert("Could not connect to the server. Is your FastAPI backend running?");
+            } finally {
+                // Restore the button back to normal
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            }
+        });
     }
 </script>
 
