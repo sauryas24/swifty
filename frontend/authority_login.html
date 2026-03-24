@@ -50,7 +50,7 @@
             <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">AUTHORITY</span>
         </div>
         <div class="flex items-center gap-4">
-            <a id="goBack"class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
                 <span class="material-icons-round text-sm">calendar_today</span>
                 Calendar
             </a>
@@ -73,29 +73,29 @@
             <form class="space-y-6 text-left" onsubmit="event.preventDefault();">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Role</label>
-<div class="relative group">
-    <select id="roleSelect" class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
-        <option disabled="" selected="" value="">Choose your role</option>
-        <option>Faculty Advisor</option>
-        <option>Student Gymkhana President</option>
-        <option value="gensec@iitk.ac.in">General Secretary</option>
-        <option>DOSA Office</option>
-    </select>
-    <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-        <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
-    </div>
-</div>
+                    <div class="relative group">
+                        <select id="roleSelect" class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
+                            <option disabled="" selected="" value="">Choose your role</option>
+                            <option>Faculty Advisor</option>
+                            <option>Student Gymkhana President</option>
+                            <option value="gensec@iitk.ac.in">General Secretary</option>
+                            <option>DOSA Office</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Password</label>
                     <div class="relative">
-                        <input id="passInput"class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" value="password123"/>
+                        <input id="passInput" class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" placeholder="••••••••"/>
                         <button id="visToggle" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" type="button">
                             <span class="material-icons-round text-lg">visibility</span>
                         </button>
                     </div>
                 </div>
-                <button id="LetMeIn"class="w-full bg-slate-900 dark:bg-primary hover:bg-primary dark:hover:bg-pink-700 text-white py-4 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-slate-900/10 group mt-6" type="submit">
+                <button id="LetMeIn" class="w-full bg-slate-900 dark:bg-primary hover:bg-primary dark:hover:bg-pink-700 text-white py-4 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-slate-900/10 group mt-6" type="submit">
                     Access Dashboard
                     <span class="material-icons-round text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
@@ -108,18 +108,26 @@ const back = document.getElementById("goBack");
 const passEntered = document.getElementById("passInput");
 const visToggle = document.getElementById("visToggle");
 const LetMeIn = document.getElementById("LetMeIn");
+
 if(back){
     back.addEventListener("click",function(){
         window.location.href= "publiccalender.html";
     })
 }
-if(passEntered&&visToggle){
+
+if(passEntered && visToggle){
     visToggle.addEventListener("click", function(){
         const type = passEntered.getAttribute('type') === 'password' ? 'text' : 'password';
         passEntered.setAttribute('type', type);
-        this.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        
+        // Target the span inside the button so the Material Icon keeps rendering
+        const iconSpan = this.querySelector('span');
+        if (iconSpan) {
+            iconSpan.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        }
     });
 }
+
 if(LetMeIn){
     LetMeIn.addEventListener("click", async(event)=>{
         console.log("you touched me");
@@ -150,7 +158,6 @@ if(LetMeIn){
             console.error("Fetch failed entirely:", e);
         }
     })
-
 }
 </script>
 </html>
