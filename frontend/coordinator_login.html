@@ -78,8 +78,8 @@
         <select id="clubDrop" class="w-full bg-none h-12 bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 text-slate-800 dark:text-white appearance-none transition-all cursor-pointer font-medium text-sm">
             <option disabled="" selected="" value="">Choose your club</option>
             <option value="music@iitk.ac.in">Music Club</option>
-            <option value="pro">Dance Club</option>
-            <option value="founder">Dramatics Club</option>
+            <option value="dance@iitk.ac.in">Dance Club</option>
+            <option value="dramatics@iitk.ac.in">Dramatics Club</option>
         </select>
         <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
             <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
@@ -147,6 +147,7 @@ if (enteredOrNot) {
             email_id: emailEl.value,
             password: passEl.value
         };
+
         
         console.log("Sending data:", loginData);
 
