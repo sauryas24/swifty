@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import database, models, schemas
-from ..utils import email_service
+from ..utils import email_service, security
 
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
 
@@ -56,6 +56,7 @@ def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)
 
 
 # 2. VERIFY OTP ENDPOINT
+# 2. VERIFY OTP ENDPOINT
 @router.post("/verify")
 def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db)):
     # Find the OTP record for this email
@@ -80,4 +81,30 @@ def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db
     db.delete(otp_record)
     db.commit()
     
-    return {"message": "Email successfully verified!"}
+    # ---------------------------------------------------------
+    # NEW CODE: Fetch the User and hand over the VIP wristband!
+    # ---------------------------------------------------------
+    
+    # 1. Find the actual user in the database
+    user = db.query(models.User).filter(models.User.email_id == request.email_id).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found in the system.")
+
+    # 2. GENERATE THE TOKEN 
+    # IMPORTANT: You must import your token function at the top of this file!
+    # If your token function is in a file called oauth2.py, it looks like this:
+    from ..utils.security import create_access_token # <-- UPDATE THIS IMPORT IF NEEDED
+    
+    # Create the token (ensure the data matches what your app normally expects)
+    access_token = create_access_token(data={"user_id": user.id}) 
+
+    # 3. Send the full package back to the frontend!
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "role": user.role,
+        "username": user.username,
+        "club_id": getattr(user, 'club_id', None), # Safely get club_id if it exists
+        "message": "Email successfully verified!"
+    }

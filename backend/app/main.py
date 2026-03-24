@@ -32,8 +32,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Plug the routers into the main app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow your Live Server
-    allow_credentials=True,
+    allow_origins=[
+    "*"
+],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
