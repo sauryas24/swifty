@@ -60,24 +60,6 @@
         .dark .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
         }
-        .nav-item-active {
-            @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        details > summary {
-            list-style: none;
-        }
-        details > summary::-webkit-details-marker {
-            display: none;
-        }
-        details[open] summary .arrow-icon {
-            transform: rotate(180deg);
-        }
-        .arrow-icon {
-            transition: transform 0.2s ease-in-out;
-        }
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 6px;
@@ -113,47 +95,43 @@
                 </div>
             </div>
             <nav class="flex-1 px-4 py-4 space-y-1">
-                <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <a id="dashboard" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">dashboard</span>
                     <span class="text-sm">Dashboard</span>
-                    </a>
-                
+                </a>
                 <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">account_balance_wallet</span>
                     <span class="text-sm">Finances</span>
-                    </a>
+                </a>
                 <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">description</span>
                     <span class="text-sm">Permission Letter</span>
-                    </a>
+                </a>
                 <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">assignment</span>
                     <span class="text-sm">MOU Form</span>
-                    </a>
-                <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                <span class="material-icons-round text-xl">event_seat</span>
-                <span class="text-sm">Venue Booking</span>
                 </a>
-                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-                <span class="material-icons-round text-xl">history</span>
-                <span class="text-sm">Past Requests</span>
+                <a class="venue_booking flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold rounded-xl transition-colors mt-2" href="#">
+                    <span class="material-icons-round text-xl">event_seat</span>
+                    <span class="text-sm">Venue Booking</span>
                 </a>
-                </nav>
-            
+                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                    <span class="material-icons-round text-xl">history</span>
+                    <span class="text-sm">Past Requests</span>
+                </a>
+            </nav>
         </div>
     </aside>
 
     <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
         
-        <div class="bg-white dark:bg-surface-dark px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-border-light dark:border-gray-800 sticky top-0 z-10">
-            <h1 id="clubName"class="text-text-main dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
-        </div>
-            
+        <div class="bg-white dark:bg-slate-900 px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-pink-100 dark:border-gray-800 sticky top-0 z-10">
+            <h1 id="clubName" class="text-slate-900 dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
         </div>
 
-        <div class="px-8 pb-32 max-w-6xl mx-auto relative z-10">
+        <div class="px-8 pt-8 pb-32 max-w-6xl mx-auto relative z-10">
             
-            <form class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
+            <form id="booking-form" class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
                 
                 <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
                     <div class="flex items-center gap-3 mb-6">
@@ -164,41 +142,6 @@
                     <div class="flex flex-col lg:flex-row gap-8 items-start">
                         <div class="flex-1 max-w-sm mx-auto lg:mx-0 w-full">
                             <h4 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">Select Date</h4>
-                            <!--<div class="bg-baby-pink dark:bg-slate-900/50 p-4 rounded-2xl border border-pink-100 dark:border-pink-900/20">
-                                <div class="flex items-center justify-between mb-4">
-                                    <button class="p-1 hover:bg-pink-200 dark:hover:bg-slate-800 rounded-full transition-colors" type="button">
-                                        <span class="material-icons-round text-slate-700 dark:text-slate-300">chevron_left</span>
-                                    </button>
-                                    <p class="text-slate-800 dark:text-white text-base font-bold">October 2023</p>
-                                    <button class="p-1 hover:bg-pink-200 dark:hover:bg-slate-800 rounded-full transition-colors" type="button">
-                                        <span class="material-icons-round text-slate-700 dark:text-slate-300">chevron_right</span>
-                                    </button>
-                                </div>
-                                <div class="grid grid-cols-7 gap-1">
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">S</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">M</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">T</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">W</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">T</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">F</span>
-                                    <span class="text-xs text-center text-slate-400 font-bold py-2">S</span>
-                                    
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">28</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">29</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-300 dark:text-slate-600" type="button">30</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">1</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">2</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">3</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">4</button>
-                                    <button class="h-10 w-10 rounded-full text-sm bg-pink-600 text-white font-bold shadow-md shadow-pink-500/30" type="button">5</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">6</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">7</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">8</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">9</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">10</button>
-                                    <button class="h-10 w-10 rounded-full text-sm text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-800 transition-colors" type="button">11</button>
-                                </div>
-                            </div>-->
                             <div class="relative">
                                 <input id="booking-date" class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white h-14 px-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 shadow-sm transition-all dark:[color-scheme:dark] cursor-pointer" type="date"/>
                             </div>
@@ -207,19 +150,14 @@
                         <div class="flex-1 w-full bg-pink-50/50 dark:bg-slate-800/20 p-5 rounded-2xl border border-dashed border-pink-200 dark:border-pink-900/30">
                             <label class="flex items-center gap-2 text-sm font-bold text-pink-600 mb-4">
                                 <span class="material-icons-round text-[18px]">schedule</span>
-                                <span>Available Time Slots for Oct 5</span>
+                                <span>Available Time Slots</span>
                             </label>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">09:00 AM - 11:00 AM</button>
-                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">11:00 AM - 01:00 PM</button>
-                                <button class="px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 transform scale-[1.02] ring-2 ring-pink-200 dark:ring-pink-900/50" type="button">02:00 PM - 04:00 PM</button>
-                                <button class="px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">04:00 PM - 06:00 PM</button>
-                                <button class="px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-800 text-sm font-medium text-slate-300 dark:text-slate-600 cursor-not-allowed bg-slate-50 dark:bg-slate-800/50" type="button">06:00 PM - 08:00 PM</button>
-                            </div>
-                            <div class="mt-4 flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-pink-600"></span>Selected</div>
-                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full border border-slate-300 bg-white dark:bg-slate-800"></span>Available</div>
-                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700"></span>Booked</div>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="time-slot-container">
+                                <button class="time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">09:00 AM - 11:00 AM</button>
+                                <button class="time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">11:00 AM - 01:00 PM</button>
+                                <button class="time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">02:00 PM - 04:00 PM</button>
+                                <button class="time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">04:00 PM - 06:00 PM</button>
+                                <button class="time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all" type="button">06:00 PM - 08:00 PM</button>
                             </div>
                         </div>
                     </div>
@@ -238,37 +176,7 @@
                                 <h4 class="text-sm font-bold uppercase tracking-wider">Available Rooms</h4>
                             </div>
                             <div id="available-rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                <label class="cursor-pointer relative group h-full">
-                                    <input checked="" class="peer sr-only" name="room" type="radio"/>
-                                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">L-20</h4>
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
-                                        </div>
-                                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Lecture Hall Complex</p>
-                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
-                                            <span class="material-icons-round text-[16px]">group</span>
-                                            <span>Capacity: 60</span>
-                                        </div>
-                                        <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
-                                            <span class="material-icons-round fill-current">check_circle</span>
-                                        </div>
-                                    </div>
-                                </label>
-                                <label class="cursor-pointer relative group h-full">
-                                    <input class="peer sr-only" name="room" type="radio"/>
-                                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">L-18</h4>
-                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
-                                        </div>
-                                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Lecture Hall Complex</p>
-                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
-                                            <span class="material-icons-round text-[16px]">group</span>
-                                            <span>Capacity: 45</span>
-                                        </div>
-                                    </div>
-                                </label>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 col-span-full">Please select a date and time to view available rooms.</p>
                             </div>
                         </div>
 
@@ -277,42 +185,8 @@
                                 <span class="material-icons-round text-[20px]">block</span>
                                 <h4 class="text-sm font-bold uppercase tracking-wider">Unavailable Rooms</h4>
                             </div>
-                            <div id="unavailable-rooms-grid"class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                                <div class="relative opacity-70 hover:opacity-100 transition-opacity">
-                                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">L-19</h4>
-                                            <span class="material-icons-round text-slate-400 text-[20px]">lock_clock</span>
-                                        </div>
-                                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Lecture Hall Complex</p>
-                                        <div class="mb-3 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 rounded text-[11px] text-amber-800 dark:text-amber-200 font-medium flex gap-1 items-start">
-                                            <span class="material-icons-round text-[14px] mt-0.5">info</span>
-                                            Booked until 6:00 PM
-                                        </div>
-                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                                            <span class="material-icons-round text-[16px]">group</span>
-                                            <span>Capacity: 45</span>
-                                        </div>
-                                    </div>
+                            <div id="unavailable-rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                 </div>
-                                <div class="relative opacity-70 hover:opacity-100 transition-opacity">
-                                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">LHC Main</h4>
-                                            <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
-                                        </div>
-                                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Large Auditorium</p>
-                                        <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
-                                            <span class="material-icons-round text-[14px] mt-0.5">calendar_month</span>
-                                            Reserved for Jan 23
-                                        </div>
-                                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                                            <span class="material-icons-round text-[16px]">group</span>
-                                            <span>Capacity: 400</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,11 +210,12 @@
                                     <option>Official Performance</option>
                                     <option>Workshop</option>
                                     <option>Audition</option>
+                                    <option>Meeting</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="attendees">Estimated Attendees</label>
-                                <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm" id="attendees" placeholder="0" type="number"/>
+                                <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm" id="attendees" placeholder="0" type="number" min="1"/>
                             </div>
                         </div>
                         <div>
@@ -348,15 +223,17 @@
                             <textarea class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="details" placeholder="Please describe the equipment needed or any special requests..." rows="4"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="permission-id">Permission Letter ID</label>
-                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="permission-id" placeholder="Enter permission letter ID" type="text"/>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="permission-id">
+                                Permission Letter ID <span class="text-pink-600 font-normal text-xs ml-1">(Must be fully Approved)</span>
+                            </label>
+                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="permission-id" placeholder="e.g. PL-2026-0001" type="text"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-6 bg-pink-50/30 dark:bg-slate-900 border-t border-pink-100 dark:border-pink-900/10 flex items-center justify-between">
                     <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md">By clicking submit, you agree to the Institute Venue Policy. Request will be sent to the DOSA office for final approval.</p>
-                    <button class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-pink-500/30 transition-all flex items-center gap-2" type="button">
+                    <button id="submit-booking-btn" class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-pink-500/30 transition-all flex items-center gap-2" type="button">
                         <span>Submit Booking Request</span>
                         <span class="material-icons-round text-[18px]">send</span>
                     </button>
@@ -365,448 +242,220 @@
             </form>
         </div>
     </main>
-</body>
-<!--<script>
-    // ==========================================
-    // 1. NAVIGATION & INITIALIZATION
-    // ==========================================
-    const finances = document.querySelectorAll(".finances");
-    const permission_letter = document.querySelectorAll(".permission_letter");
-    const MOU_form = document.querySelectorAll(".MOU_form");
-    const venue_booking = document.querySelectorAll(".venue_booking");
-    const past_requests = document.querySelectorAll(".past_requests");
-    const dashboard = document.getElementById("dashboard");
-    
-    if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
-    finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
-    MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
-    venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Venue_booking.html"; }));
-    permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
-    past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
 
-    const clubName = document.getElementById("clubName");
-    const enterName = localStorage.getItem("club");
-    const getToken = localStorage.getItem("token"); // Critical for our API calls!
-    
-    if(clubName && enterName){
-        clubName.textContent = enterName.toUpperCase();
-    }
-
-    // ==========================================
-    // 2. STATE MANAGEMENT FOR BOOKING
-    // ==========================================
-    let selectedDate = null;
-    let selectedTime = null;
-    // Base URL for your FastAPI backend
-    const API_BASE_URL = "http://localhost:8000/api/venues"; 
-    // Assuming the calendar is for a specific month/year. Update dynamically in a real app!
-    const currentYearMonth = "2026-10"; 
-
-    // ==========================================
-    // 3. DATE & TIME SELECTION LOGIC
-    // ==========================================
-    
-    // Select all the date buttons (1 through 31)
-    const dateButtons = document.querySelectorAll('.grid.grid-cols-7 button');
-    dateButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Remove active pink styling from all date buttons
-            dateButtons.forEach(b => {
-                b.classList.remove('bg-pink-600', 'text-white', 'shadow-md');
-                b.classList.add('text-slate-700', 'dark:text-slate-200');
-            });
-            // Add active styling to clicked button
-            e.target.classList.remove('text-slate-700', 'dark:text-slate-200');
-            e.target.classList.add('bg-pink-600', 'text-white', 'shadow-md');
-            
-            // Format date as YYYY-MM-DD for the backend
-            const day = e.target.innerText.padStart(2, '0');
-            selectedDate = `${currentYearMonth}-${day}`;
-            
-            checkAvailability(); // Trigger API call
-        });
-    });
-
-    // Select all interactive time buttons
-    const timeButtons = document.querySelectorAll('.grid.grid-cols-2 button:not(.cursor-not-allowed)');
-    timeButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Reset all time buttons to default styling
-            timeButtons.forEach(b => {
-                b.classList.remove('bg-pink-600', 'text-white', 'shadow-md');
-                b.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-white');
-            });
-            // Highlight selected time
-            e.target.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-white');
-            e.target.classList.add('bg-pink-600', 'text-white', 'shadow-md');
-            
-            selectedTime = e.target.innerText;
-            
-            checkAvailability(); // Trigger API call
-        });
-    });
-
-    // ==========================================
-    // 4. FETCH AVAILABILITY FROM BACKEND
-    // ==========================================
-    async function checkAvailability() {
-        // Only fetch if BOTH date and time are selected
-        if(!selectedDate || !selectedTime) return;
-
-        try {
-            // Call the public /availability endpoint we built
-            const response = await fetch(`${API_BASE_URL}/availability?date=${selectedDate}&time=${selectedTime}`);
-            if(!response.ok) throw new Error("Failed to fetch rooms");
-            
-            const data = await response.json();
-            renderRooms(data.available_rooms, data.unavailable_rooms);
-        } catch (error) {
-            console.error("Error fetching availability:", error);
-            alert("Could not check room availability. Is the server running?");
-        }
-    }
-
-    // ==========================================
-    // 5. DYNAMICALLY RENDER ROOMS
-    // ==========================================
-    function renderRooms(available, unavailable) {
-        // We target the grids based on their position in the DOM
-        const availableContainer = document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-2.md\\:grid-cols-4')[0];
-        const unavailableContainer = document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-2.md\\:grid-cols-4')[1];
+    <script>
+        // ==========================================
+        // 1. NAVIGATION & INITIALIZATION
+        // ==========================================
+        const finances = document.querySelectorAll(".finances");
+        const permission_letter = document.querySelectorAll(".permission_letter");
+        const MOU_form = document.querySelectorAll(".MOU_form");
+        const venue_booking = document.querySelectorAll(".venue_booking");
+        const past_requests = document.querySelectorAll(".past_requests");
+        const dashboard = document.getElementById("dashboard");
         
-        // Clear existing hardcoded HTML
-        availableContainer.innerHTML = '';
-        unavailableContainer.innerHTML = '';
+        if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
+        finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
+        MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
+        // Current page, no need to redirect if clicked
+        venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }));
+        permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
+        past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
 
-        // Render Available Rooms (Clickable Radio Buttons)
-        available.forEach(room => {
-            availableContainer.innerHTML += `
-                <label class="cursor-pointer relative group h-full">
-                    <input class="peer sr-only" name="room" type="radio" value="${room.id}"/>
-                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">${room.name}</h4>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
-                        </div>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Campus Venue</p>
-                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
-                            <span class="material-icons-round text-[16px]">group</span>
-                            <span>Capacity: ${room.capacity}</span>
-                        </div>
-                        <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
-                            <span class="material-icons-round fill-current">check_circle</span>
-                        </div>
-                    </div>
-                </label>
-            `;
-        });
-
-        // Render Unavailable Rooms (Disabled UI)
-        unavailable.forEach(room => {
-            unavailableContainer.innerHTML += `
-                <div class="relative opacity-70">
-                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">${room.name}</h4>
-                            <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
-                        </div>
-                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Campus Venue</p>
-                        <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
-                            <span class="material-icons-round text-[14px] mt-0.5">lock</span>
-                            Booked for this slot
-                        </div>
-                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                            <span class="material-icons-round text-[16px]">group</span>
-                            <span>Capacity: ${room.capacity}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // ==========================================
-    // 6. SUBMIT BOOKING REQUEST TO BACKEND
-    // ==========================================
-    // Target the specific submit button at the bottom of the form
-    const submitBtn = document.querySelector('button.bg-pink-600.hover\\:bg-pink-700');
-    
-    submitBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        // // Check if user is logged in
-        // if(!getToken) {
-        //     alert("You must be logged in to submit a request.");
-        //     return;
-        // }
-
-        // Gather all the data from the form
-        const selectedRoomRadio = document.querySelector('input[name="room"]:checked');
-        const eventTitle = document.getElementById('event-title').value;
-        const eventType = document.getElementById('event-type').value;
-        const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        const description = document.getElementById('details').value;
-        const permissionId = document.getElementById('permission-id').value; // Your generated_id!
-
-        // Basic Validation
-        if(!selectedDate || !selectedTime) return alert("Please select a date and time.");
-        if(!selectedRoomRadio) return alert("Please select an available room.");
-        if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
-
-        // Create the payload matching your schemas.BookingCreate
-        const bookingData = {
-            date: selectedDate,
-            time: selectedTime,
-            room_id: parseInt(selectedRoomRadio.value),
-            event_title: eventTitle,
-            event_type: eventType,
-            expected_attendees: attendees,
-            description: description,
-            permission_letter_id: permissionId
-        };
-
-        // Change button to loading state
-        submitBtn.innerHTML = `<span>Submitting...</span><span class="material-icons-round animate-spin">refresh</span>`;
-        submitBtn.disabled = true;
-
-        try {
-            // Send the POST request to the protected route
-            const response = await fetch(`${API_BASE_URL}/book`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${getToken}` // Attach the JWT token securely
-                },
-                body: JSON.stringify(bookingData)
-            });
-
-            const result = await response.json();
-
-            if(response.ok) {
-                alert(`Success! ${result.message}`);
-                window.location.href = "past requests.html"; // Redirect to dashboard
-            } else {
-                // Show the specific error message generated by your FastAPI HTTPException
-                alert(`Error: ${result.detail}`);
-            }
-        } catch (error) {
-            console.error("Booking submission error:", error);
-            alert("A network error occurred. Please try again.");
-        } finally {
-            // Restore button state
-            submitBtn.innerHTML = `<span>Submit Booking Request</span><span class="material-icons-round text-[18px]">send</span>`;
-            submitBtn.disabled = false;
-        }
-    });
-</script>-->
-<script>
-// ==========================================
-    // 1. NAVIGATION & INITIALIZATION
-    // ==========================================
-    const finances = document.querySelectorAll(".finances");
-    const permission_letter = document.querySelectorAll(".permission_letter");
-    const MOU_form = document.querySelectorAll(".MOU_form");
-    const venue_booking = document.querySelectorAll(".venue_booking");
-    const past_requests = document.querySelectorAll(".past_requests");
-    const dashboard = document.getElementById("dashboard");
-    
-    if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
-    finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
-    MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
-    venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Venue_booking.html"; }));
-    permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
-    past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
-
-    const clubName = document.getElementById("clubName");
-    const enterName = localStorage.getItem("club");
-    const getToken = localStorage.getItem("token"); // Critical for our API calls!
-    
-    if(clubName && enterName){
-        clubName.textContent = enterName.toUpperCase();
-    }
-
-    // ==========================================
-    // 2. STATE MANAGEMENT & SETUP
-    // ==========================================
-    let selectedDate = null;
-    let selectedTime = null;
-    const API_BASE_URL = "http://localhost:8000/api/venues"; 
-
-    // ==========================================
-    // 3. DATE & TIME SELECTION LOGIC
-    // ==========================================
-    
-    // --- Native Date Picker Logic ---
-    const dateInput = document.getElementById('booking-date');
-    if (dateInput) {
-        // Set the minimum date to today so users can't book in the past
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.min = today;
-
-        dateInput.addEventListener('change', (e) => {
-            selectedDate = e.target.value; // Outputs "YYYY-MM-DD" natively
-            checkAvailability(); 
-        });
-    }
-
-    // --- Cleaned-up Time Buttons Logic ---
-    const timeButtons = document.querySelectorAll('.grid.grid-cols-2 button:not(.cursor-not-allowed)');
-    timeButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Reset all time buttons to default styling
-            timeButtons.forEach(b => {
-                b.className = "px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all";
-            });
-            
-            // Highlight the clicked time slot
-            e.target.className = "px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50";
-            
-            selectedTime = e.target.innerText;
-            checkAvailability(); 
-        });
-    });
-
-    // ==========================================
-    // 4. FETCH & RENDER ROOM AVAILABILITY
-    // ==========================================
-    async function checkAvailability() {
-        // Only fetch if BOTH date and time have been selected by the user
-        if(!selectedDate || !selectedTime) return;
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/availability?date=${selectedDate}&time=${selectedTime}`);
-            if(!response.ok) throw new Error("Failed to fetch rooms");
-            
-            const data = await response.json();
-            renderRooms(data.available_rooms, data.unavailable_rooms);
-        } catch (error) {
-            console.error("Error fetching availability:", error);
-            // alert("Could not check room availability. Is your backend running?");
-        }
-    }
-
-    function renderRooms(available, unavailable) {
-        // Using the reliable IDs we added to the HTML
-        const availableContainer = document.getElementById('available-rooms-grid');
-        const unavailableContainer = document.getElementById('unavailable-rooms-grid');
+        const clubName = document.getElementById("clubName");
+        const enterName = localStorage.getItem("club");
+        const getToken = localStorage.getItem("token"); // Critical for backend RBAC!
         
-        if (!availableContainer || !unavailableContainer) return;
+        if(clubName && enterName){
+            clubName.textContent = enterName.toUpperCase();
+        }
 
-        availableContainer.innerHTML = '';
-        unavailableContainer.innerHTML = '';
+        // ==========================================
+        // 2. STATE MANAGEMENT & SETUP
+        // ==========================================
+        let selectedDate = null;
+        let selectedTime = null;
+        const API_BASE_URL = "http://localhost:8000/api/venues"; 
 
-        // Render Clickable Available Rooms
-        available.forEach(room => {
-            availableContainer.innerHTML += `
-                <label class="cursor-pointer relative group h-full">
-                    <input class="peer sr-only" name="room" type="radio" value="${room.id}"/>
-                    <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-lg text-slate-900 dark:text-white">${room.name}</h4>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
-                        </div>
-                        <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Campus Venue</p>
-                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
-                            <span class="material-icons-round text-[16px]">group</span>
-                            <span>Capacity: ${room.capacity}</span>
-                        </div>
-                        <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
-                            <span class="material-icons-round fill-current">check_circle</span>
-                        </div>
-                    </div>
-                </label>
-            `;
+        // ==========================================
+        // 3. DATE & TIME SELECTION LOGIC
+        // ==========================================
+        const dateInput = document.getElementById('booking-date');
+        if (dateInput) {
+            // Prevent users from booking in the past
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.min = today;
+
+            dateInput.addEventListener('change', (e) => {
+                selectedDate = e.target.value; // Format: "YYYY-MM-DD"
+                checkAvailability(); 
+            });
+        }
+
+        const timeButtons = document.querySelectorAll('.time-btn');
+        timeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Reset all buttons to default styling
+                timeButtons.forEach(b => {
+                    b.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all";
+                });
+                
+                // Highlight the clicked button
+                e.target.className = "time-btn px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50";
+                
+                selectedTime = e.target.innerText; // Format matches what the backend expects
+                checkAvailability(); 
+            });
         });
 
-        // Render Disabled Unavailable Rooms
-        unavailable.forEach(room => {
-            unavailableContainer.innerHTML += `
-                <div class="relative opacity-70">
-                    <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">${room.name}</h4>
-                            <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
-                        </div>
-                        <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Campus Venue</p>
-                        <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
-                            <span class="material-icons-round text-[14px] mt-0.5">lock</span>
-                            Booked for this slot
-                        </div>
-                        <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
-                            <span class="material-icons-round text-[16px]">group</span>
-                            <span>Capacity: ${room.capacity}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // ==========================================
-    // 5. SUBMIT BOOKING REQUEST TO BACKEND
-    // ==========================================
-    const submitBtn = document.getElementById('submit-booking-btn');
-    
-    if (submitBtn) {
-        submitBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-
-            // Gather all the data from the form
-            const selectedRoomRadio = document.querySelector('input[name="room"]:checked');
-            const eventTitle = document.getElementById('event-title').value;
-            const eventType = document.getElementById('event-type').value;
-            const attendees = parseInt(document.getElementById('attendees').value) || 0;
-            const description = document.getElementById('details').value;
-            const permissionId = document.getElementById('permission-id').value; 
-
-            // Basic Validation
-            if(!selectedDate || !selectedTime) return alert("Please select a date and time.");
-            if(!selectedRoomRadio) return alert("Please select an available room from the list.");
-            if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
-
-            // Create the payload matching your schemas.BookingCreate
-            const bookingData = {
-                date: selectedDate,
-                time: selectedTime,
-                room_id: parseInt(selectedRoomRadio.value),
-                event_title: eventTitle,
-                event_type: eventType,
-                expected_attendees: attendees,
-                description: description,
-                permission_letter_id: permissionId
-            };
-
-            // Change button to loading state
-            submitBtn.innerHTML = `<span>Submitting...</span><span class="material-icons-round animate-spin">refresh</span>`;
-            submitBtn.disabled = true;
+        // ==========================================
+        // 4. FETCH & RENDER ROOM AVAILABILITY
+        // ==========================================
+        async function checkAvailability() {
+            if(!selectedDate || !selectedTime) return;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/book`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${getToken}` 
-                    },
-                    body: JSON.stringify(bookingData)
-                });
-
-                const result = await response.json();
-
-                if(response.ok) {
-                    alert(`Success! ${result.message}`);
-                    window.location.href = "past requests.html"; 
-                } else {
-                    alert(`Error: ${result.detail}`);
-                }
+                const response = await fetch(`${API_BASE_URL}/availability?date=${selectedDate}&time=${selectedTime}`);
+                if(!response.ok) throw new Error("Failed to fetch rooms");
+                
+                const data = await response.json();
+                renderRooms(data.available_rooms, data.unavailable_rooms);
             } catch (error) {
-                console.error("Booking submission error:", error);
-                alert("A network error occurred. Please try again.");
-            } finally {
-                // Restore button state
-                submitBtn.innerHTML = `<span>Submit Booking Request</span><span class="material-icons-round text-[18px]">send</span>`;
-                submitBtn.disabled = false;
+                console.error("Error fetching availability:", error);
             }
-        });
-    }
+        }
+
+        function renderRooms(available, unavailable) {
+            const availableContainer = document.getElementById('available-rooms-grid');
+            const unavailableContainer = document.getElementById('unavailable-rooms-grid');
+            
+            if (!availableContainer || !unavailableContainer) return;
+
+            availableContainer.innerHTML = '';
+            unavailableContainer.innerHTML = '';
+
+            if (available.length === 0) {
+                availableContainer.innerHTML = `<p class="text-sm text-slate-500 dark:text-slate-400 col-span-full">No rooms available for this time slot.</p>`;
+            }
+
+            // Render Clickable Available Rooms
+            available.forEach(room => {
+                availableContainer.innerHTML += `
+                    <label class="cursor-pointer relative group h-full">
+                        <input class="peer sr-only" name="room" type="radio" value="${room.id}"/>
+                        <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-lg text-slate-900 dark:text-white">${room.name}</h4>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">OPEN</span>
+                            </div>
+                            <p class="text-slate-500 dark:text-slate-400 text-xs mb-3">Campus Venue</p>
+                            <div class="mt-auto flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                                <span class="material-icons-round text-[16px]">group</span>
+                                <span>Capacity: ${room.capacity}</span>
+                            </div>
+                            <div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 text-pink-600">
+                                <span class="material-icons-round fill-current">check_circle</span>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+
+            // Render Disabled Unavailable Rooms
+            unavailable.forEach(room => {
+                unavailableContainer.innerHTML += `
+                    <div class="relative opacity-70">
+                        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 shadow-none h-full flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-bold text-lg text-slate-500 dark:text-slate-400">${room.name}</h4>
+                                <span class="material-icons-round text-slate-400 text-[20px]">event_busy</span>
+                            </div>
+                            <p class="text-slate-400 dark:text-slate-500 text-xs mb-3">Campus Venue</p>
+                            <div class="mb-3 px-2 py-1.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded text-[11px] text-red-800 dark:text-red-300 font-medium flex gap-1 items-start">
+                                <span class="material-icons-round text-[14px] mt-0.5">lock</span>
+                                Booked for this slot
+                            </div>
+                            <div class="mt-auto flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500 font-medium">
+                                <span class="material-icons-round text-[16px]">group</span>
+                                <span>Capacity: ${room.capacity}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==========================================
+        // 5. SUBMIT BOOKING REQUEST TO BACKEND
+        // ==========================================
+        const submitBtn = document.getElementById('submit-booking-btn');
+        
+        if (submitBtn) {
+            submitBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                // Token Check for Protected Backend Route
+                if (!getToken) {
+                    alert("You are not logged in. Please log in to book a venue.");
+                    return;
+                }
+
+                const selectedRoomRadio = document.querySelector('input[name="room"]:checked');
+                const eventTitle = document.getElementById('event-title').value;
+                const eventType = document.getElementById('event-type').value;
+                const attendees = parseInt(document.getElementById('attendees').value) || 0;
+                const description = document.getElementById('details').value;
+                const permissionId = document.getElementById('permission-id').value; 
+
+                // Validation
+                if(!selectedDate || !selectedTime) return alert("Please select a date and time.");
+                if(!selectedRoomRadio) return alert("Please select an available room from the list.");
+                if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
+                if(attendees <= 0) return alert("Please enter a valid number of estimated attendees.");
+
+                // Payload matching schemas.BookingCreate
+                const bookingData = {
+                    date: selectedDate,
+                    time: selectedTime,
+                    room_id: parseInt(selectedRoomRadio.value), 
+                    event_title: eventTitle,
+                    event_type: eventType,
+                    expected_attendees: attendees,              
+                    description: description,
+                    permission_letter_id: permissionId
+                };
+
+                submitBtn.innerHTML = `<span>Submitting...</span><span class="material-icons-round animate-spin">refresh</span>`;
+                submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/book`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${getToken}` 
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    const result = await response.json();
+
+                    if(response.ok) {
+                        alert(`Success! ${result.message}`);
+                        window.location.href = "past requests.html"; 
+                    } else {
+                        // Surfaces backend errors (e.g. "Permission letter not found or invalid ID")
+                        alert(`Error: ${result.detail}`);
+                    }
+                } catch (error) {
+                    console.error("Booking submission error:", error);
+                    alert("A network error occurred. Is your FastAPI backend running?");
+                } finally {
+                    submitBtn.innerHTML = `<span>Submit Booking Request</span><span class="material-icons-round text-[18px]">send</span>`;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
     </script>
+</body>
 </html>
