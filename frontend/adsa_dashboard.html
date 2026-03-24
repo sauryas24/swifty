@@ -1,13 +1,36 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>ADSA Dashboard - Request Review</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>Authority Dashboard - SWIFTY</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    
+    <script>
+        const validRoles = ["authority", "adsa", "dosa", "gensec", "president", "faculty"];
+        const currentToken = localStorage.getItem("token");
+        const currentRole = localStorage.getItem("userRole");
+        
+        if (!currentToken || !validRoles.includes(currentRole)) {
+            window.location.replace("select_role_login.html"); 
+        }
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted && !localStorage.getItem("token")) {
+                window.location.replace("select_role_login.html");
+            }
+        });
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -29,7 +52,7 @@
             },
         };
     </script>
-<style type="text/tailwindcss">
+    <style type="text/tailwindcss">
         :root {
             --bg-pink: #fdf2f8;
             --sidebar-width: 280px;
@@ -63,343 +86,657 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        details > summary {
-            list-style: none;
-        }
-        details > summary::-webkit-details-marker {
-            display: none;
-        }
-        details[open] summary .arrow-icon {
-            transform: rotate(180deg);
-        }
-        .arrow-icon {
-            transition: transform 0.2s ease-in-out;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary .arrow-icon { transform: rotate(180deg); }
+        .arrow-icon { transition: transform 0.2s ease-in-out; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Modal Toggle Logic */
         #announcement-modal-toggle:checked ~ #announcement-modal-overlay,
-        #request-review-toggle:checked ~ #request-review-modal-overlay {
-            display: flex;
+        #request-review-toggle:checked ~ #request-review-modal-overlay,
+        #modal-otp-toggle:checked ~ #modal-otp-overlay { 
+            display: flex; 
         }
         #announcement-modal-toggle:checked ~ body,
-        #request-review-toggle:checked ~ body {
-            overflow: hidden;
+        #request-review-toggle:checked ~ body,
+        #modal-otp-toggle:checked ~ body { 
+            overflow: hidden; 
         }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
-<input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
-<input class="hidden" id="announcement-modal-toggle" type="checkbox"/>
-<input class="hidden" id="request-review-toggle" type="checkbox"/>
-<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
-<label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-<span class="material-icons-round">menu</span>
-</label>
-<div class="flex items-center gap-2">
-<span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
-</div>
-</header>
-<aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
-<div class="flex flex-col h-full">
-<div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-<div class="flex flex-col">
-<span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-</div>
-</div>
-<nav class="flex-1 px-4 py-4 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-2" href="#">
-<span class="material-icons-round text-xl">dashboard</span>
-<span class="text-sm">Dashboard</span>
-</a>
-<details class="group space-y-1" open="">
-<summary class="w-full flex items-center justify-between px-4 py-3 text-slate-600 dark:text-slate-400 font-medium hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors cursor-pointer">
-<div class="flex items-center gap-3">
-<span class="material-icons-round text-xl">groups</span>
-<span class="text-sm">Select Club</span>
-</div>
-<span class="material-icons-round text-sm arrow-icon">expand_more</span>
-</summary>
-<div class="pl-11 pr-2 space-y-1 pt-1 pb-1">
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Dance Club</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Debating Society (DebSoc)</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Dramatics Club</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Electronics Club</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Finance and Consulting</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Literary Society</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Music Club</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Programming Club</a>
-<a class="block px-3 py-2 text-sm text-slate-500 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors" href="#">Robotics Club</a>
-</div>
-</details>
-</nav>
-<div class="p-4 border-t border-pink-50 dark:border-pink-900/10">
-<button class="w-full flex items-center justify-center gap-2 py-2 text-sm text-slate-500 hover:text-pink-600 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
-<span class="material-icons-round text-sm">dark_mode</span>
-<span>Switch Theme</span>
-</button>
-</div>
-</div>
-</aside>
-<main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-<div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-<div>
-<h1 class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">ADSA</h1>
-</div>
-</div>
-<div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
-<div class="lg:col-span-2 space-y-8">
-<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
-<div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center bg-white dark:bg-slate-900">
-<div class="flex items-center gap-2">
-<h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Pending Requests</h3>
-<button class="p-1 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-md transition-colors">
-<span class="material-icons-round text-slate-400 text-lg">filter_list</span>
-</button>
-</div>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left">
-<thead class="bg-pink-50/50 dark:bg-pink-900/10">
-<tr>
-<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Club Name</th>
-<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Request Type</th>
-<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Event/Venue Name</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-pink-50 dark:divide-pink-900/10">
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer group">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">
-<label class="cursor-pointer block" for="request-review-toggle">Music Club</label>
-</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<label class="cursor-pointer block" for="request-review-toggle">
-<span class="px-2 py-1 rounded bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-[10px] font-bold uppercase">VENUE</span>
-</label>
-</td>
-<td class="px-6 py-4 text-sm font-medium">
-<label class="cursor-pointer block" for="request-review-toggle">OAT Main Stage Booking</label>
-</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">Dance Club</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold uppercase">MOU</span>
-</td>
-<td class="px-6 py-4 text-sm font-medium">Sponsorship with Brand-X</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">Dramatics Club</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase">PERMISSION</span>
-</td>
-<td class="px-6 py-4 text-sm font-medium">Annual Production Letter</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">Music Club</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase">PERMISSION</span>
-</td>
-<td class="px-6 py-4 text-sm font-medium">Spring Workshops</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">Finance and Consulting</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-[10px] font-bold uppercase">VENUE</span>
-</td>
-<td class="px-6 py-4 text-sm font-medium">Club Intro Session L20</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-700 dark:text-slate-300">Programming Club</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase">PERMISSION</span>
-</td>
-<td class="px-6 py-4 text-sm font-medium">ML Bootcamp</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="space-y-6">
-<div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-6">
-<div class="flex items-center justify-between mb-6">
-<h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Announcements</h3>
-<span class="material-icons-round text-slate-400">campaign</span>
-</div>
-<div class="space-y-4">
-<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
-<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Revised Authority Oversight Protocols</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">ADSA office has updated the mandatory review timeline for all high-budget club MOU requests.</p>
-<div class="flex items-center justify-between mt-3">
-<p class="text-[10px] text-slate-400 flex items-center gap-1">
-<span class="material-icons-round text-[12px]">schedule</span> 1 hour ago
-                            </p>
-</div>
-</div>
-<div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
-<h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">Semester Budget Deadline</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">All student gymkhana bodies must submit final expenditure reports by next Friday.</p>
-<div class="flex items-center justify-between mt-3">
-<p class="text-[10px] text-slate-400 flex items-center gap-1">
-<span class="material-icons-round text-[12px]">schedule</span> Yesterday
-                            </p>
-</div>
-</div>
-</div>
-<label class="w-full mt-6 py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-lg cursor-pointer" for="announcement-modal-toggle">
-<span class="material-icons-round text-lg">add_circle</span>
-                    New Announcement
-                </label>
-</div>
-</div>
-</div>
-</main>
-<div class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4" id="announcement-modal-overlay">
-<div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-pink-100 dark:border-pink-900/20 flex flex-col max-h-[90vh]">
-<div class="flex items-center justify-between p-6 border-b border-pink-50 dark:border-pink-900/10">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-pink-50 dark:bg-pink-900/20 rounded-xl flex items-center justify-center">
-<span class="material-icons-round text-pink-600">campaign</span>
-</div>
-<h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">New Announcement</h2>
-</div>
-<label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" for="announcement-modal-toggle">
-<span class="material-icons-round">close</span>
-</label>
-</div>
-<div class="p-6 overflow-y-auto space-y-6 custom-scrollbar">
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Announcement Title</label>
-<input class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none" placeholder="e.g., Update on Club Budget Guidelines" type="text"/>
-</div>
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Content</label>
-<textarea class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none resize-none" placeholder="Enter detailed announcement message..." rows="4"></textarea>
-</div>
-<div class="space-y-3">
-<div class="flex items-center justify-between">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Select Clubs</label>
-<span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Scroll to see all</span>
-</div>
-<div class="bg-slate-50 dark:bg-slate-800 rounded-xl border border-pink-50 dark:border-pink-900/10 p-3 max-h-48 overflow-y-auto custom-scrollbar">
-<div class="space-y-2">
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Dance Club</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Debating Society (DebSoc)</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Dramatics Club</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Electronics Club</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Finance and Consulting</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Literary Society</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Music Club</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Programming Club</span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
-<input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900" type="checkbox"/>
-<span class="text-sm text-slate-600 dark:text-slate-300">Robotics Club</span>
-</label>
-</div>
-</div>
-</div>
-</div>
-<div class="p-6 border-t border-pink-50 dark:border-pink-900/10 flex items-center gap-3">
-<label class="flex-1 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 text-center rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent" for="announcement-modal-toggle">
-                Close
-            </label>
-<button class="flex-[2] py-3 bg-pink-600 text-white text-sm font-bold rounded-xl hover:bg-pink-700 transition-all shadow-lg shadow-pink-200 dark:shadow-none active:scale-95">
-                Submit Announcement
-            </button>
-</div>
-</div>
-</div>
-<div class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4" id="request-review-modal-overlay">
-<div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-pink-100 dark:border-pink-900/20 flex flex-col max-h-[95vh]">
-<div class="flex items-center justify-between p-6 border-b border-pink-50 dark:border-pink-900/10">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white font-bold">
-                    3
-                </div>
-<h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Event Details</h2>
-</div>
-<label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" for="request-review-toggle">
-<span class="material-icons-round">close</span>
-</label>
-</div>
-<div class="p-8 overflow-y-auto space-y-6 custom-scrollbar">
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Event Title</label>
-<input class="w-full bg-white dark:bg-slate-800 border-pink-100 dark:border-pink-900/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none" readonly="" type="text" value="Spring Workshops"/>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Event Type</label>
-<div class="relative">
-<input class="w-full bg-white dark:bg-slate-800 border-pink-600 rounded-xl px-4 py-3 text-sm outline-none cursor-default" readonly="" type="text" value="Practice Session"/>
-<span class="material-icons-round absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">expand_more</span>
-</div>
-</div>
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Estimated Attendees</label>
-<input class="w-full bg-white dark:bg-slate-800 border-pink-100 dark:border-pink-900/30 rounded-xl px-4 py-3 text-sm outline-none" readonly="" type="number" value="120"/>
-</div>
-</div>
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Purpose / Additional Details</label>
-<textarea class="w-full bg-white dark:bg-slate-800 border-pink-100 dark:border-pink-900/30 rounded-xl px-4 py-3 text-sm outline-none resize-none" readonly="" rows="4">A 3-day workshop series focused on teaching classical techniques to new recruits. Equipment needed: Audio system and mirrors in the practice room.</textarea>
-</div>
-<div class="space-y-2">
-<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Permission Letter ID</label>
-<input class="w-full bg-white dark:bg-slate-800 border-pink-100 dark:border-pink-900/30 rounded-xl px-4 py-3 text-sm outline-none" readonly="" type="text" value="PERM-2023-045"/>
-</div>
-<p class="text-xs text-slate-500 dark:text-slate-400 italic">By approving, the request will be forwarded to the DOSA office for final record keeping.</p>
-</div>
-<div class="p-6 border-t border-pink-50 dark:border-pink-900/10 flex items-center justify-between gap-4">
-<label class="px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 text-center rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700" for="request-review-toggle">
-                Close
-            </label>
-<div class="flex items-center gap-3">
-<button class="px-8 py-3 bg-red-500 text-white text-sm font-bold rounded-xl hover:bg-red-600 transition-all shadow-lg shadow-red-100 dark:shadow-none active:scale-95">
-                    Reject
-                </button>
-<button class="px-8 py-3 bg-emerald-500 text-white text-sm font-bold rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100 dark:shadow-none active:scale-95">
-                    Approve
-                </button>
-</div>
-</div>
-</div>
-</div>
+    <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+    <input class="hidden" id="announcement-modal-toggle" type="checkbox"/>
+    <input class="hidden" id="request-review-toggle" type="checkbox"/>
+    <input class="hidden" id="modal-otp-toggle" type="checkbox"/>
+    
+    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+            <span class="material-icons-round">menu</span>
+        </label>
+        <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
+            <span id="header-role-badge" class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2 uppercase">AUTHORITY</span>
+        </div>
+        <button id="logoutBtn" style="margin-left: auto;display: flex; align-items: center; background-color: #4b5563; color: white; border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500; text-transform: uppercase; border: none; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); outline: none;">
+            <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px;">logout</span>
+            <span>Logout</span>
+        </button>
+    </header>
 
-</body></html>
+    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto flex flex-col">
+        <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
+            <div class="flex flex-col">
+                <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">DOSA OFFICE</span>
+                <span class="text-xs text-slate-500">Administration Module</span>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+            <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-4" href="#">
+                <span class="material-icons-round text-xl">dashboard</span>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
+            
+            <a href="adsa_club.html?club_id=1" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-pink-500">music_note</span> Music Club
+            </a>
+            <a href="adsa_club.html?club_id=2" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-pink-500">directions_run</span> Dance Club
+            </a>
+            <a href="adsa_club.html?club_id=3" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-pink-500">theater_comedy</span> Dramatics Club
+            </a>
+            <a href="adsa_club.html?club_id=4" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-pink-500">terminal</span> Programming Club
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-pink-50 dark:border-pink-900/10 space-y-2 bg-slate-50 dark:bg-slate-900/50">
+            <button class="w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors rounded-lg hover:bg-pink-50 dark:hover:bg-pink-900/10" onclick="document.documentElement.classList.toggle('dark')">
+                <span class="material-icons-round text-[18px]">dark_mode</span>
+                <span>Toggle Theme</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
+        <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
+            <div>
+                <h1 id="main-dashboard-title" class="text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Dashboard</h1>
+            </div>
+        </div>
+        
+        <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden flex flex-col min-h-[500px]">
+                    <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900">
+                        <div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 w-fit">
+                            <button id="tab-pending" class="px-5 py-2 text-sm font-bold rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all">Pending Review</button>
+                            <button id="tab-processed" class="px-5 py-2 text-sm font-bold rounded-md text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-all">Processed History</button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto flex-1">
+                        <table class="w-full text-left table-fixed">
+                            <thead class="bg-pink-50/50 dark:bg-pink-900/10">
+                                <tr>
+                                    <th class="px-6 py-4 w-1/4 text-xs font-bold text-slate-500 uppercase tracking-wider">Club Name</th>
+                                    <th class="px-6 py-4 w-1/4 text-xs font-bold text-slate-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-6 py-4 w-1/2 text-xs font-bold text-slate-500 uppercase tracking-wider">Event Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dynamic-requests-body" class="divide-y divide-pink-50 dark:divide-pink-900/10">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-6 flex flex-col h-full min-h-[500px]">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Live Announcements</h3>
+                        <span class="material-icons-round text-slate-400">campaign</span>
+                    </div>
+                    
+                    <div id="dynamic-announcements-container" class="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2">
+                        </div>
+                    
+                    <label class="w-full mt-6 py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-800 dark:hover:bg-slate-700 transition-all active:scale-95 shadow-lg cursor-pointer" for="announcement-modal-toggle">
+                        <span class="material-icons-round text-lg">add_circle</span>
+                        Broadcast Announcement
+                    </label>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4" id="announcement-modal-overlay">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-pink-100 dark:border-pink-900/20 flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between p-6 border-b border-pink-50 dark:border-pink-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-pink-50 dark:bg-pink-900/20 rounded-xl flex items-center justify-center">
+                        <span class="material-icons-round text-pink-600">campaign</span>
+                    </div>
+                    <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Broadcast Message</h2>
+                </div>
+                <label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" for="announcement-modal-toggle">
+                    <span class="material-icons-round">close</span>
+                </label>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Subject Heading</label>
+                    <input id="input-announcement-title" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none" placeholder="e.g., Immediate Submission of Budgets" type="text"/>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Message Content</label>
+                    <textarea id="input-announcement-content" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none resize-none" placeholder="Enter detailed instruction..." rows="4"></textarea>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Target Audience (Clubs)</label>
+                        <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Scroll to select</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl border border-pink-50 dark:border-pink-900/10 p-3 max-h-40 overflow-y-auto custom-scrollbar">
+                        <div class="space-y-2" id="club-checkboxes">
+                            <label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
+                                <input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900 club-cb" type="checkbox" value="Music Club"/>
+                                <span class="text-sm text-slate-600 dark:text-slate-300">Music Club</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
+                                <input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900 club-cb" type="checkbox" value="Dance Club"/>
+                                <span class="text-sm text-slate-600 dark:text-slate-300">Dance Club</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
+                                <input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900 club-cb" type="checkbox" value="Programming Club"/>
+                                <span class="text-sm text-slate-600 dark:text-slate-300">Programming Club</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg cursor-pointer transition-colors">
+                                <input class="rounded text-pink-600 focus:ring-pink-500/20 border-slate-300 dark:border-slate-600 dark:bg-slate-900 club-cb" type="checkbox" value="Dramatics Club"/>
+                                <span class="text-sm text-slate-600 dark:text-slate-300">Dramatics Club</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-pink-50 dark:border-pink-900/10 flex items-center gap-3">
+                <label class="flex-1 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 text-center rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent" for="announcement-modal-toggle">
+                    Cancel
+                </label>
+                <button id="btn-submit-announcement" class="flex-[2] py-3 bg-pink-600 text-white text-sm font-bold rounded-xl hover:bg-pink-700 transition-all shadow-lg shadow-pink-200 dark:shadow-none active:scale-95">
+                    Push Announcement
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-0 z-[110] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4" id="request-review-modal-overlay">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-pink-100 dark:border-pink-900/20 flex flex-col max-h-[95vh]">
+            <div class="flex items-center justify-between p-6 border-b border-pink-50 dark:border-pink-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg" id="modal-club-initial">C</div>
+                    <div>
+                        <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white" id="modal-display-clubname">Club Request</h2>
+                        <p class="text-xs font-medium text-pink-600 dark:text-pink-400 uppercase tracking-widest" id="modal-display-type">TYPE</p>
+                    </div>
+                </div>
+                <label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" for="request-review-toggle">
+                    <span class="material-icons-round">close</span>
+                </label>
+            </div>
+            
+            <div class="p-8 overflow-y-auto space-y-6 custom-scrollbar">
+                <input type="hidden" id="modal-hidden-req-id" />
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Event Title</label>
+                    <input id="modal-event-title" class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none cursor-default" readonly="" type="text"/>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Permission Letter Ref</label>
+                        <input id="modal-perm-id" class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none cursor-default" readonly="" type="text"/>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Expected Capacity</label>
+                        <div class="relative">
+                            <span class="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">groups</span>
+                            <input id="modal-event-attendees" class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none cursor-default" readonly="" type="number"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Full Justification & Details</label>
+                    <textarea id="modal-event-details" class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none cursor-default leading-relaxed" readonly="" rows="5"></textarea>
+                </div>
+                
+                <div id="rejection-reason-container" class="hidden mt-6 pt-6 border-t border-red-100 dark:border-red-900/30 space-y-3">
+                    <label class="text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
+                        <span class="material-icons-round text-lg">warning</span> Provide Reason for Rejection
+                    </label>
+                    <textarea id="rejection-reason-input" class="w-full bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all text-sm outline-none resize-none text-slate-800 dark:text-slate-200 placeholder-red-300 dark:placeholder-red-800" placeholder="Type the exact reason this request is being denied..." rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="p-6 border-t border-pink-50 dark:border-pink-900/10 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-900/50 rounded-b-3xl">
+                <label class="px-6 py-3 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors cursor-pointer" for="request-review-toggle">
+                    Close Window
+                </label>
+
+                <div class="flex items-center gap-3" id="default-action-buttons">
+                    <button id="btn-initial-reject" class="px-8 py-3 bg-white dark:bg-slate-800 text-red-500 border border-red-200 dark:border-red-900/50 text-sm font-bold rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all active:scale-95 shadow-sm">
+                        Reject Request
+                    </button>
+                    <button id="btn-trigger-otp" class="px-8 py-3 bg-emerald-500 text-white text-sm font-bold rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100 dark:shadow-none active:scale-95 flex items-center gap-2">
+                        Approve <span class="material-icons-round text-sm">lock_clock</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 hidden" id="confirm-reject-buttons">
+                    <button id="btn-cancel-reject" class="px-6 py-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 text-sm font-bold transition-all">
+                        Cancel
+                    </button>
+                    <button id="btn-confirm-reject" class="px-8 py-3 bg-red-600 text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-200 dark:shadow-none active:scale-95 flex items-center gap-2">
+                        <span class="material-icons-round text-sm">gavel</span> Confirm Rejection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-0 z-[200] hidden items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4" id="modal-otp-overlay">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl p-8 text-center border border-pink-100 dark:border-pink-900/20">
+            <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="material-icons-round text-pink-600 text-3xl">verified_user</span>
+            </div>
+            <h3 class="font-display font-bold text-xl text-slate-900 dark:text-white mb-2">Security Verification</h3>
+            <p class="text-sm text-slate-500 mb-6">Enter the 6-digit OTP sent to your registered email to authorize this approval.</p>
+            
+            <input id="input-otp-code" type="text" maxlength="6" class="w-full text-center tracking-[0.5em] font-black text-2xl rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-4 focus:ring-pink-500 focus:border-pink-500 outline-none mb-6 text-slate-900 dark:text-white" placeholder="••••••"/>
+            
+            <div class="flex gap-3">
+                <label for="modal-otp-toggle" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold rounded-xl cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-transparent">Cancel</label>
+                <button id="btn-verify-otp" class="flex-1 py-3 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-700 transition-all shadow-lg">Verify & Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:8000/api"; 
+        
+        // --- 0. SECURITY & INIT LOGIC ---
+        const authToken = localStorage.getItem("token");
+        const authHeaders = {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`
+        };
+
+        // Set Dynamic Role Headings (from Authority Login save point)
+        const displayRole = localStorage.getItem("displayRoleName") || localStorage.getItem("userRole") || "Authority";
+        document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
+        document.getElementById("main-dashboard-title").innerText = displayRole.toUpperCase() + " DASHBOARD";
+
+        // Logout Logic 
+        document.getElementById("logoutBtn").addEventListener("click", function() {
+            localStorage.clear();
+            window.location.replace("select_role_login.html");
+        });
+
+
+        // --- 1. STATE MANAGEMENT ---
+        let currentTab = 'pending'; 
+        let globalRequestsData = [];
+        let processedRequestsData = []; 
+
+        document.getElementById("tab-pending").addEventListener("click", () => switchTab('pending'));
+        document.getElementById("tab-processed").addEventListener("click", () => switchTab('processed'));
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const btnPending = document.getElementById("tab-pending");
+            const btnProcessed = document.getElementById("tab-processed");
+            
+            const activeClasses = "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm".split(" ");
+            const inactiveClasses = "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-transparent".split(" ");
+
+            if(tab === 'pending') {
+                btnPending.classList.add(...activeClasses); btnPending.classList.remove(...inactiveClasses);
+                btnProcessed.classList.add(...inactiveClasses); btnProcessed.classList.remove(...activeClasses);
+            } else {
+                btnProcessed.classList.add(...activeClasses); btnProcessed.classList.remove(...inactiveClasses);
+                btnPending.classList.add(...inactiveClasses); btnPending.classList.remove(...activeClasses);
+            }
+            renderRequestsTable();
+        }
+
+        // --- 2. DATA FETCHING & RENDERING (Requests) ---
+        async function fetchRequests() {
+            try {
+                const response = await fetch(`${API_BASE}/requests/pending`, {
+                    method: 'GET',
+                    headers: authHeaders
+                });
+                if (!response.ok) throw new Error("API Fetch failed");
+                globalRequestsData = await response.json();
+            } catch (error) {
+                console.log("Database connection failed. Loading fallback data.");
+                globalRequestsData = [
+                    { id: 1, club_name: "Music Club", type: "VENUE", event_title: "OAT Main Stage Booking for Annual Orientation 2026", expected_attendees: 1500, details: "Requires Open Air Theater for the annual orientation. Heavy load-in 3 hours prior.", permission_letter_id: "PERM-2026-001", status: "Pending" },
+                    { id: 2, club_name: "Dance Club", type: "MOU", event_title: "Sponsorship with RedBull India", expected_attendees: 0, details: "Official MOU for upcoming technical fest. Includes beverage distribution rights.", permission_letter_id: "N/A", status: "Pending" }
+                ];
+            }
+            renderRequestsTable();
+        }
+
+        function renderRequestsTable() {
+            const tbody = document.getElementById("dynamic-requests-body");
+            tbody.innerHTML = "";
+            
+            const dataToRender = currentTab === 'pending' ? globalRequestsData : processedRequestsData;
+
+            if(dataToRender.length === 0) {
+                const emptyMsg = currentTab === 'pending' ? "Inbox Zero! No pending requests." : "No history to display.";
+                tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-12 text-center text-slate-500 font-medium">${emptyMsg}</td></tr>`;
+                return;
+            }
+
+            dataToRender.forEach(req => {
+                let colorClass = "bg-slate-50 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border border-slate-200 dark:border-slate-700";
+                if(req.type === "VENUE") colorClass = "bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400 border border-pink-200 dark:border-pink-900/50";
+                if(req.type === "MOU") colorClass = "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50";
+                if(req.type === "PERMISSION") colorClass = "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50";
+
+                const rowInteraction = currentTab === 'pending' ? 'hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer group' : 'bg-slate-50/30 dark:bg-slate-800/10 opacity-70';
+
+                let statusBadge = ""; let timeStamp = "";
+                if (currentTab === 'processed') {
+                    const sColor = req.status === 'approved' ? 'text-emerald-500' : 'text-red-500';
+                    const sIcon = req.status === 'approved' ? 'check_circle' : 'cancel';
+                    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-2"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
+                    timeStamp = `<div class="text-[10px] text-slate-400 font-medium mt-1">${req.processedAt}</div>`;
+                }
+
+                const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full">`;
+                const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
+
+                const tr = `
+                    <tr data-id="${req.id}" class="transition-colors border-b border-pink-50 dark:border-pink-900/10 ${rowInteraction}">
+                        <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-800 dark:text-slate-200 max-w-[150px] truncate">
+                            ${wrapStart}<span class="block truncate" title="${req.club_name}">${req.club_name}</span>${wrapEnd}
+                        </td>
+                        <td class="px-6 py-5 whitespace-nowrap">
+                            ${wrapStart}<span class="px-2.5 py-1 rounded-md ${colorClass} text-[10px] font-black uppercase tracking-wider shadow-sm">${req.type}</span>${wrapEnd}
+                        </td>
+                        <td class="px-6 py-5 text-sm max-w-[250px] truncate">
+                            ${wrapStart}
+                                <div class="flex items-center">
+                                    <span class="block font-medium text-slate-700 dark:text-slate-300 truncate" title="${req.event_title}">${req.event_title}</span>
+                                    ${statusBadge}
+                                </div>
+                                ${timeStamp}
+                            ${wrapEnd}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        // --- 3. MODAL LOGIC & REJECTION FLOW ---
+        function resetReviewModal() {
+            document.getElementById("rejection-reason-container").classList.add("hidden");
+            document.getElementById("confirm-reject-buttons").classList.add("hidden");
+            document.getElementById("default-action-buttons").classList.remove("hidden");
+            document.getElementById("rejection-reason-input").value = "";
+        }
+
+        document.getElementById("dynamic-requests-body").addEventListener("click", function(e) {
+            if (currentTab !== 'pending') return; 
+            const row = e.target.closest("tr");
+            if (!row) return;
+
+            const reqId = row.getAttribute("data-id");
+            const reqData = globalRequestsData.find(r => r.id == reqId);
+
+            if (reqData) {
+                document.getElementById("modal-hidden-req-id").value = reqData.id;
+                document.getElementById("modal-display-clubname").innerText = reqData.club_name;
+                document.getElementById("modal-display-type").innerText = reqData.type + " REQUEST";
+                
+                document.getElementById("modal-event-title").value = reqData.event_title || "N/A"; 
+                document.getElementById("modal-event-attendees").value = reqData.expected_attendees || 0;
+                document.getElementById("modal-event-details").value = reqData.details || "";
+                document.getElementById("modal-perm-id").value = reqData.permission_letter_id || "N/A";
+                
+                const safeName = reqData.club_name || "C";
+                document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
+                
+                resetReviewModal(); 
+            }
+        });
+
+        document.getElementById("btn-initial-reject").addEventListener("click", function() {
+            document.getElementById("default-action-buttons").classList.add("hidden");
+            document.getElementById("rejection-reason-container").classList.remove("hidden");
+            document.getElementById("confirm-reject-buttons").classList.remove("hidden");
+            document.getElementById("rejection-reason-input").focus(); 
+        });
+
+        document.getElementById("btn-cancel-reject").addEventListener("click", () => resetReviewModal());
+
+        // --- 4. EXECUTING APPROVAL & OTP SECURE FLOW ---
+
+        // Step A: Trigger OTP instead of instant approval
+        document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
+            const userEmail = localStorage.getItem("email_id") || "admin@iitk.ac.in"; // Need to pass to backend so it knows where to send OTP
+            
+            try {
+                // Call backend to generate and email OTP
+                await fetch(`${API_BASE}/auth/send-otp`, {
+                    method: "POST",
+                    headers: authHeaders,
+                    body: JSON.stringify({ email_id: userEmail })
+                });
+
+                // Swap Modals
+                document.getElementById("request-review-toggle").checked = false;
+                document.getElementById("modal-otp-toggle").checked = true;
+                document.getElementById("input-otp-code").focus();
+            } catch(e) {
+                console.log("Mocking OTP Send for local testing");
+                document.getElementById("request-review-toggle").checked = false;
+                document.getElementById("modal-otp-toggle").checked = true;
+            }
+        });
+
+        // Step B: Verify OTP Code
+        document.getElementById("btn-verify-otp").addEventListener("click", async () => {
+            const code = document.getElementById("input-otp-code").value;
+            const userEmail = localStorage.getItem("email_id") || "admin@iitk.ac.in";
+
+            if (code.length < 6) return alert("Please enter the full 6-digit code.");
+
+            try {
+                const verifyRes = await fetch(`${API_BASE}/auth/verify-otp`, {
+                    method: "POST",
+                    headers: authHeaders,
+                    body: JSON.stringify({ email_id: userEmail, otp_code: code })
+                });
+
+                if (verifyRes.ok) {
+                    // Success! Close OTP modal and run the final approval function
+                    document.getElementById("modal-otp-toggle").checked = false;
+                    document.getElementById("input-otp-code").value = "";
+                    await executeFinalAction("approved"); 
+                } else {
+                    alert("Invalid or Expired OTP.");
+                }
+            } catch(e) {
+                console.log("Mocking OTP verification success");
+                document.getElementById("modal-otp-toggle").checked = false;
+                document.getElementById("input-otp-code").value = "";
+                await executeFinalAction("approved");
+            }
+        });
+
+        // Step C: Reject (No OTP Needed)
+        document.getElementById("btn-confirm-reject").addEventListener("click", function() {
+            const reason = document.getElementById("rejection-reason-input").value.trim();
+            if (reason === "") return alert("Action Blocked: A justification must be provided to reject a request.");
+            executeFinalAction("rejected", reason);
+        });
+
+        // Step D: Final Backend Update
+        async function executeFinalAction(actionState, reason = null) {
+            const reqId = document.getElementById("modal-hidden-req-id").value;
+            const backendAction = actionState === "approved" ? "approve" : "reject";
+            const payload = { action: backendAction };
+            if (reason) payload.message = reason;
+
+            try {
+                await fetch(`${API_BASE}/requests/${reqId}/action`, {
+                    method: "POST",
+                    headers: authHeaders,
+                    body: JSON.stringify(payload)
+                });
+            } catch(e) {
+                console.log(`Action submitted locally for testing: ${JSON.stringify(payload)}`);
+            }
+
+            // Move data to Processed History on UI
+            const requestToMove = globalRequestsData.find(r => r.id == reqId);
+            if (requestToMove) {
+                const processedRequest = { 
+                    ...requestToMove, 
+                    status: actionState, 
+                    comments: reason,
+                    processedAt: new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                };
+                processedRequestsData.unshift(processedRequest); 
+                globalRequestsData = globalRequestsData.filter(request => request.id != reqId);
+            }
+
+            renderRequestsTable();
+            document.getElementById("request-review-toggle").checked = false; 
+        }
+
+        // --- 5. DATA FETCHING & RENDERING (Announcements) ---
+        async function fetchAnnouncements() {
+            const container = document.getElementById("dynamic-announcements-container");
+            try {
+                const response = await fetch(`${API_BASE}/announcements`, {
+                    method: 'GET',
+                    headers: authHeaders
+                });
+                if (!response.ok) throw new Error("API not ready");
+                const data = await response.json();
+                renderAnnouncements(data.slice(0, 2), container);
+            } catch(e) {
+                renderAnnouncements([
+                    { heading: "URGENT: Semester Budget Audits", message: "All clubs must upload their final ledger receipts by Friday 5PM to the finance module.", timestamp: new Date().toISOString() }
+                ], container);
+            }
+        }
+
+        function renderAnnouncements(data, container) {
+            container.innerHTML = "";
+            if (data.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-500 italic">No active announcements.</p>`;
+                return;
+            }
+
+            data.forEach(ann => {
+                const dateObj = new Date(ann.timestamp);
+                const timeString = isNaN(dateObj) ? 'Recently' : dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                
+                const html = `
+                    <div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-slate-50 dark:bg-slate-800/50 hover:border-pink-200 dark:hover:border-pink-800 transition-all group">
+                        <h4 class="font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${ann.heading}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">${ann.message}</p>
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200 dark:border-slate-700/50">
+                            <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1 uppercase tracking-wider">
+                                <span class="material-icons-round text-[14px]">calendar_today</span> Posted ${timeString}
+                            </p>
+                        </div>
+                    </div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        // --- 6. POSTING A NEW ANNOUNCEMENT ---
+        document.getElementById("btn-submit-announcement").addEventListener("click", async function() {
+            const headingStr = document.getElementById("input-announcement-title").value.trim();
+            const messageStr = document.getElementById("input-announcement-content").value.trim();
+            const checkedBoxes = Array.from(document.querySelectorAll('.club-cb:checked')).map(cb => cb.value);
+
+            if (!headingStr || !messageStr) {
+                alert("Error: Subject Heading and Message Content are required.");
+                return;
+            }
+
+            // Fallback for empty club targets
+            const targets = checkedBoxes.length > 0 ? checkedBoxes : ["All Gymkhana Clubs"];
+
+            const payload = { 
+                heading: headingStr, 
+                message: messageStr, 
+                target_clubs: targets 
+            };
+
+            const submitBtn = this;
+            submitBtn.innerText = "Pushing...";
+
+            try {
+                await fetch(`${API_BASE}/announcements`, { 
+                    method: "POST", 
+                    headers: authHeaders, 
+                    body: JSON.stringify(payload) 
+                });
+            } catch(e) {
+                console.log("Mock submission (Backend disconnected).");
+                const container = document.getElementById("dynamic-announcements-container");
+                const localHtml = `
+                    <div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-slate-50 dark:bg-slate-800/50 hover:border-pink-200 dark:hover:border-pink-800 transition-all group">
+                        <h4 class="font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${headingStr}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">${messageStr}</p>
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200 dark:border-slate-700/50">
+                            <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1 uppercase tracking-wider">
+                                <span class="material-icons-round text-[14px]">calendar_today</span> Posted Just now
+                            </p>
+                        </div>
+                    </div>`;
+                container.innerHTML = localHtml + container.innerHTML;
+            } finally {
+                // Cleanup Modal
+                document.getElementById("input-announcement-title").value = "";
+                document.getElementById("input-announcement-content").value = "";
+                document.querySelectorAll('.club-cb').forEach(cb => cb.checked = false);
+                document.getElementById("announcement-modal-toggle").checked = false; 
+                submitBtn.innerText = "Push Announcement";
+                
+                // Refresh actual data
+                fetchAnnouncements(); 
+            }
+        });
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchRequests();
+            fetchAnnouncements();
+        });
+    </script>
+</body>
+</html>

@@ -119,8 +119,7 @@ if(passEntered && visToggle){
     visToggle.addEventListener("click", function(){
         const type = passEntered.getAttribute('type') === 'password' ? 'text' : 'password';
         passEntered.setAttribute('type', type);
-        
-        // Target the span inside the button so the Material Icon keeps rendering
+    
         const iconSpan = this.querySelector('span');
         if (iconSpan) {
             iconSpan.textContent = type === 'password' ? 'visibility' : 'visibility_off';
@@ -130,29 +129,51 @@ if(passEntered && visToggle){
 
 if(LetMeIn){
     LetMeIn.addEventListener("click", async(event)=>{
-        console.log("you touched me");
+        event.preventDefault();
+        
         const roleSelect = document.getElementById("roleSelect");
         const passEntered1 = document.getElementById("passInput");
-        const loginData={
+        
+        if (!roleSelect.value || !passEntered1.value) {
+            alert("Please select a role and enter a password.");
+            return;
+        }
+
+        const loginData = {
             email_id: roleSelect.value,
             password: passEntered1.value
         }
-        try{
+        // if (passEntered1.value === "admin") {
+        //     localStorage.setItem("token", "fake-developer-token");
+        //     localStorage.setItem("userRole", "adsa"); 
+        //     localStorage.setItem("displayRoleName", roleSelect.options[roleSelect.selectedIndex].text);
+        //     window.location.href = "adsa_dashboard.html";
+        //     return; // This stops the code from asking the backend
+        // }
+        
+        try {
             const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
                 method: "POST",
                 headers: {"Content-type": "application/json"},
                 body: JSON.stringify(loginData)
             });
             const result = await response.json();
+            
             if(response.ok){
                 localStorage.setItem("token", result.access_token);
                 localStorage.setItem("userRole", result.role);
-                if(result.role==="authority"){
+            
+                const selectedText = roleSelect.options[roleSelect.selectedIndex].text;
+                localStorage.setItem("displayRoleName", selectedText);
+
+                if(result.role === "authority" || result.role === "gensec" || result.role === "adsa" || result.role === "dosa"){
                     window.location.href="adsa_dashboard.html";
                 }
                 else{
-                    alert(result.detail || "Login Failed");
+                    alert(result.detail || "Access Denied: You are not an authority.");
                 }
+            } else {
+                alert(result.detail || "Login Failed");
             }
         }catch(e){
             console.error("Fetch failed entirely:", e);
