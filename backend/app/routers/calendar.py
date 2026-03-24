@@ -8,7 +8,7 @@ from .. import models, schemas
 from ..database import get_db
 
 router = APIRouter(
-    prefix="/calendar",
+    prefix="/api/calendar",
     tags=["Public Calendar"]
 )
 

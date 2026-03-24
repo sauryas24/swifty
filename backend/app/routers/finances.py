@@ -1,18 +1,25 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+import os
+import shutil
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
 from sqlalchemy.orm import Session
 from .. import models, schemas, database
-import shutil
-import os
+from ..utils import security
 
-router = APIRouter(prefix="/finances", tags=["finances"])
+router = APIRouter(prefix="/api/finances", tags=["finances"])
 
-@router.get("/{club_id}", response_model=schemas.ClubFinanceStatus)
-def get_club_finances(club_id: int, db: Session = Depends(database.get_db)):
-    club = db.query(models.Club).filter(models.Club.id == club_id).first()
-    if not club:
-        raise HTTPException(status_code=404, detail="Club not found")
+# 1. GET STATUS (Required for Dashboard & Tests)
+@router.get("/status", response_model=schemas.ClubFinanceStatus)
+def get_my_club_finances(
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    # Security: Only fetch the club belonging to the logged-in user
+    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
     
-    # Calculate derived values for the UI progress bar
+    if not club:
+        raise HTTPException(status_code=404, detail="Finance ledger not found.")
+    
     remaining = club.total_allocated - club.total_spent
     utilization = (club.total_spent / club.total_allocated) * 100 if club.total_allocated > 0 else 0
     
@@ -21,30 +28,61 @@ def get_club_finances(club_id: int, db: Session = Depends(database.get_db)):
         "total_allocated": club.total_allocated,
         "total_spent": club.total_spent,
         "remaining_balance": remaining,
-        "utilization_percentage": utilization,
+        "utilization_percentage": round(utilization, 2),
         "transactions": club.transactions
     }
 
+# 2. JSON TRANSACTION (Required for your Integration Tests)
+@router.post("/transactions", response_model=schemas.TransactionRead)
+def submit_json_transaction(
+    transaction_data: schemas.TransactionBase, 
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
+    if not club:
+        raise HTTPException(status_code=404, detail="Club ledger not found.")
+
+    if (club.total_spent + transaction_data.amount) > club.total_allocated:
+        raise HTTPException(status_code=400, detail="Insufficient budget!")
+
+    club.total_spent += transaction_data.amount
+    new_tx = models.Transaction(
+        club_id=club.id,
+        amount=transaction_data.amount,
+        description=transaction_data.description
+    )
+    db.add(new_tx)
+    db.commit()
+    db.refresh(new_tx)
+    return new_tx
+
+# 3. UPLOAD BILL (The Real-World Feature with Files)
 @router.post("/upload-bill")
 async def upload_bill(
-    club_id: int = Form(...),
     amount: float = Form(...),
     description: str = Form(...),
     file: UploadFile = File(...),
-    db: Session = Depends(database.get_db)
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
 ):
-    # 1. Save the file to the static directory as shown in SDD requirements [cite: 1947, 1967]
-    file_location = f"static/receipts/{file.filename}"
-    with open(file_location, "wb+") as file_object:
-        shutil.copyfileobj(file.file, file_object)
+    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
+    if not club:
+        raise HTTPException(status_code=404, detail="Club not found")
 
-    # 2. Update the Club's budget status [cite: 1948, 2035]
-    club = db.query(models.Club).filter(models.Club.id == club_id).first()
-    club.total_spent += amount
+    # Save the file
+    upload_dir = "static/receipts"
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
     
-    # 3. Create a persistent transaction log [cite: 1950, 2036]
+    file_location = f"{upload_dir}/{file.filename}"
+    with open(file_location, "wb+") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Update budget & log transaction
+    club.total_spent += amount
     new_transaction = models.Transaction(
-        club_id=club_id,
+        club_id=club.id,
         amount=amount,
         description=description,
         receipt_url=file_location
@@ -52,6 +90,5 @@ async def upload_bill(
     
     db.add(new_transaction)
     db.commit()
-    db.refresh(new_transaction)
     
-    return {"message": "Bill uploaded and budget updated successfully"}
+    return {"message": "Bill uploaded successfully", "receipt_path": file_location}
