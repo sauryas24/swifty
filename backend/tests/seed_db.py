@@ -34,7 +34,7 @@ def master_seed():
         )
         gensec = User(
             username="General Secretary",
-            email_id="gensec@iitk.ac.in",
+            email_id="mharsh24@iitk.ac.in",
             password=get_password_hash("admin123"),
             role="authority"
         )
