@@ -396,10 +396,10 @@
     let clubRequestsData = [];
     let clubFinancesData = []; // Store to populate bill details modal
 
-    // --- CORE DATA FETCHER ---
+        // --- CORE DATA FETCHER ---
     async function loadClubProfile() {
         
-        // 1. Fetch Finances
+        // 1. Fetch Finances & Bills
         try {
             const finRes = await fetch(`${API_BASE}/finances/${targetClubId}`, { headers: authHeaders });
             if (!finRes.ok) throw new Error("Finance API Failed");
@@ -407,7 +407,9 @@
             const finData = await finRes.json();
             clubFinancesData = finData.transactions || [];
             
+            // Dynamically set the club name at the top
             document.getElementById("club-title").innerText = finData.name.toUpperCase();
+            
             document.getElementById("budget-spent").innerText = `₹${finData.total_spent.toLocaleString('en-IN')}`;
             document.getElementById("budget-total").innerText = `₹${finData.total_allocated.toLocaleString('en-IN')}`;
             
@@ -422,7 +424,6 @@
             } else {
                 finData.transactions.forEach(tx => {
                     const dateStr = new Date(tx.timestamp).toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' });
-                    // Click opens the Bill Details Modal
                     billsTbody.innerHTML += `
                         <tr onclick="openBillModal(${tx.id})" class="group hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer relative">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">${dateStr}</td>
@@ -433,13 +434,13 @@
                 });
             }
         } catch(e) { 
-            // Fallback mock data prevents page freeze if backend is down
-            document.getElementById("club-title").innerText = `CLUB #${targetClubId}`;
-            document.getElementById("budget-spent").innerText = "₹1,20,000";
-            document.getElementById("budget-total").innerText = "₹5,00,000";
-            document.getElementById("budget-progress-bar").style.width = "24%";
-            document.getElementById("budget-percent-text").innerText = "24% of annual budget utilized (Mock)";
-            document.getElementById("bills-tbody").innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">No backend connection. Displaying UI layout only.</td></tr>`;
+            // Removed hardcoded data. Replaced with error states.
+            document.getElementById("club-title").innerText = "DATA UNAVAILABLE";
+            document.getElementById("budget-spent").innerText = "₹0";
+            document.getElementById("budget-total").innerText = "₹0";
+            document.getElementById("budget-progress-bar").style.width = "0%";
+            document.getElementById("budget-percent-text").innerText = "Error connecting to server";
+            document.getElementById("bills-tbody").innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-red-500">Failed to load financial records.</td></tr>`;
         }
 
         // 2. Fetch Requests
@@ -447,14 +448,13 @@
             const reqRes = await fetch(`${API_BASE}/requests/club/${targetClubId}`, { headers: authHeaders });
             if (!reqRes.ok) throw new Error("Requests API Failed");
             clubRequestsData = await reqRes.json();
+            renderRequests(clubRequestsData);
         } catch(e) { 
-            clubRequestsData = [
-                { id: 101, type: "VENUE", event_title: "Main Stage Booking", expected_attendees: 500, details: "Concert setup request.", status: "Pending", timestamp: new Date().toISOString() },
-                { id: 102, type: "PERMISSION", event_title: "Late Rehearsal", details: "Room 2 access.", status: "Rejected", timestamp: new Date(Date.now() - 86400000).toISOString() }
-            ];
+            // Removed hardcoded data. Replaced with error states.
+            clubRequestsData = [];
+            document.getElementById("sidebar-requests-list").innerHTML = `<p class="text-sm text-red-500 text-center py-10">Unable to load club requests.</p>`;
+            document.getElementById("full-history-tbody").innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-red-500">Unable to load club requests.</td></tr>`;
         }
-        
-        renderRequests(clubRequestsData);
     }
 
     // --- RENDER REQUESTS LIST ---
