@@ -3,3 +3,4 @@ sqlalchemy
 pydantic
 passlib[bcrypt]
 pyjwt 
+pytest

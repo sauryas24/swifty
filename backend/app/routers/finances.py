@@ -32,6 +32,35 @@ def get_my_club_finances(
         "transactions": club.transactions
     }
 
+# 4. GET SPECIFIC CLUB STATUS (For ADSA/DOSA Dashboard)
+@router.get("/{club_id}", response_model=schemas.ClubFinanceStatus)
+def get_specific_club_finances(
+    club_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    # Security check: Ensure the user is an authority
+    if current_user.role not in ["authority", "adsa", "dosa", "gensec"]:
+        raise HTTPException(status_code=403, detail="Not authorized to view other clubs.")
+
+    # Find the specific club by ID
+    club = db.query(models.Club).filter(models.Club.id == club_id).first()
+    
+    if not club:
+        raise HTTPException(status_code=404, detail="Club ledger not found.")
+    
+    remaining = club.total_allocated - club.total_spent
+    utilization = (club.total_spent / club.total_allocated) * 100 if club.total_allocated > 0 else 0
+    
+    return {
+        "name": club.name,
+        "total_allocated": club.total_allocated,
+        "total_spent": club.total_spent,
+        "remaining_balance": remaining,
+        "utilization_percentage": round(utilization, 2),
+        "transactions": club.transactions
+    }
+
 # 2. JSON TRANSACTION (Required for your Integration Tests)
 @router.post("/transactions", response_model=schemas.TransactionRead)
 def submit_json_transaction(
