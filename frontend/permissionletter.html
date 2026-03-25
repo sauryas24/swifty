@@ -247,37 +247,57 @@ past_requests.forEach((button) => {
         clubName.textContent= enterName.toUpperCase();
     }
 
-const submitButton=document.getElementById("submitButton");
-const cancelButton=document.getElementById("cancelButton");
+const submitButton = document.getElementById("submitButton");
+const cancelButton = document.getElementById("cancelButton");
+
 if(submitButton){
-    submitButton.addEventListener("click", async(event)=>{
-        const eventName= document.getElementById("eventName");
-        const eventDate= document.getElementById("eventDate");
-        const eventTime= document.getElementById("eventTime");
-        const reason= document.getElementById("reason");
-        const getToken = localStorage.getItem("token");
-        const PermissionLetter= {
-            event_name: eventName.value,
-            date: eventDate.value,
-            time: eventTime.value,
-            reason: reason.value
+    submitButton.addEventListener("click", async(event) => {
+        event.preventDefault(); // Prevent accidental page reloads
+        
+        const eventName = document.getElementById("eventName").value;
+        const eventDate = document.getElementById("eventDate").value;
+        const eventTime = document.getElementById("eventTime").value;
+        const reason = document.getElementById("reason").value;
+        
+        // GRAB THE FRESH TOKEN RIGHT BEFORE SENDING
+        const freshToken = localStorage.getItem("token");
+        
+        if (!freshToken) {
+            alert("Security Error: No token found. Please log in again.");
+            return;
+        }
+
+        const PermissionLetter = {
+            event_name: eventName,
+            date: eventDate,
+            time: eventTime,
+            reason: reason
         };
-        try{
-            const response = await fetch("http://127.0.0.1:8000/api/permission/submit",{
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/permission/submit", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" ,
-                    "Authorization": `Bearer ${getToken}`
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${freshToken}` 
                 },
                 body: JSON.stringify(PermissionLetter)
             });
-            if(response.ok){
-                alert("Permission letter sent!");
+
+            if (response.ok) {
+                alert("Permission letter sent successfully!");
+                // Clear the form
+                document.getElementById("eventName").value = "";
+                document.getElementById("eventDate").value = "";
+                document.getElementById("eventTime").value = "";
+                document.getElementById("reason").value = "";
+            } else {
+                const errorData = await response.json();
+                alert(`Submission Failed: ${errorData.detail}`);
             }
-        }
-        catch(e){
+        } catch(e) {
             console.error("Fetch failed entirely:", e);
         }
-        
     });
 }
 </script>

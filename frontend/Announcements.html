@@ -234,25 +234,50 @@ if(clubName){
     clubName.textContent= enterName.toUpperCase();
 }
 async function loadAnnouncements() {
-    try{
-        const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announements");
+    try {
+        // 1. Grab the fresh token
+        const token = localStorage.getItem("token");
+        if (!token) {
+            document.getElementById("insertAnnouncement").innerHTML = "<p class='text-slate-500'>Please log in to view announcements.</p>";
+            return;
+        }
+
+        // 2. Fix the typo and add the Authorization Headers
+        const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announcements", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch announcements");
+        
         const result = await response.json();
         const containerA = document.getElementById("insertAnnouncement");
-        const enterName = localStorage.getItem("club");
-        containerA.innerHTML="";
-        result.forEach((event)=>{
-            if(enterName in event.target_clubs){
+        containerA.innerHTML = "";
+
+        if (result.length === 0) {
+            containerA.innerHTML = "<p class='text-slate-500'>No announcements to display right now.</p>";
+            return;
+        }
+
+        // 3. Render directly - the backend already did the filtering for us!
+        result.forEach((event) => {
+            
+            // Format the date nicely
+            const dateStr = event.timestamp ? new Date(event.timestamp).toLocaleDateString() : "Recently";
+
             const cardHTML = `
-                <div class="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden">
+                <div class="group bg-white dark:bg-slate-900 p-6 rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm hover:shadow-md transition-all cursor-pointer relative overflow-hidden mb-4">
                     <div class="absolute top-0 left-0 w-1 h-full bg-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex flex-col md:flex-row gap-4 md:items-start justify-between mb-3">
                         <div class="flex items-center gap-3">
-
                             <h3 class="text-xl font-display font-bold text-slate-900 dark:text-white">${event.heading}</h3>
                         </div>
                         <span class="text-xs font-semibold text-slate-400 flex items-center gap-1 bg-pink-50/50 dark:bg-pink-900/10 px-3 py-1.5 rounded-lg">
                             <span class="material-symbols-outlined text-[16px]">schedule</span>
-                            ${event.timestamp}
+                            ${dateStr}
                         </span>
                     </div>
                     <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm">
@@ -260,28 +285,23 @@ async function loadAnnouncements() {
                     </p>
                     <div class="flex items-center justify-between border-t border-pink-50 dark:border-pink-900/10 pt-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPBLFw8DlYfvAB6bXLE7hcqaibKAUuG9HUUmwODC_UwpbNQZvsAeCzGyPVMbB-fRn8NiHJ78wEHjsJNLJKV55UQQAUMWhGvf9Z8_XDPMJZYglhqpLHynnGQ6GUdMCB4By6RLRk5FGikO0l0BNt9tNfpKZOGbWuT13Lm738o-SvZr0jNMGOZEOr0eezo67-DnzT6wC8Fn7Jpdl6ezNmNH3Uk7bOiVsdNuEwnlHWHxRX03gDbWWS7xMCdr8EwLKz9DBqEXOBmg2FLdw");'></div>
+                            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                                <span class="material-symbols-outlined text-[18px]">campaign</span>
+                            </div>
                             <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Posted by ${event.sender_username}</span>
                         </div>
-                        <button class="text-pink-600 text-sm font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                            Read Details <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                        </button>
                     </div>
                 </div>
-            
-
             `;
             containerA.innerHTML += cardHTML;
-            }
         });
 
+    } catch(e) {
+        console.error("Failed to load announcements:", e);
+        document.getElementById("insertAnnouncement").innerHTML = "<p class='text-red-500'>Failed to load announcements.</p>";
     }
-    catch(e){
-        console.error("Failed to load announcements:", error);
-        document.getElementById("insertAnnouncement").innerHTML = "<p>Failed to load events.</p>";
-    }
-    
 }
+
 loadAnnouncements();
 </script>
 </html>

@@ -271,38 +271,39 @@
 
     if (submitBtn) {
         submitBtn.addEventListener("click", async function(event) {
-            event.preventDefault(); // Prevent any default page reload
+            event.preventDefault();
 
-            // Grab the values from the inputs
             const orgName = document.getElementById("orgName").value;
             const purpose = document.getElementById("purpose").value;
             const docFile = document.getElementById("docFile").files[0];
 
-            // Basic Validation
             if (!orgName || !purpose || !docFile) {
                 alert("Please fill in all fields and attach a document.");
                 return;
             }
+            
+            // GRAB THE FRESH TOKEN RIGHT BEFORE SENDING
+            const freshToken = localStorage.getItem("token");
+            if (!freshToken) {
+                alert("Security Error: No token found. Please log in again.");
+                return;
+            }
 
-            // Pack the data into FormData (Required for sending files!)
             const formData = new FormData();
             formData.append("organization_name", orgName);
             formData.append("purpose", purpose);
             formData.append("document", docFile);
 
-            // Change button state to show loading
             const originalBtnHtml = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = `<span>Submitting...</span>`;
 
             try {
-                // NOTE: 'getToken' is already defined higher up in your script!
-                const response = await fetch("http://localhost:8000/api/mou/submit", {
+                // FIXED: Changed localhost to 127.0.0.1 to match your login domain!
+                const response = await fetch("http://127.0.0.1:8000/api/mou/submit", {
                     method: "POST",
                     headers: {
-                        // CRITICAL: Do NOT set "Content-Type" here. 
-                        // The browser automatically sets it to multipart/form-data for FormData.
-                        "Authorization": `Bearer ${getToken}` 
+                        "Authorization": `Bearer ${freshToken}` 
                     },
                     body: formData
                 });
@@ -311,23 +312,15 @@
 
                 if (response.ok) {
                     alert("MoU Request submitted successfully!");
-                    // Clear the form and reset UI
                     document.getElementById("mouForm").reset(); 
                     fileNameDisplay.textContent = "Click to upload or drag and drop";
                     fileNameDisplay.classList.remove("text-primary");
-                    
-                    // Optional: Redirect to the Past Requests page so they can see it's pending
-                    //window.location.href = "past requests.html"; 
-                } else if (response.status === 401 || response.status === 403) {
-                    alert("Authorization failed. Please make sure you are logged in as a Coordinator.");
                 } else {
-                    alert(`Error: ${data.detail || "Failed to submit MoU"}`);
+                    alert(`Backend Error: ${data.detail || "Unauthorized"}`);
                 }
             } catch (error) {
                 console.error("Submission Error:", error);
-                alert("Could not connect to the server. Is your FastAPI backend running?");
             } finally {
-                // Restore the button back to normal
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHtml;
             }
