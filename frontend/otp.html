@@ -232,13 +232,12 @@
             verifyButton.disabled = true;
 
             try {
-                // Call your actual Python endpoint defined in otp.py
-                const response = await fetch("http://127.0.0.1:8000/api/otp/verify", {
+                const response = await fetch("http://127.0.0.1:8000/api/auth/login/verify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         email_id: storedEmail,
-                        otp_code: otp // Updated to match schemas.OTPVerify
+                        otp_code: otp 
                     })
                 });
 
@@ -247,20 +246,17 @@
                 if (response.ok) {
                     console.log("OTP Verified! Backend released the tokens:", result);
                     
-                    // 1. Catch the tokens
                     if (result.access_token) {
                         localStorage.setItem("token", result.access_token);
                     }
                     
-                    // 2. Extract and clean the role (force lowercase, remove invisible spaces)
-                    // If the backend didn't send a role, default to "missing"
                     const rawRole = result.role || "missing";
                     const safeRole = rawRole.trim().toLowerCase();
                     
                     localStorage.setItem("userRole", safeRole);
                     
                     if (result.username) localStorage.setItem("club", result.username);
-                    if (result.club_id) localStorage.setItem("club_id", result.club_id);
+                    if (result.id) localStorage.setItem("club_id", result.id);
 
                     // 3. The Bulletproof Routing
                     if (safeRole === "coordinator") {

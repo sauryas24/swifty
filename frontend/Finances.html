@@ -246,22 +246,27 @@ past_requests.forEach((button) => {
 
 async function loadFinances() {
     try {
-        // NOTE: The finances API requires an integer club_id. 
-        // If you don't have it in localStorage yet, we will default to 1 (Music Club) for testing.
-        let rawClubId = localStorage.getItem("club_id");
-        let clubId;
-        if (!rawClubId || rawClubId === "undefined" || rawClubId === "null") {
-            clubId = 1; // Fallback to Music Club
-        } else {
-            clubId = parseInt(rawClubId, 10);
+        // 1. Grab the token from localStorage
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+            throw new Error("No authentication token found. Please log in.");
         }
-        const response = await fetch(`http://127.0.0.1:8000/finances/${clubId}`);
+
+        // 2. Hit the correct endpoint and pass the Authorization header
+        const response = await fetch(`http://127.0.0.1:8000/api/finances/status`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
         if (!response.ok) throw new Error("Failed to fetch finances");
         
         const data = await response.json();
 
         // 1. Update the Budget Numbers
-        // Using toLocaleString('en-IN') formats the numbers with Indian commas (e.g., 1,50,000)
         document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
         document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
         
@@ -280,11 +285,9 @@ async function loadFinances() {
         }
 
         data.transactions.forEach((tx) => {
-            // Format the date to look like "Feb 24, 2026"
             const dateObj = new Date(tx.timestamp || new Date()); 
             const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
             
-            // Format the URL so the button actually opens the PDF!
             const receiptUrl = `http://127.0.0.1:8000/${tx.receipt_url}`;
 
             const rowHTML = `
@@ -307,7 +310,6 @@ async function loadFinances() {
         document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500">Failed to load financial data.</td></tr>`;
     }
 }
-
 // Call the function when the script runs!
 loadFinances();
 
