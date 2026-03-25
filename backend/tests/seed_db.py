@@ -40,8 +40,8 @@ def master_seed():
         )
         president = User(
             username="President Gymkhana",
-            email_id="shrutis24@iitk.ac.in",
-            password=get_password_hash("admin123"),
+            email_id="shrutisahu24@iitk.ac.in",
+            password=get_password_hash("psg123"),
             role="president" # MUST BE EXACTLY "president"
         )
         facad = User(
@@ -63,7 +63,8 @@ def master_seed():
             role="dosa" # MUST BE EXACTLY "president"
         )
 
-        db.add_all([coordinator, gensec])
+        # db.add_all([coordinator, gensec])
+        db.add_all([coordinator, gensec, president, facad, adsa, dosa])
         db.commit()
 
         # ==========================================
