@@ -99,3 +99,25 @@ def send_approval_otp(
         "club_id": getattr(user, 'club_id', None), # Safely get club_id if it exists
         "message": "Email successfully verified!"
     }
+    existing_otp = db.query(models.OTP).filter(models.OTP.email_id == current_user.email_id).first()
+    
+    if existing_otp:
+        existing_otp.otp_code = otp_code
+        existing_otp.expires_at = expiration_time.isoformat()
+    else:
+        new_otp = models.OTP(email_id=current_user.email_id, otp_code=otp_code, expires_at=expiration_time.isoformat())
+        db.add(new_otp)
+        
+    db.commit()
+
+    email_body = f"Hello {current_user.username},\n\nYou are attempting to approve a request on Swifty.\nYour authorization code is: {otp_code}\n\nThis code will expire in 5 minutes."
+    email_sent = email_service.send_notification_email(
+        current_user.email_id, 
+        "Swifty Security: Approval Authorization Code", 
+        email_body
+    )
+    
+    if not email_sent:
+        raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
+
+    return {"message": "Authorization OTP sent to your registered email."}
