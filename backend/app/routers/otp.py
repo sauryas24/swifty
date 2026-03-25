@@ -3,11 +3,8 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import database, models, schemas
-<<<<<<< Updated upstream
 from ..utils import email_service, security
-=======
 from ..utils import email_service, security # Added security import!
->>>>>>> Stashed changes
 
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
 
@@ -37,12 +34,9 @@ def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)
 
     return {"message": f"OTP successfully sent to {request.email_id}"}
 
-<<<<<<< Updated upstream
 
 # 2. VERIFY OTP ENDPOINT
 # 2. VERIFY OTP ENDPOINT
-=======
->>>>>>> Stashed changes
 @router.post("/verify")
 def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db)):
     """Used ONLY for Login/Registration."""
@@ -79,7 +73,6 @@ def send_approval_otp(
     otp_code = f"{random.randint(0, 999999):06d}"
     expiration_time = datetime.now(timezone.utc) + timedelta(minutes=5)
     
-<<<<<<< Updated upstream
     # ---------------------------------------------------------
     # NEW CODE: Fetch the User and hand over the VIP wristband!
     # ---------------------------------------------------------
@@ -107,7 +100,6 @@ def send_approval_otp(
         "club_id": getattr(user, 'club_id', None), # Safely get club_id if it exists
         "message": "Email successfully verified!"
     }
-=======
     existing_otp = db.query(models.OTP).filter(models.OTP.email_id == current_user.email_id).first()
     
     if existing_otp:
@@ -130,4 +122,3 @@ def send_approval_otp(
         raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
 
     return {"message": "Authorization OTP sent to your registered email."}
->>>>>>> Stashed changes
