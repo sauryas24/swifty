@@ -259,12 +259,14 @@
                     if (result.id) localStorage.setItem("club_id", result.id);
 
                     // 3. The Bulletproof Routing
+                    const authorityRoles = ["authority", "adsa", "dosa", "gensec", "president", "facad"];
+
                     if (safeRole === "coordinator") {
                         window.location.href = "Coordinator_homepage.html";
-                    } else if (safeRole === "authority") {
-                        window.location.href = "adsa_dashboard.html";
+                    } else if (authorityRoles.includes(safeRole)) {
+                        // ALL authorities share the same dashboard UI!
+                        window.location.href = "adsa_dashboard.html"; 
                     } else {
-                        // Let's explicitly alert you if the backend messed up!
                         alert(`Wait! The backend sent your role as: "${rawRole}". I don't know where to send you!`);
                         window.location.href = "publiccalender.html"; 
                     }

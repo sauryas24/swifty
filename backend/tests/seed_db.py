@@ -36,8 +36,33 @@ def master_seed():
             username="General Secretary",
             email_id="mharsh24@iitk.ac.in",
             password=get_password_hash("admin123"),
-            role="authority"
+            role="gensec" # MUST BE EXACTLY "gensec"
         )
+        president = User(
+            username="President Gymkhana",
+            email_id="shrutis24@iitk.ac.in",
+            password=get_password_hash("admin123"),
+            role="president" # MUST BE EXACTLY "president"
+        )
+        facad = User(
+            username="Faculty Advisor",
+            email_id="diyahp24@iitk.ac.in",
+            password=get_password_hash("admin123"),
+            role="facad" # MUST BE EXACTLY "president"
+        )
+        adsa = User(
+            username="ADSA",
+            email_id="pulkitj24@iitk.ac.in",
+            password=get_password_hash("admin123"),
+            role="adsa" # MUST BE EXACTLY "president"
+        )
+        dosa = User(
+            username="DOSA",
+            email_id="sreejas24@iitk.ac.in",
+            password=get_password_hash("admin123"),
+            role="dosa" # MUST BE EXACTLY "president"
+        )
+
         db.add_all([coordinator, gensec])
         db.commit()
 

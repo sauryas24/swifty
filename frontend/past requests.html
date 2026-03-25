@@ -197,12 +197,23 @@
 
     <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="perm-details-modal">
         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('perm-modal-toggle').checked = false"></div>
-        <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
+        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
             <div class="p-6 border-b border-pink-50 flex justify-between items-center">
-                <h3 class="font-display font-bold text-2xl text-slate-800 dark:text-slate-100">Permission Letter</h3>
+                <h3 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100">Permission Letter</h3>
                 <label class="p-2 cursor-pointer text-slate-400" for="perm-modal-toggle"><span class="material-icons-round">close</span></label>
             </div>
-            
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border border-pink-100 dark:border-pink-900/50">
+                    <span class="material-icons-round text-pink-600 text-3xl">verified</span>
+                </div>
+                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Your Booking ID</h4>
+                
+                <div id="view-perm-id" class="text-3xl font-black text-slate-900 dark:text-white tracking-wider bg-slate-50 dark:bg-slate-800 py-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                    PENDING
+                </div>
+                
+                <p class="text-xs text-slate-400 mt-4 px-4">Copy this ID and paste it into the Venue Booking form to secure your room.</p>
+            </div>
         </div>
     </div>
 </body>
@@ -360,21 +371,18 @@ function getStatusUI(status, comments) {
 }
     }
 
-    window.viewDetails = (type, id) => {
-        // Find the specific record from our globally stored allRecords
+   window.viewDetails = (type, id) => {
         const record = allRecords.find(r => r.id === id && r.type === type);
         if (!record) return;
 
         if (type === 'MOU') {
-            // Fill Partner Name & Scope
             document.getElementById('view-mou-partner').textContent = record.details;
             document.getElementById('view-mou-scope').textContent = record.purpose || "No specific scope provided.";
             
-            // Handle PDF Attachment
             const fileContainer = document.getElementById('mou-file-container');
             if (record.document_url) {
                 fileContainer.classList.remove('hidden');
-                document.getElementById('view-mou-link').href = `http://localhost:8000/${record.document_url}`;
+                document.getElementById('view-mou-link').href = `http://127.0.0.1:8000/${record.document_url}`;
                 document.getElementById('view-mou-filename').textContent = record.document_url.split('/').pop();
             } else {
                 fileContainer.classList.add('hidden');
@@ -383,7 +391,17 @@ function getStatusUI(status, comments) {
             document.getElementById('mou-modal-toggle').checked = true;
         } 
         else if (type === 'PERMISSION') {
-            // Fill Permission Modal logic here
+            // NEW LOGIC: Inject the generated ID into the modal
+            const idDisplay = document.getElementById('view-perm-id');
+            
+            if (record.generated_id) {
+                idDisplay.textContent = record.generated_id;
+                idDisplay.className = "text-3xl font-black text-pink-600 tracking-wider bg-pink-50 dark:bg-pink-900/20 py-4 rounded-xl border border-pink-200 dark:border-pink-900/50";
+            } else {
+                idDisplay.textContent = "NOT APPROVED YET";
+                idDisplay.className = "text-xl font-bold text-slate-400 tracking-wider bg-slate-50 dark:bg-slate-800 py-5 rounded-xl border border-slate-200 dark:border-slate-700";
+            }
+
             document.getElementById('perm-modal-toggle').checked = true;
         }
     };

@@ -12,7 +12,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     
     <script>
-        const validRoles = ["authority", "adsa", "dosa", "gensec", "president", "faculty"];
+        const validRoles = ["authority", "adsa", "dosa", "gensec", "president", "facad"];
         const currentToken = localStorage.getItem("token");
         const currentRole = localStorage.getItem("userRole");
         
@@ -423,20 +423,26 @@
         }
 
         // --- 2. DATA FETCHING & RENDERING (Requests) ---
+        // --- 2. DATA FETCHING & RENDERING (Requests) ---
         async function fetchRequests() {
             try {
                 const response = await fetch(`${API_BASE}/requests/pending`, {
                     method: 'GET',
                     headers: authHeaders
                 });
-                if (!response.ok) throw new Error("API Fetch failed");
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "API Fetch failed");
+                }
+                
                 globalRequestsData = await response.json();
+                
             } catch (error) {
-                console.log("Database connection failed. Loading fallback data.");
-                globalRequestsData = [
-                    { id: 1, club_name: "Music Club", type: "VENUE", event_title: "OAT Main Stage Booking for Annual Orientation 2026", expected_attendees: 1500, details: "Requires Open Air Theater for the annual orientation. Heavy load-in 3 hours prior.", permission_letter_id: "PERM-2026-001", status: "Pending" },
-                    { id: 2, club_name: "Dance Club", type: "MOU", event_title: "Sponsorship with RedBull India", expected_attendees: 0, details: "Official MOU for upcoming technical fest. Includes beverage distribution rights.", permission_letter_id: "N/A", status: "Pending" }
-                ];
+                console.error("Failed to load queue:", error);
+                // Instead of loading fake data, we show a clean empty state!
+                globalRequestsData = []; 
+                alert("Could not load your pending queue. Please ensure you are logged in correctly.");
             }
             renderRequestsTable();
         }

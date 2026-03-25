@@ -143,7 +143,7 @@ class RequestRecordResponse(BaseModel):
     status: str     # 'Pending', 'Approved', 'Rejected'
     raw_status: str # Keeping the original (e.g., 'Pending GenSec') just in case!
     comments: Optional[str] = None
-    
+    generated_id: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
     
