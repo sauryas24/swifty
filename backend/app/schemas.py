@@ -120,6 +120,7 @@ class MoUResponse(BaseModel):
 class ApprovalAction(BaseModel):
     action: str  # Must be "approve" or "reject"
     message: Optional[str] = None  # Optional reason for rejection
+    otp_code: Optional[str] = None
 # Used when an authority clicks "Reject"
 class RejectionCreate(BaseModel):
     reason: str

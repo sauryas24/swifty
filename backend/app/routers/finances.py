@@ -15,8 +15,11 @@ def get_my_club_finances(
     current_user: models.User = Depends(security.get_current_user)
 ):
     # Security: Only fetch the club belonging to the logged-in user
-    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
-    
+    # Inside get_my_club_finances and submit_json_transaction
+    # Use this query in your GET and POST routes in finances.py
+    club = db.query(models.Club).filter(
+    (models.Club.user_id == current_user.id) | (models.Club.name == current_user.username)
+).first()
     if not club:
         raise HTTPException(status_code=404, detail="Finance ledger not found.")
     
@@ -68,7 +71,10 @@ def submit_json_transaction(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
+    # Use this query in your GET and POST routes in finances.py
+    club = db.query(models.Club).filter(
+    (models.Club.user_id == current_user.id) | (models.Club.name == current_user.username)
+).first()
     if not club:
         raise HTTPException(status_code=404, detail="Club ledger not found.")
 
@@ -95,7 +101,11 @@ async def upload_bill(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    club = db.query(models.Club).filter(models.Club.name == current_user.username).first()
+    # Inside get_my_club_finances and submit_json_transaction
+    # Use this query in your GET and POST routes in finances.py
+    club = db.query(models.Club).filter(
+    (models.Club.user_id == current_user.id) | (models.Club.name == current_user.username)
+).first()
     if not club:
         raise HTTPException(status_code=404, detail="Club not found")
 
