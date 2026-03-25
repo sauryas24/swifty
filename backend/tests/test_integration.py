@@ -144,7 +144,7 @@ from app.models import User, PermissionLetter, VenueBooking, OTP
 from app.utils.security import get_current_user
 from tests.seed_db import master_seed
 from dotenv import load_dotenv
-
+from unittest.mock import patch
 load_dotenv()
 
 client = TestClient(app)
@@ -195,6 +195,13 @@ def test_finance_dashboard_and_transaction():
 def test_unauthorized_approval_fails():
     override_auth(mock_coordinator)
     db = SessionLocal()
+    # --- ADD THIS BLOCK ---
+        # Make sure there is actually a pending venue to test!
+    if not db.query(VenueBooking).filter(VenueBooking.status == "Pending GenSec").first():
+        test_venue = VenueBooking(date="2026-10-10", time="10:00 AM", room_id=1, event_title="Test", status="Pending GenSec")
+        db.add(test_venue)
+        db.commit()
+        # ----------------------
     pending_venue = db.query(VenueBooking).filter(VenueBooking.status == "Pending GenSec").first()
     db.close()
     
@@ -207,6 +214,13 @@ def test_unauthorized_approval_fails():
 def test_permission_letter_approval_chain_with_otp():
     global generated_pl_id
     db = SessionLocal()
+# --- ADD THIS BLOCK ---
+        # Make sure there is actually a pending letter to test!
+    if not db.query(PermissionLetter).filter(PermissionLetter.status == "Pending GenSec").first():
+        test_letter = PermissionLetter(event_name="Test Event", date="2026-10-10", time="10:00 AM", reason="Testing", club_id=1, status="Pending GenSec")
+        db.add(test_letter)
+        db.commit()
+        # ----------------------
     letter = db.query(PermissionLetter).filter(PermissionLetter.status == "Pending GenSec").first()
     letter_id = letter.id
     db.close()
@@ -216,18 +230,29 @@ def test_permission_letter_approval_chain_with_otp():
         (mock_president, "Pending FacAd"),
         (mock_facad, "Pending ADSA"),
     ]
-    
-    for mock_user, expected_status in approval_chain:
-        override_auth(mock_user)
-        client.post("/api/otp/send-approval")
-        otp_code = fetch_otp_from_db(mock_user.email_id)
+
+    # --- NEW: Mock the email service so it doesn't crash! ---
+    with patch("app.utils.email_service.send_notification_email") as mock_email:
+        mock_email.return_value = True  # Pretend the email sent successfully!
         
-        res = client.put(
-            f"/api/approvals/permission/{letter_id}/process",
-            json={"action": "approve", "otp_code": otp_code}
-        )
-        assert res.status_code == 200
-        assert expected_status in res.json()["message"]
+        for mock_user, expected_status in approval_chain:
+            override_auth(mock_user)
+            
+            # 1. Capture the OTP endpoint response
+            res_otp = client.post("/api/otp/send-approval")
+            assert res_otp.status_code == 200, f"OTP Endpoint Crashed! Error: {res_otp.text}"
+            
+            # 2. Fetch the OTP and ensure it actually exists
+            otp_code = fetch_otp_from_db(mock_user.email_id)
+            assert otp_code is not None, f"Failed to find OTP in database for {mock_user.email_id}!"
+    
+            # 3. Process the approval
+            res = client.put(
+                f"/api/approvals/permission/{letter_id}/process",
+                json={"action": "approve", "otp_code": otp_code}
+            )
+            assert res.status_code == 200, f"Backend rejected approval! Error: {res.json()}"
+            assert expected_status in res.json()["message"], f"Expected status '{expected_status}' not found in response!"
 
     override_auth(mock_adsa)
     client.post("/api/otp/send-approval")

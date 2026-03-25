@@ -102,14 +102,14 @@ def master_seed():
                 amount=15000.0,
                 description="New PA System Rental",
                 receipt_url="static/receipts/dummy_pa_system.pdf",
-                timestamp=datetime.datetime.now(datetime.UTC)
+                timestamp=datetime.datetime.now(datetime.timezone.utc)
             ),
             Transaction(
                 club_id=music_ledger.id,
                 amount=4500.0,
                 description="Guitar Strings & Repairs",
                 receipt_url="static/receipts/dummy_guitar_strings.pdf",
-                timestamp=datetime.datetime.now(datetime.UTC)
+                timestamp=datetime.datetime.now(datetime.timezone.utc)
             )
         ]
         db.add_all(transactions)
