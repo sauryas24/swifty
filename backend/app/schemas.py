@@ -51,7 +51,7 @@ class TransactionCreate(TransactionBase):
 class TransactionRead(TransactionBase):
     id: int
     timestamp: datetime
-    receipt_url: Optional[str]
+    receipt_url: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 

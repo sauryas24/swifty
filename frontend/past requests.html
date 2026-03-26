@@ -289,38 +289,38 @@ function getTypeStyle(type) {
 }
 
 // Function to generate the HTML for the status column
+// Function to generate the HTML for the status column
 function getStatusUI(status, comments) {
     let colorClass = "";
     let icon = "";
+    
+    // Convert to lowercase to make it easy to search
+    const lowerStatus = (status || "").toLowerCase();
 
-    switch (status?.toLowerCase()) {
-        case 'approved':
-            colorClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20";
-            icon = "check_circle";
-            break;
-        case 'rejected':
-            colorClass = "text-rose-600 bg-rose-50 dark:bg-rose-900/20";
-            icon = "cancel";
-            break;
-        case 'pending':
-            colorClass = "text-amber-600 bg-amber-50 dark:bg-amber-900/20";
-            icon = "schedule";
-            break;
-        default:
-            colorClass = "text-slate-600 bg-slate-50";
-            icon = "help_outline";
+    // Use .includes() so "Pending GenSec" and "Pending ADSA" both trigger the yellow badge!
+    if (lowerStatus.includes('approved')) {
+        colorClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20";
+        icon = "check_circle";
+    } else if (lowerStatus.includes('rejected')) {
+        colorClass = "text-rose-600 bg-rose-50 dark:bg-rose-900/20";
+        icon = "cancel";
+    } else if (lowerStatus.includes('pending')) {
+        colorClass = "text-amber-600 bg-amber-50 dark:bg-amber-900/20";
+        icon = "schedule";
+    } else {
+        colorClass = "text-slate-600 bg-slate-50";
+        icon = "help_outline";
     }
 
     // If there are comments and it's rejected, show the info icon to trigger the modal
-    const commentTrigger = (status?.toLowerCase() === 'rejected' && comments) 
+    const commentTrigger = (lowerStatus.includes('rejected') && comments) 
         ? `<label for="modal-toggle" class="cursor-pointer hover:text-rose-800 ml-1"><span class="material-icons-round text-xs">info</span></label>` 
         : "";
 
     return `
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${colorClass} text-xs font-bold">
             <span class="material-icons-round text-sm">${icon}</span>
-            ${status}
-            ${commentTrigger}
+            ${status} ${commentTrigger}
         </div>
     `;
 }
@@ -344,7 +344,7 @@ function getStatusUI(status, comments) {
             });
 
             if (!response.ok) throw new Error("Failed to fetch records");
-
+            
             allRecords = await response.json(); 
             currentPage = 1; // Reset to page 1 whenever new data is loaded
             

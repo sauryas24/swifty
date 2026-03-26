@@ -148,37 +148,12 @@
 </tr>
 </thead>
 <tbody id="transactionsTable" class="divide-y divide-slate-100">
-<tr class="hover:bg-slate-50/50 transition-colors">
-
-<td class="px-6 py-5 text-sm font-medium text-slate-500">Loading...</td>
-<!--<td class="px-6 py-5 text-sm font-bold text-slate-800">New PA System Rental</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">15,000</td>
-<td class="px-6 py-5 text-center">
-<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
-<span class="material-symbols-outlined text-xl">visibility</span>
-</button>
-</td>-->
-</tr>
-<tr class="hover:bg-slate-50/50 transition-colors">
-<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 12, 2026</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-800">Guitar Strings &amp; Repairs</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">4,500</td>
-<td class="px-6 py-5 text-center">
-<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
-<span class="material-symbols-outlined text-xl">visibility</span>
-</button>
-</td>
-</tr>
-<tr class="hover:bg-slate-50/50 transition-colors">
-<td class="px-6 py-5 text-sm font-medium text-slate-500">Feb 08, 2026</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-800">Workshop Guest Refreshments</td>
-<td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">2,200</td>
-<td class="px-6 py-5 text-center">
-<button class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors">
-<span class="material-symbols-outlined text-xl">visibility</span>
-</button>
-</td>
-</tr>
+    <tr>
+        <td colspan="4" class="px-6 py-8 text-center text-slate-500 text-sm font-medium flex flex-col items-center justify-center gap-2">
+            <span class="material-symbols-outlined animate-spin text-pink-500">autorenew</span>
+            Syncing financial ledgers...
+        </td>
+    </tr>
 </tbody>
 </table>
 </div>
@@ -246,14 +221,9 @@ past_requests.forEach((button) => {
 
 async function loadFinances() {
     try {
-        // 1. Grab the token from localStorage
         const token = localStorage.getItem("token");
-        
-        if (!token) {
-            throw new Error("No authentication token found. Please log in.");
-        }
+        if (!token) throw new Error("No authentication token found. Please log in.");
 
-        // 2. Hit the correct endpoint and pass the Authorization header
         const response = await fetch(`http://127.0.0.1:8000/api/finances/status`, {
             method: 'GET',
             headers: {
@@ -266,51 +236,56 @@ async function loadFinances() {
         
         const data = await response.json();
 
-        // 1. Update the Budget Numbers
+        // 1. Update the Budget Numbers dynamically
         document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
         document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
         
         // 2. Update the Progress Bar
-        const roundedPercentage = Math.round(data.total_spent/data.total_allocated*100);
-        document.getElementById("progressBar").style.width = `${roundedPercentage}%`;
-        document.getElementById("budgetUtilized").textContent = `${roundedPercentage}% of annual budget utilized`;
+        const percent = data.utilization_percentage || 0;
+        document.getElementById("progressBar").style.width = `${percent}%`;
+        document.getElementById("budgetUtilized").textContent = `${percent}% of annual budget utilized`;
 
         // 3. Update the Transactions Table
         const tableBody = document.getElementById("transactionsTable");
-        tableBody.innerHTML = ""; // Clear the "Loading..." text
         
-        if (data.transactions.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">No transactions found.</td></tr>`;
+        if (!data.transactions || data.transactions.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400 font-medium">No transactions recorded yet.</td></tr>`;
             return;
         }
 
+        // Build the rows assuming every transaction HAS a receipt
+        let rowsHTML = "";
         data.transactions.forEach((tx) => {
             const dateObj = new Date(tx.timestamp || new Date()); 
             const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
             
-            const receiptUrl = `http://127.0.0.1:8000/${tx.receipt_url}`;
-
-            const rowHTML = `
-                <tr class="hover:bg-slate-50/50 transition-colors">
+            // Clean the URL and build the button directly
+            const cleanUrl = tx.receipt_url.startsWith('/') ? tx.receipt_url.slice(1) : tx.receipt_url;
+            const fullUrl = `http://127.0.0.1:8000/${cleanUrl}`;
+            
+            rowsHTML += `
+                <tr class="hover:bg-slate-50/80 transition-colors">
                     <td class="px-6 py-5 text-sm font-medium text-slate-500">${formattedDate}</td>
                     <td class="px-6 py-5 text-sm font-bold text-slate-800">${tx.description}</td>
-                    <td class="px-6 py-5 text-sm font-bold text-slate-900 text-right">${tx.amount.toLocaleString('en-IN')}</td>
+                    <td class="px-6 py-5 text-sm font-black text-slate-900 text-right">₹${tx.amount.toLocaleString('en-IN')}</td>
                     <td class="px-6 py-5 text-center">
-                        <button onclick="window.open('${receiptUrl}', '_blank')" class="text-pink-600 hover:bg-pink-50 p-1.5 rounded-full transition-colors" title="View Receipt">
-                            <span class="material-symbols-outlined text-xl">visibility</span>
+                        <button onclick="window.open('${fullUrl}', '_blank')" class="text-pink-600 hover:bg-pink-100 bg-pink-50 p-2 rounded-full transition-colors shadow-sm" title="View Receipt">
+                            <span class="material-symbols-outlined text-[18px]">visibility</span>
                         </button>
                     </td>
                 </tr>
             `;
-            tableBody.innerHTML += rowHTML;
         });
+        
+        tableBody.innerHTML = rowsHTML;
 
     } catch (error) {
         console.error("Error loading finances:", error);
-        document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-500">Failed to load financial data.</td></tr>`;
+        document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-8 text-red-500 font-bold bg-red-50">Failed to load financial data.</td></tr>`;
     }
 }
-// Call the function when the script runs!
+
+// Boot up!
 loadFinances();
 
 </script>

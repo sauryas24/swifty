@@ -176,33 +176,15 @@
 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-pink-50 dark:divide-pink-900/10">
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-pink-50 dark:bg-pink-900/30 text-pink-600 dark:text-pink-400 text-[10px] font-bold uppercase">Venue</span>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Feb 10, 2026</td>
-<td class="px-6 py-4 text-sm font-medium">OAT Main Stage Booking</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-amber-400"></div>
-<span class="text-sm text-slate-600 dark:text-slate-400">Pending DOSA</span>
-</div>
-</td>
-</tr>
-<tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/5 transition-colors cursor-pointer">
-<td class="px-6 py-4 whitespace-nowrap">
-<span class="px-2 py-1 rounded bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-[10px] font-bold uppercase">MOU</span>
-</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Feb 08, 2026</td>
-<td class="px-6 py-4 text-sm font-medium">Sponsorship with Brand-X</td>
-<td class="px-6 py-4 whitespace-nowrap">
-<div class="flex items-center gap-2">
-<div class="w-2 h-2 rounded-full bg-emerald-400"></div>
-<span class="text-sm text-slate-600 dark:text-slate-400">Approved</span>
-</div>
-</td>
-</tr>
+<tbody id="recent-requests-body" class="divide-y divide-pink-50 dark:divide-pink-900/10">
+    <tr>
+        <td colspan="4" class="px-6 py-8 text-center text-slate-500 font-medium">
+            <div class="flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined animate-spin text-pink-500">autorenew</span>
+                Fetching recent requests...
+            </div>
+        </td>
+    </tr>
 </tbody>
 </table>
 </div>
@@ -395,5 +377,78 @@ past_requests.forEach((button) => {
     if(clubName){
         clubName.textContent= enterName.toUpperCase();
     }
+
+
+    // --- FETCH & RENDER RECENT REQUESTS ---
+    async function loadRecentRequests() {
+        const token = localStorage.getItem("token");
+        const tbody = document.getElementById("recent-requests-body");
+        if (!token) return;
+
+        try {
+            // Reusing the endpoint from the Past Requests page
+            const response = await fetch("http://127.0.0.1:8000/api/requests/all", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch requests");
+
+            const records = await response.json();
+            tbody.innerHTML = ""; // Clear the loading spinner
+
+            if (!records || records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 font-medium">No recent requests submitted.</td></tr>`;
+                return;
+            }
+
+            // Grab only the top 5 most recent records
+            const recentRecords = records.slice(0, 5);
+
+            recentRecords.forEach(record => {
+                // 1. Determine Badge Colors based on Type
+                let typeColor = "bg-slate-50 text-slate-600";
+                const typeUpper = (record.type || "").toUpperCase();
+                if (typeUpper.includes("VENUE")) typeColor = "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400";
+                else if (typeUpper.includes("MOU")) typeColor = "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400";
+                else if (typeUpper.includes("PERMISSION")) typeColor = "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
+                else if (typeUpper.includes("FINANCE")) typeColor = "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+
+                // 2. Determine Status Dot Color
+                let statusDot = "bg-slate-400"; // Default Gray
+                const statusLower = (record.status || "").toLowerCase();
+                if (statusLower.includes("approved")) statusDot = "bg-emerald-400";
+                else if (statusLower.includes("rejected")) statusDot = "bg-rose-500";
+                else if (statusLower.includes("pending")) statusDot = "bg-amber-400";
+
+                // 3. Inject Row HTML
+                tbody.innerHTML += `
+                    <tr class="hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer" onclick="window.location.href='past requests.html'">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 rounded ${typeColor} text-[10px] font-bold uppercase">${record.type}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${record.date || 'N/A'}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-800 dark:text-slate-200 truncate max-w-[200px]">${record.details || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full ${statusDot}"></div>
+                                <span class="text-sm font-medium text-slate-600 dark:text-slate-400">${record.status}</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+        } catch (error) {
+            console.error("Error loading recent requests:", error);
+            tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-rose-500 bg-rose-50 font-medium">Failed to load recent requests.</td></tr>`;
+        }
+    }
+
+    // Call it alongside your announcements function!
+    loadRecentRequests();
 </script>
 </html>

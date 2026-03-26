@@ -65,38 +65,38 @@ def master_seed():
         # ==========================================
         print("💰 Seeding Finances...")
         # By creating them in this exact order, they get IDs 1, 2, 3, 4 to match your HTML sidebar!
-        music_ledger = Club(user_id=coordinator_music.id, name="Music Club", total_allocated=500000.0, total_spent=19500.0)
-        dance_ledger = Club(user_id=coordinator_dance.id, name="Dance Club", total_allocated=300000.0, total_spent=45000.0)
-        drama_ledger = Club(user_id=coordinator_drama.id, name="Dramatics Club", total_allocated=400000.0, total_spent=12000.0)
-        prog_ledger = Club(user_id=coordinator_prog.id, name="Programming Club", total_allocated=250000.0, total_spent=5000.0)
+        music_ledger = Club(user_id=coordinator_music.id, name="Music Club", total_allocated=500000.0, total_spent=0)
+        dance_ledger = Club(user_id=coordinator_dance.id, name="Dance Club", total_allocated=300000.0, total_spent=0)
+        drama_ledger = Club(user_id=coordinator_drama.id, name="Dramatics Club", total_allocated=400000.0, total_spent=0)
+        prog_ledger = Club(user_id=coordinator_prog.id, name="Programming Club", total_allocated=250000.0, total_spent=0)
         
         db.add_all([music_ledger, dance_ledger, drama_ledger, prog_ledger])
         db.commit()
 
-        transactions = [
-            Transaction(club_id=music_ledger.id, amount=15000.0, description="New PA System Rental", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=music_ledger.id, amount=4500.0, description="Guitar Strings & Repairs", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=drama_ledger.id, amount=12000.0, description="Stage Props & Costumes", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=dance_ledger.id, amount=45000.0, description="Annual Choreographer Fee", timestamp=datetime.datetime.now(datetime.UTC)),
+        # transactions = [
+        #     Transaction(club_id=music_ledger.id, amount=15000.0, description="New PA System Rental", timestamp=datetime.datetime.now(datetime.UTC)),
+        #     Transaction(club_id=music_ledger.id, amount=4500.0, description="Guitar Strings & Repairs", timestamp=datetime.datetime.now(datetime.UTC)),
+        #     Transaction(club_id=drama_ledger.id, amount=12000.0, description="Stage Props & Costumes", timestamp=datetime.datetime.now(datetime.UTC)),
+        #     Transaction(club_id=dance_ledger.id, amount=45000.0, description="Annual Choreographer Fee", timestamp=datetime.datetime.now(datetime.UTC)),
 
-            Transaction(
-                club_id=music_ledger.id,
-                amount=15000.0,
-                description="New PA System Rental",
-                receipt_url="static/receipts/dummy_pa_system.pdf",
-                timestamp=datetime.datetime.now(datetime.timezone.utc)
-            ),
-            Transaction(
-                club_id=music_ledger.id,
-                amount=4500.0,
-                description="Guitar Strings & Repairs",
-                receipt_url="static/receipts/dummy_guitar_strings.pdf",
-                timestamp=datetime.datetime.now(datetime.timezone.utc)
-            )
+        #     Transaction(
+        #         club_id=music_ledger.id,
+        #         amount=15000.0,
+        #         description="New PA System Rental",
+        #         receipt_url="static/receipts/dummy_pa_system.pdf",
+        #         timestamp=datetime.datetime.now(datetime.timezone.utc)
+        #     ),
+        #     Transaction(
+        #         club_id=music_ledger.id,
+        #         amount=4500.0,
+        #         description="Guitar Strings & Repairs",
+        #         receipt_url="static/receipts/dummy_guitar_strings.pdf",
+        #         timestamp=datetime.datetime.now(datetime.timezone.utc)
+        #     )
  
-        ]
-        db.add_all(transactions)
-        db.commit()
+        # ]
+        # db.add_all(transactions)
+        # db.commit()
 
         # ==========================================
         # 4. SEED MoU REQUESTS
