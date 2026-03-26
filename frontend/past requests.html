@@ -136,8 +136,8 @@
                 </div>
 
                 <div class="px-8 py-5 flex items-center justify-between border-t border-pink-50 dark:border-pink-900/10">
-                    <p class="text-[13px] text-slate-500 font-medium">Showing 1 to 7 of 68 history records</p>
-                    <div class="flex items-center gap-2">
+                    <p id="pagination-info" class="text-[13px] text-slate-500 font-medium">Showing 1 to 7 of 68 history records</p>
+                    <div id="pagination-controls" class="flex items-center gap-2">
                         <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#111827] text-white hover:bg-slate-800 transition-colors">
                             <span class="material-icons-round text-sm">chevron_left</span>
                         </button>
@@ -324,8 +324,12 @@ function getStatusUI(status, comments) {
         </div>
     `;
 }
- let allRecords = []; // Global storage for all fetched requests
+ // --- PAGINATION STATE ---
+    let allRecords = []; 
+    let currentPage = 1;
+    const rowsPerPage = 7; // You can change this number to show more/less rows per page!
 
+    // --- FETCH DATA ---
     async function fetchRequests() {
         const token = localStorage.getItem("token");
         const tableBody = document.getElementById("request-table-body");
@@ -341,34 +345,106 @@ function getStatusUI(status, comments) {
 
             if (!response.ok) throw new Error("Failed to fetch records");
 
-            const records = await response.json();
-            allRecords = records; // IMPORTANT: Store records for modal viewing
-            tableBody.innerHTML = ""; 
+            allRecords = await response.json(); 
+            currentPage = 1; // Reset to page 1 whenever new data is loaded
+            
+            renderTable(); // Call the render function instead of looping here
+            
+        } catch (error) {
+            console.error("Detailed Error:", error); 
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-rose-500">Error: ${error.message}</td></tr>`;
+        }
+    }
 
-            records.forEach(record => {
-                const row = document.createElement("tr");
-                row.className = "hover:bg-pink-50/20 transition-colors";
+    // --- RENDER TABLE (SLICED DATA) ---
+    function renderTable() {
+        const tableBody = document.getElementById("request-table-body");
+        tableBody.innerHTML = ""; 
 
-                const typeClass = getTypeStyle(record.type);
-                const statusBadge = getStatusUI(record.status, record.comments);
+        if (allRecords.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-slate-500">No records found.</td></tr>`;
+            updatePaginationUI(0, 0, 0, 0);
+            return;
+        }
 
-                row.innerHTML = `
-                    <td class="px-8 py-4"><span class="px-2 py-1 rounded ${typeClass} text-[10px] font-bold uppercase">${record.type}</span></td>
-                    <td class="px-8 py-4 text-sm text-slate-500">${record.date || 'N/A'}</td>
-                    <td class="px-8 py-4 text-sm font-medium">${record.details}</td>
-                    <td class="px-8 py-4">${statusBadge}</td>
-                    <td class="px-8 py-4 text-center">
-                        <button onclick="viewDetails('${record.type}', ${record.id})" class="text-xs font-bold underline text-slate-900 dark:text-white hover:text-pink-600">
-                            View Details
-                        </button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }catch (error) {
-    console.error("Detailed Error:", error); // This will tell you exactly what is wrong in the console
-    tableBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-rose-500">Error: ${error.message}</td></tr>`;
-}
+        // Calculate Pagination Math
+        const totalPages = Math.ceil(allRecords.length / rowsPerPage);
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, allRecords.length);
+        
+        // Slice the array to only get the records for the current page
+        const paginatedRecords = allRecords.slice(startIndex, endIndex);
+
+        // Render the sliced records
+        paginatedRecords.forEach(record => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-pink-50/20 transition-colors";
+
+            const typeClass = getTypeStyle(record.type);
+            const statusBadge = getStatusUI(record.status, record.comments);
+
+            row.innerHTML = `
+                <td class="px-8 py-4"><span class="px-2 py-1 rounded ${typeClass} text-[10px] font-bold uppercase">${record.type}</span></td>
+                <td class="px-8 py-4 text-sm text-slate-500">${record.date || 'N/A'}</td>
+                <td class="px-8 py-4 text-sm font-medium">${record.details}</td>
+                <td class="px-8 py-4">${statusBadge}</td>
+                <td class="px-8 py-4 text-center">
+                    <button onclick="viewDetails('${record.type}', ${record.id})" class="text-xs font-bold underline text-slate-900 dark:text-white hover:text-pink-600">
+                        View Details
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Update the text and buttons
+        updatePaginationUI(startIndex + 1, endIndex, allRecords.length, totalPages);
+    }
+
+    // --- RENDER PAGINATION UI ---
+    function updatePaginationUI(start, end, total, totalPages) {
+        const infoText = document.getElementById("pagination-info");
+        const controls = document.getElementById("pagination-controls");
+        
+        // 1. Update the Text
+        if (total === 0) {
+            infoText.textContent = "Showing 0 records";
+            controls.innerHTML = "";
+            return;
+        }
+        infoText.textContent = `Showing ${start} to ${end} of ${total} history records`;
+
+        // 2. Generate the Buttons
+        controls.innerHTML = "";
+
+        // Previous Button
+        const prevBtn = document.createElement("button");
+        prevBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === 1 ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
+        prevBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_left</span>`;
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => { currentPage--; renderTable(); };
+        controls.appendChild(prevBtn);
+
+        // Page Numbers
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement("button");
+            if (i === currentPage) {
+                pageBtn.className = "w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white dark:bg-slate-700 text-pink-600 text-xs font-bold shadow-sm";
+            } else {
+                pageBtn.className = "w-8 h-8 flex items-center justify-center rounded-lg bg-[#111827] text-white text-xs font-medium hover:bg-slate-800 transition-colors";
+            }
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => { currentPage = i; renderTable(); };
+            controls.appendChild(pageBtn);
+        }
+
+        // Next Button
+        const nextBtn = document.createElement("button");
+        nextBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === totalPages ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
+        nextBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_right</span>`;
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => { currentPage++; renderTable(); };
+        controls.appendChild(nextBtn);
     }
 
    window.viewDetails = (type, id) => {
