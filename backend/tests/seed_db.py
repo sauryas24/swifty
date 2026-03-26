@@ -74,10 +74,10 @@ def master_seed():
         db.commit()
 
         transactions = [
-            Transaction(club_id=music_ledger.id, amount=15000.0, description="New PA System Rental", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=music_ledger.id, amount=4500.0, description="Guitar Strings & Repairs", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=drama_ledger.id, amount=12000.0, description="Stage Props & Costumes", timestamp=datetime.datetime.now(datetime.UTC)),
-            Transaction(club_id=dance_ledger.id, amount=45000.0, description="Annual Choreographer Fee", timestamp=datetime.datetime.now(datetime.UTC)),
+            Transaction(club_id=music_ledger.id, amount=15000.0, description="New PA System Rental", timestamp=datetime.datetime.now(datetime.timezone.utc)),
+            Transaction(club_id=music_ledger.id, amount=4500.0, description="Guitar Strings & Repairs", timestamp=datetime.datetime.now(datetime.timezone.utc)),
+            Transaction(club_id=drama_ledger.id, amount=12000.0, description="Stage Props & Costumes", timestamp=datetime.datetime.now(datetime.timezone.utc)),
+            Transaction(club_id=dance_ledger.id, amount=45000.0, description="Annual Choreographer Fee", timestamp=datetime.datetime.now(datetime.timezone.utc)),
 
             Transaction(
                 club_id=music_ledger.id,

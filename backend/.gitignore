@@ -6,3 +6,4 @@ venv/
 myenv/
 .DS_Store
 *.pyc
+hi.env
