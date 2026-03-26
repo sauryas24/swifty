@@ -323,6 +323,13 @@
                     <textarea id="modal-event-details" class="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none cursor-default leading-relaxed" readonly="" rows="5"></textarea>
                 </div>
                 
+                <div id="modal-document-container" class="hidden space-y-2 mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Attached Document</label>
+                    <a id="modal-document-link" href="#" target="_blank" class="flex items-center gap-2 px-4 py-3 rounded-xl border border-pink-200 dark:border-pink-900/50 bg-pink-50 dark:bg-pink-900/10 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/20 transition-colors w-max font-bold text-sm">
+                        <span class="material-icons-round">description</span> View Attached File
+                    </a>
+                </div>
+                
                 <div id="rejection-reason-container" class="hidden mt-6 pt-6 border-t border-red-100 dark:border-red-900/30 space-y-3">
                     <label class="text-sm font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
                         <span class="material-icons-round text-lg">warning</span> Provide Reason for Rejection
@@ -384,17 +391,14 @@
             "Authorization": `Bearer ${authToken}`
         };
 
-        // Set Dynamic Role Headings (from Authority Login save point)
         const displayRole = localStorage.getItem("displayRoleName") || localStorage.getItem("userRole") || "Authority";
         document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
         document.getElementById("main-dashboard-title").innerText = displayRole.toUpperCase() + " DASHBOARD";
 
-        // Logout Logic 
         document.getElementById("logoutBtn").addEventListener("click", function() {
             localStorage.clear();
             window.location.replace("select_role_login.html");
         });
-
 
         // --- 1. STATE MANAGEMENT ---
         let currentTab = 'pending'; 
@@ -425,7 +429,6 @@
         // --- 2. DATA FETCHING & RENDERING (Requests) ---
         async function fetchRequests() {
             try {
-                // 1. Fetch ALL Pending Requests for this Authority
                 const pendingRes = await fetch(`${API_BASE}/requests/pending`, {
                     method: 'GET',
                     headers: authHeaders
@@ -437,8 +440,6 @@
                     globalRequestsData = [];
                 }
 
-                // 2. Fetch Processed History for this Authority
-                // Note: Ensure your FastAPI backend has this endpoint mapped!
                 const historyRes = await fetch(`${API_BASE}/requests/history`, {
                     method: 'GET',
                     headers: authHeaders
@@ -471,7 +472,6 @@
             }
 
             dataToRender.forEach(req => {
-                // Base colors for request types
                 let colorClass = "bg-slate-50 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border border-slate-200 dark:border-slate-700";
                 const reqType = (req.type || "").toUpperCase();
                 
@@ -484,7 +484,6 @@
                 let statusBadge = ""; 
                 let timeStampHtml = "";
                 
-                // Format the timestamp if it exists
                 if (req.timestamp || req.updated_at) {
                     const dateObj = new Date(req.updated_at || req.timestamp);
                     const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -499,10 +498,9 @@
                     statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
                 }
 
-                const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full">`;
+                const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
                 const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
 
-                // Render the Row
                 const tr = `
                     <tr data-id="${req.id}" class="transition-colors border-b border-pink-50 dark:border-pink-900/10 ${rowInteraction}">
                         <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-800 dark:text-slate-200 max-w-[150px] truncate">
@@ -534,6 +532,45 @@
             document.getElementById("rejection-reason-input").value = "";
         }
 
+        // Allow opening modal for history items too (to view documents)
+        window.openHistoryModal = function(reqId) {
+            const reqData = processedRequestsData.find(r => r.id == reqId);
+            if(reqData) populateModal(reqData, true);
+        }
+
+        function populateModal(reqData, isHistory = false) {
+            document.getElementById("modal-hidden-req-id").value = reqData.id;
+            document.getElementById("modal-display-clubname").innerText = reqData.club_name;
+            document.getElementById("modal-display-type").innerText = reqData.type + " REQUEST";
+            
+            document.getElementById("modal-event-title").value = reqData.event_title || "N/A"; 
+            document.getElementById("modal-event-attendees").value = reqData.expected_attendees || 0;
+            document.getElementById("modal-event-details").value = reqData.details || "";
+            document.getElementById("modal-perm-id").value = reqData.permission_letter_id || "N/A";
+            
+            const safeName = reqData.club_name || "C";
+            document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
+            
+            // --- NEW DOCUMENT LOGIC ---
+            const docContainer = document.getElementById("modal-document-container");
+            const docLink = document.getElementById("modal-document-link");
+            
+            if (reqData.document_url && reqData.document_url !== "N/A") {
+                docContainer.classList.remove("hidden");
+                docLink.href = `http://127.0.0.1:8000/${reqData.document_url.replace(/\\/g, "/")}`;
+            } else {
+                docContainer.classList.add("hidden");
+            }
+            
+            resetReviewModal(); 
+
+            // Hide action buttons if viewing history
+            if(isHistory) {
+                document.getElementById("default-action-buttons").classList.add("hidden");
+                document.getElementById("request-review-toggle").checked = true; 
+            }
+        }
+
         document.getElementById("dynamic-requests-body").addEventListener("click", function(e) {
             if (currentTab !== 'pending') return; 
             const row = e.target.closest("tr");
@@ -542,21 +579,7 @@
             const reqId = row.getAttribute("data-id");
             const reqData = globalRequestsData.find(r => r.id == reqId);
 
-            if (reqData) {
-                document.getElementById("modal-hidden-req-id").value = reqData.id;
-                document.getElementById("modal-display-clubname").innerText = reqData.club_name;
-                document.getElementById("modal-display-type").innerText = reqData.type + " REQUEST";
-                
-                document.getElementById("modal-event-title").value = reqData.event_title || "N/A"; 
-                document.getElementById("modal-event-attendees").value = reqData.expected_attendees || 0;
-                document.getElementById("modal-event-details").value = reqData.details || "";
-                document.getElementById("modal-perm-id").value = reqData.permission_letter_id || "N/A";
-                
-                const safeName = reqData.club_name || "C";
-                document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
-                
-                resetReviewModal(); 
-            }
+            if (reqData) populateModal(reqData, false);
         });
 
         document.getElementById("btn-initial-reject").addEventListener("click", function() {
@@ -569,11 +592,8 @@
         document.getElementById("btn-cancel-reject").addEventListener("click", () => resetReviewModal());
 
         // --- 4. EXECUTING APPROVAL & OTP SECURE FLOW ---
-
-        // Step A: Trigger OTP (Updated URL & Removed Body)
         document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
             try {
-                // Pointing to /otp/send-approval. No body needed, authHeaders handle identity!
                 const res = await fetch(`${API_BASE}/otp/send-approval`, {
                     method: "POST",
                     headers: authHeaders
@@ -581,7 +601,6 @@
 
                 if (!res.ok) throw new Error("Failed to send OTP");
 
-                // Swap Modals
                 document.getElementById("request-review-toggle").checked = false;
                 document.getElementById("modal-otp-toggle").checked = true;
                 document.getElementById("input-otp-code").focus();
@@ -591,56 +610,48 @@
             }
         });
 
-        // Step B: "Verify" OTP Code (Skipping the middleman!)
         document.getElementById("btn-verify-otp").addEventListener("click", async () => {
             const code = document.getElementById("input-otp-code").value;
 
             if (code.length < 6) return alert("Please enter the full 6-digit code.");
 
-            // Success! Close OTP modal and pass the code directly to final action
             document.getElementById("modal-otp-toggle").checked = false;
             document.getElementById("input-otp-code").value = "";
             
             await executeFinalAction("approved", null, code); 
         });
 
-        // Step C: Reject (No OTP Needed)
         document.getElementById("btn-confirm-reject").addEventListener("click", function() {
             const reason = document.getElementById("rejection-reason-input").value.trim();
             if (reason === "") return alert("Action Blocked: A justification must be provided to reject a request.");
             executeFinalAction("rejected", reason, null);
         });
 
-        // Step D: Final Backend Update (Updated URL, PUT method, and Payload)
         async function executeFinalAction(actionState, reason = null, otpCode = null) {
             const reqId = document.getElementById("modal-hidden-req-id").value;
             const backendAction = actionState === "approved" ? "approve" : "reject";
             
-            // 1. Build the precise Pydantic payload
             const payload = { action: backendAction };
             if (reason) payload.message = reason;
             if (otpCode) payload.otp_code = otpCode;
 
-            // 2. Figure out the route type (Assuming you have access to the request type here)
             const typeText = document.getElementById("modal-display-type").innerText.toLowerCase();
-            let routeType = "venue"; // Default
+            let routeType = "venue"; 
             if (typeText.includes("mou")) routeType = "mou";
             if (typeText.includes("permission")) routeType = "permission";
 
             try {
-                // 3. Send the PUT request to the correct pipeline
                 const res = await fetch(`${API_BASE}/approvals/${routeType}/${reqId}/process`, {
                     method: "PUT",
                     headers: {
                         ...authHeaders,
-                        "Content-Type": "application/json" // Crucial for sending the payload!
+                        "Content-Type": "application/json" 
                     },
                     body: JSON.stringify(payload)
                 });
 
                 if (res.ok) {
                     alert(`Successfully ${actionState}!`);
-                    // Add your UI refresh logic here (e.g., reloading the page or updating the table)
                     window.location.reload(); 
                 } else {
                     const err = await res.json();
@@ -706,7 +717,6 @@
                 return;
             }
 
-            // Fallback for empty club targets
             const targets = checkedBoxes.length > 0 ? checkedBoxes : ["All Gymkhana Clubs"];
 
             const payload = { 
@@ -739,18 +749,15 @@
                     </div>`;
                 container.innerHTML = localHtml + container.innerHTML;
             } finally {
-                // Cleanup Modal
                 document.getElementById("input-announcement-title").value = "";
                 document.getElementById("input-announcement-content").value = "";
                 document.querySelectorAll('.club-cb').forEach(cb => cb.checked = false);
                 document.getElementById("announcement-modal-toggle").checked = false; 
                 submitBtn.innerText = "Push Announcement";
                 
-                // Refresh actual data
                 fetchAnnouncements(); 
             }
         });
-
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchRequests();
