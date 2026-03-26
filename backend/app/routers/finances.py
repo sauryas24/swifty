@@ -36,7 +36,7 @@ def get_my_club_finances(
     }
 
 
-# 4. GET SPECIFIC CLUB STATUS (For ADSA/DOSA Dashboard)
+# 4. GET SPECIFIC CLUB STATUS (For ADSA Dashboard)
 @router.get("/{club_id}", response_model=schemas.ClubFinanceStatus)
 def get_specific_club_finances(
     club_id: int,
@@ -44,7 +44,7 @@ def get_specific_club_finances(
     current_user: models.User = Depends(security.get_current_user)
 ):
     # Security check: Ensure the user is an authority (Added president and facad)
-    if current_user.role not in ["authority", "adsa", "dosa", "gensec", "president", "facad"]:
+    if current_user.role not in ["authority", "adsa", "gensec", "president", "facad"]:
         raise HTTPException(status_code=403, detail="Not authorized to view other clubs.")
 
     # Find the specific club by ID

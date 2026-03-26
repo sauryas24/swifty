@@ -94,14 +94,13 @@ AUTHORITY_STATUS_MAP = {
     "president": "Pending President",
     "facad": "Pending FacAd",
     "adsa": "Pending ADSA",
-    "dosa": "Pending DOSA"
 }
 
 # --- HELPER LOGIC FOR AUTHORITY PERMISSIONS ---
 def get_authority_pipeline_data(user_role: str):
     """Calculates exactly what an authority is allowed to see based on the pipeline."""
     target_status = AUTHORITY_STATUS_MAP.get(user_role)
-    PIPELINE = ["Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Pending DOSA", "Approved"]
+    PIPELINE = ["Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"]
     
     try:
         user_index = PIPELINE.index(target_status)
