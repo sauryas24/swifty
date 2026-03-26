@@ -27,7 +27,7 @@ def master_seed():
         # ==========================================
         print("👤 Seeding Users...")
         # Coordinators
-        coordinator_music = User(username="Music Club", email_id="music@iitk.ac.in", password=get_password_hash("music123"), role="coordinator")
+        coordinator_music = User(username="Music Club", email_id="vanshikaag24@iitk.ac.in", password=get_password_hash("music123"), role="coordinator")
         coordinator_dance = User(username="Dance Club", email_id="dance@iitk.ac.in", password=get_password_hash("dance123"), role="coordinator")
         coordinator_drama = User(username="Dramatics Club", email_id="drama@iitk.ac.in", password=get_password_hash("drama123"), role="coordinator")
         coordinator_prog = User(username="Programming Club", email_id="prog@iitk.ac.in", password=get_password_hash("prog123"), role="coordinator")

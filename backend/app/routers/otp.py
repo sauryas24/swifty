@@ -6,7 +6,6 @@ from .. import database, models, schemas
 
 from ..utils import email_service, security
 
-
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
 
 # ==========================================
