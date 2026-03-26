@@ -545,98 +545,86 @@
 
         // --- 4. EXECUTING APPROVAL & OTP SECURE FLOW ---
 
-        // Step A: Trigger OTP instead of instant approval
+        // Step A: Trigger OTP (Updated URL & Removed Body)
         document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
-            const userEmail = localStorage.getItem("email_id") || "admin@iitk.ac.in"; // Need to pass to backend so it knows where to send OTP
-            
             try {
-                // Call backend to generate and email OTP
-                await fetch(`${API_BASE}/auth/send-otp`, {
+                // Pointing to /otp/send-approval. No body needed, authHeaders handle identity!
+                const res = await fetch(`${API_BASE}/otp/send-approval`, {
                     method: "POST",
-                    headers: authHeaders,
-                    body: JSON.stringify({ email_id: userEmail })
+                    headers: authHeaders
                 });
+
+                if (!res.ok) throw new Error("Failed to send OTP");
 
                 // Swap Modals
                 document.getElementById("request-review-toggle").checked = false;
                 document.getElementById("modal-otp-toggle").checked = true;
                 document.getElementById("input-otp-code").focus();
             } catch(e) {
-                console.log("Mocking OTP Send for local testing");
-                document.getElementById("request-review-toggle").checked = false;
-                document.getElementById("modal-otp-toggle").checked = true;
+                console.error("OTP Trigger Error:", e);
+                alert("Failed to send OTP. Check console.");
             }
         });
 
-        // Step B: Verify OTP Code
+        // Step B: "Verify" OTP Code (Skipping the middleman!)
         document.getElementById("btn-verify-otp").addEventListener("click", async () => {
             const code = document.getElementById("input-otp-code").value;
-            const userEmail = localStorage.getItem("email_id") || "admin@iitk.ac.in";
 
             if (code.length < 6) return alert("Please enter the full 6-digit code.");
 
-            try {
-                const verifyRes = await fetch(`${API_BASE}/auth/verify-otp`, {
-                    method: "POST",
-                    headers: authHeaders,
-                    body: JSON.stringify({ email_id: userEmail, otp_code: code })
-                });
-
-                if (verifyRes.ok) {
-                    // Success! Close OTP modal and run the final approval function
-                    document.getElementById("modal-otp-toggle").checked = false;
-                    document.getElementById("input-otp-code").value = "";
-                    await executeFinalAction("approved"); 
-                } else {
-                    alert("Invalid or Expired OTP.");
-                }
-            } catch(e) {
-                console.log("Mocking OTP verification success");
-                document.getElementById("modal-otp-toggle").checked = false;
-                document.getElementById("input-otp-code").value = "";
-                await executeFinalAction("approved");
-            }
+            // Success! Close OTP modal and pass the code directly to final action
+            document.getElementById("modal-otp-toggle").checked = false;
+            document.getElementById("input-otp-code").value = "";
+            
+            await executeFinalAction("approved", null, code); 
         });
 
         // Step C: Reject (No OTP Needed)
         document.getElementById("btn-confirm-reject").addEventListener("click", function() {
             const reason = document.getElementById("rejection-reason-input").value.trim();
             if (reason === "") return alert("Action Blocked: A justification must be provided to reject a request.");
-            executeFinalAction("rejected", reason);
+            executeFinalAction("rejected", reason, null);
         });
 
-        // Step D: Final Backend Update
-        async function executeFinalAction(actionState, reason = null) {
+        // Step D: Final Backend Update (Updated URL, PUT method, and Payload)
+        async function executeFinalAction(actionState, reason = null, otpCode = null) {
             const reqId = document.getElementById("modal-hidden-req-id").value;
             const backendAction = actionState === "approved" ? "approve" : "reject";
+            
+            // 1. Build the precise Pydantic payload
             const payload = { action: backendAction };
             if (reason) payload.message = reason;
+            if (otpCode) payload.otp_code = otpCode;
+
+            // 2. Figure out the route type (Assuming you have access to the request type here)
+            const typeText = document.getElementById("modal-display-type").innerText.toLowerCase();
+            let routeType = "venue"; // Default
+            if (typeText.includes("mou")) routeType = "mou";
+            if (typeText.includes("permission")) routeType = "permission";
 
             try {
-                await fetch(`${API_BASE}/requests/${reqId}/action`, {
-                    method: "POST",
-                    headers: authHeaders,
+                // 3. Send the PUT request to the correct pipeline
+                const res = await fetch(`${API_BASE}/approvals/${routeType}/${reqId}/process`, {
+                    method: "PUT",
+                    headers: {
+                        ...authHeaders,
+                        "Content-Type": "application/json" // Crucial for sending the payload!
+                    },
                     body: JSON.stringify(payload)
                 });
+
+                if (res.ok) {
+                    alert(`Successfully ${actionState}!`);
+                    // Add your UI refresh logic here (e.g., reloading the page or updating the table)
+                    window.location.reload(); 
+                } else {
+                    const err = await res.json();
+                    alert(`Action failed: ${err.detail}`);
+                }
             } catch(e) {
-                console.log(`Action submitted locally for testing: ${JSON.stringify(payload)}`);
+                console.error("Network error during final action:", e);
+                alert("A network error occurred.");
             }
-
-            // Move data to Processed History on UI
-            const requestToMove = globalRequestsData.find(r => r.id == reqId);
-            if (requestToMove) {
-                const processedRequest = { 
-                    ...requestToMove, 
-                    status: actionState, 
-                    comments: reason,
-                    processedAt: new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                };
-                processedRequestsData.unshift(processedRequest); 
-                globalRequestsData = globalRequestsData.filter(request => request.id != reqId);
-            }
-
-            renderRequestsTable();
-            document.getElementById("request-review-toggle").checked = false; 
         }
 
         // --- 5. DATA FETCHING & RENDERING (Announcements) ---

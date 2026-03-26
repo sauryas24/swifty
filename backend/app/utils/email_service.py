@@ -3,7 +3,7 @@ import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
-env_path = r"D:\vs code\CS_253 project\swifty\backend\app\utils\.env" 
+env_path = "/Users/harshsiddharthmalgatte/Desktop/cs253_implementation/swifty/backend/.env"
 load_dotenv(dotenv_path=env_path)
 
 SMTP_SERVER = os.getenv("SMTP_SERVER")
@@ -13,12 +13,11 @@ SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 
 def send_notification_email(to_email: str, subject: str, body: str):
-    # --- DEV BYPASS: Comment this out when deploying to production! ---
-    print(f"\n" + "="*50)
-    print(f"📧 PRETENDING TO SEND EMAIL TO: {to_email}")
-    print(f"📝 EMAIL CONTENT:\n{body}")
-    print("="*50 + "\n")
-    return True
+    # # --- DEV BYPASS: Comment this out when deploying to production! ---
+    # print(f"\n" + "="*50)
+    # print(f"📧 PRETENDING TO SEND EMAIL TO: {to_email}")
+    # print(f"📝 EMAIL CONTENT:\n{body}")
+    # print("="*50 + "\n")
     msg = EmailMessage()
     msg.set_content(body)
     msg['Subject'] = subject

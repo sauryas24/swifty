@@ -103,9 +103,9 @@ def send_approval_otp(
     
 
     email_sent = email_service.send_notification_email(
-        to_email=current_user.email_id, 
-        subject="Swifty Security: Approval Authorization Code", 
-        body=email_body
+        current_user.email_id, 
+        "Swifty Security: Approval Authorization Code", 
+        email_body
     )
     
     if not email_sent:

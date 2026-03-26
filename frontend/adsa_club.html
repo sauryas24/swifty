@@ -537,7 +537,8 @@
         document.getElementById("modal-bill-add").checked = false;
     });
 
-    // --- OTP APPROVAL LOGIC ---
+// --- OTP & APPROVAL LOGIC ---
+    
     function openApprovalModal(reqId) {
         const reqData = clubRequestsData.find(r => r.id === reqId);
         if (!reqData) return;
@@ -555,6 +556,48 @@
         document.getElementById("modal-request-review-toggle").checked = true;
     }
 
+    // ---------------------------------------------------------
+    // STEP 1: TRIGGER OTP EMAIL
+    // ---------------------------------------------------------
+    // 1. TRIGGER OTP EMAIL
+    document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
+        try {
+            // FIX IS HERE: Change /auth/send-otp to /otp/send-approval
+            const res = await fetch(`${API_BASE}/otp/send-approval`, {
+                method: "POST",
+                headers: authHeaders // Ensure you are sending the JWT!
+            });
+            
+            if (!res.ok) throw new Error("Failed to trigger OTP from backend");
+
+            document.getElementById("modal-request-review-toggle").checked = false;
+            document.getElementById("modal-otp-toggle").checked = true;
+            document.getElementById("input-otp-code").focus();
+        } catch(e) {
+            console.error(e);
+            alert("Error triggering OTP. Check console.");
+        }
+    });
+
+    // ---------------------------------------------------------
+    // STEP 2: VERIFY OTP & APPROVE
+    // ---------------------------------------------------------
+    document.getElementById("btn-verify-otp").addEventListener("click", async () => {
+        const code = document.getElementById("input-otp-code").value;
+
+        if (code.length < 6) return alert("Please enter the full 6-digit code.");
+
+        // Clear and close the OTP modal
+        document.getElementById("modal-otp-toggle").checked = false;
+        document.getElementById("input-otp-code").value = "";
+        
+        // Pass the code directly to the final action (skipping the middleman!)
+        await submitFinalAction("approve", null, code);
+    });
+
+    // ---------------------------------------------------------
+    // HANDLE REJECTIONS
+    // ---------------------------------------------------------
     document.getElementById("btn-initial-reject").addEventListener("click", () => {
         document.getElementById("default-action-buttons").classList.add("hidden");
         document.getElementById("rejection-reason-container").classList.remove("hidden");
@@ -570,79 +613,57 @@
     document.getElementById("btn-confirm-reject").addEventListener("click", async () => {
         const reason = document.getElementById("rejection-reason-input").value;
         if (!reason) return alert("Must provide a reason to reject.");
-        await submitFinalAction("reject", reason);
+        await submitFinalAction("reject", reason, null);
     });
 
-    // Trigger OTP Email
-    document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
-        const email = localStorage.getItem("email_id") || "admin@iitk.ac.in"; 
+    // ---------------------------------------------------------
+    // THE MASTER SUBMIT FUNCTION
+    // ---------------------------------------------------------
+    async function submitFinalAction(actionState, reason = null, otpCode = null) {
+        const reqId = parseInt(document.getElementById("modal-hidden-req-id").value);
+        const reqData = clubRequestsData.find(r => r.id === reqId);
+        if (!reqData) return;
         
-        try {
-            await fetch(`${API_BASE}/auth/send-otp`, {
-                method: "POST",
-                headers: authHeaders,
-                body: JSON.stringify({ email_id: email })
-            });
-            document.getElementById("modal-request-review-toggle").checked = false;
-            document.getElementById("modal-otp-toggle").checked = true;
-            document.getElementById("input-otp-code").focus();
-        } catch(e) {
-            console.log("Mocking OTP trigger");
-            document.getElementById("modal-request-review-toggle").checked = false;
-            document.getElementById("modal-otp-toggle").checked = true;
-        }
-    });
+        // 1. Build the exact JSON payload your FastAPI Pydantic schema expects
+        const payload = { action: actionState };
+        if (reason) payload.message = reason;
+        if (otpCode) payload.otp_code = otpCode;
 
-    // Verify OTP
-    document.getElementById("btn-verify-otp").addEventListener("click", async () => {
-        const code = document.getElementById("input-otp-code").value;
-        const email = localStorage.getItem("email_id") || "admin@iitk.ac.in";
-
-        if (code.length < 6) return alert("Enter the 6-digit code.");
+        // 2. SMART ROUTE MAPPER: Cleans up the frontend type to match the backend URLs
+        let routeType = "venue"; // Safe default fallback
+        const rawType = (reqData.type || "").toLowerCase();
+        
+        if (rawType.includes("mou")) routeType = "mou";
+        else if (rawType.includes("permission")) routeType = "permission";
+        else if (rawType.includes("venue") || rawType.includes("room")) routeType = "venue";
 
         try {
-            const res = await fetch(`${API_BASE}/auth/verify-otp`, {
-                method: "POST",
-                headers: authHeaders,
-                body: JSON.stringify({ email_id: email, otp_code: code })
+            // 3. Send the PUT request to the dynamically chosen router
+            const res = await fetch(`${API_BASE}/approvals/${routeType}/${reqId}/process`, {
+                method: "PUT", 
+                headers: {
+                    ...authHeaders,
+                    "Content-Type": "application/json" // Required when sending JSON bodies!
+                },
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                document.getElementById("modal-otp-toggle").checked = false;
-                document.getElementById("input-otp-code").value = "";
-                await submitFinalAction("approve");
+                // 4. Update the local UI state so the user sees the change instantly
+                reqData.status = actionState === "approve" ? "Approved" : "Rejected";
+                renderRequests(clubRequestsData); 
+                alert(`Successfully processed as ${actionState}!`);
             } else {
-                alert("Invalid OTP code.");
+                const errorData = await res.json();
+                alert(`Action failed: ${errorData.detail}`);
             }
-        } catch(e) {
-            console.log("Mocking successful OTP verification.");
-            document.getElementById("modal-otp-toggle").checked = false;
-            document.getElementById("input-otp-code").value = "";
-            await submitFinalAction("approve");
-        }
-    });
 
-    // Finalize action
-    async function submitFinalAction(actionState, reason = null) {
-        const reqId = parseInt(document.getElementById("modal-hidden-req-id").value);
-        const payload = { action: actionState };
-        if (reason) payload.message = reason;
-
-        try {
-            await fetch(`${API_BASE}/requests/${reqId}/action`, {
-                method: "POST",
-                headers: authHeaders,
-                body: JSON.stringify(payload)
-            });
-        } catch(e) { console.log("Mock action submitted securely"); }
-
-        const reqIndex = clubRequestsData.findIndex(r => r.id === reqId);
-        if (reqIndex !== -1) {
-            clubRequestsData[reqIndex].status = actionState === "approve" ? "Approved" : "Rejected";
+        } catch(e) { 
+            console.error("Network error during final action:", e); 
+            alert("A network error occurred.");
         }
         
         document.getElementById("modal-request-review-toggle").checked = false;
-        renderRequests(clubRequestsData); 
     }
 
     // Boot Up
