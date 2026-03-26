@@ -643,7 +643,7 @@
         async function fetchAnnouncements() {
             const container = document.getElementById("dynamic-announcements-container");
             try {
-                const response = await fetch(`${API_BASE}/announcements`, {
+                const response = await fetch(`${API_BASE}/announcements/my-announcements`, {
                     method: 'GET',
                     headers: authHeaders
                 });
@@ -706,7 +706,7 @@
             submitBtn.innerText = "Pushing...";
 
             try {
-                await fetch(`${API_BASE}/announcements`, { 
+                await fetch(`${API_BASE}/announcements/publish`, { 
                     method: "POST", 
                     headers: authHeaders, 
                     body: JSON.stringify(payload) 
