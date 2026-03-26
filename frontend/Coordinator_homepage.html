@@ -280,39 +280,67 @@ View All Announcements
         });
     }
     async function addAnnouncements() {
-        try{
-            const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announements");
+        try {
+            // 1. Grab the auth token
+            const token = localStorage.getItem("token");
+            if (!token) {
+                document.getElementById("addAnnouncements").innerHTML = "<p class='text-slate-500 text-sm'>Please log in to view announcements.</p>";
+                return;
+            }
+
+            // 2. Fetch using the correct endpoint and Authorization headers
+            const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announcements", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch announcements");
+
             const result = await response.json();
             const container = document.getElementById("addAnnouncements");
-            container.innerHTML="";
-            const enterName= localStorage.getItem("club");
-            const firstTwo = result.slice(0,2);
-            const filteredAnnouncements = result
-            .filter(announcement => announcement.target_clubs.includes(enterName)) 
-            .slice(0, 2);
-            filteredAnnouncements.forEach((announcement)=>{
-                const cardHTML= `
-                <div class="space-y-4">
-                <div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 transition-all group cursor-pointer">
-                <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 transition-colors text-sm">${announcement.heading}</h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">${announcement.message}</p>
-                <div class="flex items-center justify-between mt-3">
-                <p class="text-[10px] text-slate-400 flex items-center gap-1">
-                <span class="material-icons-round text-[12px]">schedule</span> ${announcement.datetime}
-                </p>
-                </div>
-                </div>
+            container.innerHTML = ""; // Clear the loading text
 
+            if (result.length === 0) {
+                container.innerHTML = "<p class='text-slate-500 text-sm'>No recent announcements.</p>";
+                return;
+            }
+
+            // 3. Take the latest 3 announcements (assuming backend returns them newest first)
+            const topAnnouncements = result.slice(0, 3);
+
+            topAnnouncements.forEach((announcement) => {
+                // Format the timestamp into a readable Date and Time
+                const dateObj = new Date(announcement.timestamp);
+                const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+
+                const cardHTML = `
+                <div class="mb-4 p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 dark:hover:border-pink-800 transition-all group cursor-pointer">
+                    <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${announcement.heading}</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">${announcement.message}</p>
+                    
+                    <div class="flex items-center justify-between mt-3 border-t border-pink-100 dark:border-pink-900/20 pt-3">
+                        <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                            <span class="material-icons-round text-[14px]">schedule</span> 
+                            ${dateStr} at ${timeStr}
+                        </p>
+                        <p class="text-[10px] font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">person</span>
+                            ${announcement.sender_username || "Admin"}
+                        </p>
+                    </div>
+                </div>
                 `;
-                container.innerHTML+= cardHTML;
-            
+                container.innerHTML += cardHTML;
             });
+            
+        } catch(error) {
+            console.error("Failed to load announcements:", error);
+            document.getElementById("addAnnouncements").innerHTML = "<p class='text-red-500 text-sm'>Failed to load announcements.</p>";
         }
-        catch(e){
-        console.error("Failed to load announcements:", error);
-        document.getElementById("insertAnnouncement").innerHTML = "<p>Failed to load events.</p>";
-    }
-        
     }
     addAnnouncements();
     if(dashboard){
