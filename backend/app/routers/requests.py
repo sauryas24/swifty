@@ -9,13 +9,17 @@ router = APIRouter(prefix="/api/requests", tags=["Request Records"])
 
 def simplify_status(raw_status: str) -> str:
     """Helper function to convert backend statuses to UI badges."""
-    status_lower = raw_status.lower() if raw_status else ""
+    if not raw_status:
+        return "Pending"
+        
+    status_lower = raw_status.lower()
     if "approved" in status_lower:
         return "Approved"
-    elif "reject" in status_lower: # Catches "Rejected by facad", etc.
+    elif "reject" in status_lower: 
         return "Rejected"
     else:
-        return "Pending"
+        # Pass the exact pending status (e.g., "Pending GenSec") straight to the frontend!
+        return raw_status
 
 @router.get("/all", response_model=List[schemas.RequestRecordResponse])
 def get_all_user_requests(
