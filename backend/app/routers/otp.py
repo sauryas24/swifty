@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import database, models, schemas
 
-# Cleaned up duplicate imports
-from ..utils import email_service, security 
+from ..utils import email_service, security
+
 
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
 
@@ -40,6 +40,7 @@ def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)
         raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
 
     return {"message": f"OTP successfully sent to {request.email_id}"}
+
 
 
 @router.post("/verify")
@@ -81,27 +82,37 @@ def send_approval_otp(
     otp_code = f"{random.randint(0, 999999):06d}"
     expiration_time = datetime.now(timezone.utc) + timedelta(minutes=5)
     
+
     existing_otp = db.query(models.OTP).filter(models.OTP.email_id == current_user.email_id).first()
     
     if existing_otp:
         existing_otp.otp_code = otp_code
         existing_otp.expires_at = expiration_time.isoformat()
     else:
-        new_otp = models.OTP(email_id=current_user.email_id, otp_code=otp_code, expires_at=expiration_time.isoformat())
+        new_otp = models.OTP(
+            email_id=current_user.email_id, 
+            otp_code=otp_code, 
+            expires_at=expiration_time.isoformat()
+        )
         db.add(new_otp)
         
     db.commit()
 
+    # 2. Send the Authorization Email
     email_body = f"Hello {current_user.username},\n\nYou are attempting to approve a request on Swifty.\nYour authorization code is: {otp_code}\n\nThis code will expire in 5 minutes."
     
-    # Using positional arguments to prevent TypeError!
+
     email_sent = email_service.send_notification_email(
-        current_user.email_id, 
-        "Swifty Security: Approval Authorization Code", 
-        email_body
+        to_email=current_user.email_id, 
+        subject="Swifty Security: Approval Authorization Code", 
+        body=email_body
     )
     
     if not email_sent:
         raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
 
+
     return {"message": "Authorization OTP sent to your registered email."}
+
+    
+
