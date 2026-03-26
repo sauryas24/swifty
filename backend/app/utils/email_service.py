@@ -3,7 +3,9 @@ import smtplib
 from email.message import EmailMessage
 from dotenv import load_dotenv
 
-env_path = r"D:\vs code\CS_253 project\swifty\backend\app\utils\.env" 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(current_dir, ".env")
+
 load_dotenv(dotenv_path=env_path)
 
 SMTP_SERVER = os.getenv("SMTP_SERVER")
