@@ -88,7 +88,8 @@ AUTHORITY_STATUS_MAP = {
     "gensec": "Pending GenSec",
     "president": "Pending President",
     "facad": "Pending FacAd",
-    "adsa": "Pending ADSA"
+    "adsa": "Pending ADSA",
+    "dosa": "Pending DOSA"
 }
 
 @router.get("/pending")
@@ -161,4 +162,66 @@ def get_pending_requests_for_authority(
             "timestamp": venue.date
         })
         
+    return unified_records
+
+
+@router.get("/club/{club_id}")
+def get_club_requests_for_authority(
+    club_id: int,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user)
+):
+    """Fetches all requests (MoU, Permission, Venue) for a specific club's detailed view."""
+    if current_user.role not in ["authority", "adsa", "dosa", "gensec", "president", "facad"]:
+        raise HTTPException(status_code=403, detail="Not authorized.")
+
+    club = db.query(models.Club).filter(models.Club.id == club_id).first()
+    if not club:
+        raise HTTPException(status_code=404, detail="Club not found")
+        
+    coordinator_id = club.user_id
+    unified_records = []
+
+    mous = db.query(models.MoURequest).filter(models.MoURequest.coordinator_id == coordinator_id).all()
+    for mou in mous:
+        unified_records.append({
+            "id": mou.id,
+            "type": "MOU",
+            "event_title": mou.organization_name,
+            "expected_attendees": 0,
+            "details": mou.purpose,
+            "status": simplify_status(mou.status),
+            "timestamp": mou.created_at.strftime("%Y-%m-%d") if mou.created_at else ""
+        })
+
+    permissions = db.query(models.PermissionLetter).filter(models.PermissionLetter.club_id == coordinator_id).all()
+    permission_gen_ids = [p.generated_id for p in permissions if p.generated_id]
+
+    for perm in permissions:
+        unified_records.append({
+            "id": perm.id,
+            "type": "PERMISSION",
+            "event_title": perm.event_name,
+            "expected_attendees": 0,
+            "details": perm.reason,
+            "status": simplify_status(perm.status),
+            "timestamp": perm.date or ""
+        })
+
+    if permission_gen_ids:
+        venues = db.query(models.VenueBooking).filter(
+            models.VenueBooking.permission_letter_id.in_(permission_gen_ids)
+        ).all()
+        for venue in venues:
+            unified_records.append({
+                "id": venue.id,
+                "type": "VENUE",
+                "event_title": venue.event_title,
+                "expected_attendees": venue.expected_attendees,
+                "details": venue.description,
+                "status": simplify_status(venue.status),
+                "timestamp": venue.date or ""
+            })
+
+    unified_records.sort(key=lambda x: x["timestamp"], reverse=True)
     return unified_records

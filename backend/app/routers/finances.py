@@ -35,6 +35,7 @@ def get_my_club_finances(
         "transactions": club.transactions
     }
 
+
 # 4. GET SPECIFIC CLUB STATUS (For ADSA/DOSA Dashboard)
 @router.get("/{club_id}", response_model=schemas.ClubFinanceStatus)
 def get_specific_club_finances(
@@ -42,8 +43,8 @@ def get_specific_club_finances(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    # Security check: Ensure the user is an authority
-    if current_user.role not in ["authority", "adsa", "dosa", "gensec"]:
+    # Security check: Ensure the user is an authority (Added president and facad)
+    if current_user.role not in ["authority", "adsa", "dosa", "gensec", "president", "facad"]:
         raise HTTPException(status_code=403, detail="Not authorized to view other clubs.")
 
     # Find the specific club by ID
@@ -63,7 +64,6 @@ def get_specific_club_finances(
         "utilization_percentage": round(utilization, 2),
         "transactions": club.transactions
     }
-
 # 2. JSON TRANSACTION (Required for your Integration Tests)
 @router.post("/transactions", response_model=schemas.TransactionRead)
 def submit_json_transaction(

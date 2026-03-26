@@ -65,7 +65,7 @@ class Transaction(Base):
     amount = Column(Float) # Amount (₹) 
     description = Column(String) # Description
     receipt_url = Column(String, nullable=True) # File attachment path 
-    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC)) # For log history 
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)) # For log history 
     
     club = relationship("Club", back_populates="transactions")
     
@@ -108,7 +108,7 @@ class Announcement(Base):
     # Since SQLite doesn't natively support arrays easily, we store target_clubs as a comma-separated string
     target_clubs = Column(String, nullable=True) 
     
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
     sender = relationship("User")
 
