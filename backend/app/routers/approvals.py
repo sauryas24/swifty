@@ -177,6 +177,9 @@ def process_mou_approval(
 # ---------------------------------------------------------
 # 3. PERMISSION LETTER APPROVALS
 # ---------------------------------------------------------
+# ---------------------------------------------------------
+# 3. PERMISSION LETTER APPROVALS
+# ---------------------------------------------------------
 def _generate_permission_letter_id(db: Session) -> str:
     year = datetime.now().year
     prefix = f"PL-{year}-"
@@ -197,10 +200,19 @@ def process_permission_approval(
 
     current_status = letter.status
     required_role = ROLE_AUTHORIZATION_MAP.get(current_status)
+    
     if not required_role:
         raise HTTPException(status_code=400, detail="This request is already fully processed or rejected.")
     if current_user.role != required_role:
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
+
+    # ---------------------------------------------------------
+    # NEW DYNAMIC EMAIL LOOKUP: Find the exact coordinator
+    # ---------------------------------------------------------
+    coordinator = db.query(models.User).filter(models.User.id == letter.club_id).first()
+    # Fallback to a default just in case the user was deleted
+    coordinator_email = coordinator.email_id if coordinator else "admin@iitk.ac.in"
+    coordinator_name = coordinator.username if coordinator else "Coordinator"
 
     if action_data.action == "reject":
         letter.status = f"Rejected by {current_user.role}"
@@ -208,9 +220,10 @@ def process_permission_approval(
         db.commit()
 
         email_service.send_notification_email(
-            "coordinator@institute.edu",
+            coordinator_email, # <-- Sends to the actual coordinator
             f"Update: Permission Letter '{letter.event_name}' Rejected",
             (
+                f"Hello {coordinator_name},\n\n"
                 f"Your permission letter for '{letter.event_name}' was rejected "
                 f"by {current_user.role}. Reason: {action_data.message}"
             )
@@ -226,7 +239,7 @@ def process_permission_approval(
 
         next_status = SHARED_PIPELINE[current_status]
         letter.status = next_status
-        db.commit()
+        
 
         if next_status == "Approved":
             generated_id = _generate_permission_letter_id(db)
@@ -234,11 +247,12 @@ def process_permission_approval(
             db.commit()
 
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                coordinator_email, # <-- Sends the ID directly to the actual coordinator
                 f"Permission Letter '{letter.event_name}' Approved",
                 (
-                    f"Your permission letter for '{letter.event_name}' has been fully approved.\n\n"
-                    f"Your Permission Letter ID is: {generated_id}\n\n"
+                    f"Hello {coordinator_name},\n\n"
+                    f"Your permission letter for '{letter.event_name}' has been fully approved!\n\n"
+                    f"Your Official Permission Letter ID is: {generated_id}\n\n"
                     f"Please use this ID when submitting a Venue Booking request."
                 )
             )
@@ -247,17 +261,16 @@ def process_permission_approval(
                 "generated_id": generated_id
             }
         else:
+            db.commit()
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                coordinator_email, # <-- Sends to the actual coordinator
                 f"Progress: Permission Letter '{letter.event_name}' moved to {next_status}",
-                f"Your permission letter was approved by {current_user.role} and is now {next_status}."
+                f"Hello {coordinator_name},\n\nYour permission letter was approved by {current_user.role} and is now {next_status}."
             )
             return {"message": f"Permission letter approved and moved to {next_status}."}
 
     else:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
-
-
 # ---------------------------------------------------------
 # 4. HELPER: Look up a Permission Letter by its generated ID
 # ---------------------------------------------------------
