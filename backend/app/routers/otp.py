@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import database, models, schemas
+
 from ..utils import email_service, security
 
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
@@ -26,7 +27,13 @@ def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)
     db.commit()
 
     email_body = f"Hello,\n\nYour verification code for Swifty is: {otp_code}\n\nThis code will expire in 5 minutes."
-    email_sent = email_service.send_notification_email(to_email=request.email_id, subject="Your Swifty Verification Code", body=email_body)
+    
+    # Using positional arguments to prevent TypeError!
+    email_sent = email_service.send_notification_email(
+        request.email_id, 
+        "Your Swifty Verification Code", 
+        email_body
+    )
     
     if not email_sent:
         raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
@@ -34,8 +41,7 @@ def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)
     return {"message": f"OTP successfully sent to {request.email_id}"}
 
 
-# 2. VERIFY OTP ENDPOINT
-# 2. VERIFY OTP ENDPOINT
+
 @router.post("/verify")
 def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db)):
     """Used ONLY for Login/Registration."""
@@ -54,6 +60,9 @@ def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db
         
     db.delete(otp_record)
     db.commit()
+    
+    # NOTE: If this is your login verify route, this is where your JWT generation 
+    # (the "VIP wristband" code) SHOULD go, instead of in the approval route!
     return {"message": "Email successfully verified!"}
 
 
@@ -72,7 +81,7 @@ def send_approval_otp(
     otp_code = f"{random.randint(0, 999999):06d}"
     expiration_time = datetime.now(timezone.utc) + timedelta(minutes=5)
     
-    # 1. Check if an OTP already exists for this authenticated user
+
     existing_otp = db.query(models.OTP).filter(models.OTP.email_id == current_user.email_id).first()
     
     if existing_otp:
@@ -91,6 +100,7 @@ def send_approval_otp(
     # 2. Send the Authorization Email
     email_body = f"Hello {current_user.username},\n\nYou are attempting to approve a request on Swifty.\nYour authorization code is: {otp_code}\n\nThis code will expire in 5 minutes."
     
+
     email_sent = email_service.send_notification_email(
         to_email=current_user.email_id, 
         subject="Swifty Security: Approval Authorization Code", 
@@ -100,4 +110,8 @@ def send_approval_otp(
     if not email_sent:
         raise HTTPException(status_code=500, detail="Failed to send the email. Please try again.")
 
+
     return {"message": "Authorization OTP sent to your registered email."}
+
+    
+
