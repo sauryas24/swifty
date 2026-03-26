@@ -7,7 +7,7 @@ from ..utils import security, email_service
 router = APIRouter(prefix="/api/announcements", tags=["Announcements"])
 
 # We define the authority list so both endpoints can use it!
-AUTHORITY_ROLES = ["admin", "authority", "gensec", "president", "facad", "adsa", "dosa"]
+AUTHORITY_ROLES = ["admin", "authority", "gensec", "president", "facad", "adsa"]
 
 # Endpoint 1: Create / Publish announcement
 @router.post("/publish")
