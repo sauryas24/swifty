@@ -41,7 +41,8 @@ def submit_mou(
         coordinator_id=current_user.id,
         organization_name=organization_name,
         purpose=purpose,
-        document_url=file_location  # Save the path to the file
+        document_url=file_location,
+        status="Pending GenSec"  
     )
 
     db.add(new_mou)

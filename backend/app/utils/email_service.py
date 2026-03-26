@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = r"D:\vs code\CS_253 project\swifty\backend\app\utils\.env"
 env_path = "/Users/vasugoyal/SWIFTY/swifty/backend/app/utils/hi.env"
 
 

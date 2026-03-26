@@ -146,9 +146,9 @@ def get_pending_requests_for_authority(
             "id": mou.id, "club_name": club.username if club else "Unknown Club",
             "type": "MOU", "event_title": mou.organization_name, "expected_attendees": 0,
             "details": mou.purpose, "permission_letter_id": "N/A", "status": mou.status,
-            "timestamp": mou.created_at.isoformat() if mou.created_at else "N/A"
+            "timestamp": mou.created_at.isoformat() if mou.created_at else "N/A",
+            "document_url": getattr(mou, 'document_url', None) # <--- ADD THIS LINE
         })
-        
     # 2. Pending Permissions
     for perm in db.query(models.PermissionLetter).filter(models.PermissionLetter.status == target_status).all():
         club = db.query(models.User).filter(models.User.id == perm.club_id).first()
