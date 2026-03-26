@@ -40,7 +40,7 @@ class VenueBooking(Base):
     expected_attendees = Column(Integer)
     description = Column(String)
     permission_letter_id = Column(String)   # This will be provided to the user after the permission letter is approved.
-    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     status = Column(String, default="Pending GenSec") # Starts the approval chain
     # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
     comments = Column(String, nullable=True) # Stores the rejection message
@@ -79,7 +79,7 @@ class PermissionLetter(Base):
     date = Column(String)
     time = Column(String)
     reason = Column(String)
-    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     # Attached automatically by the backend
     club_id = Column(Integer, ForeignKey("users.id"))
     

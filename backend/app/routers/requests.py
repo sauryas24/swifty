@@ -40,7 +40,7 @@ def get_all_user_requests(
         unified_records.append({
             "id": mou.id,
             "type": "MOU",
-            "date": mou.created_at.strftime("%b %d, %Y") if mou.created_at else "N/A",
+            "date": mou.created_at.strftime("%b %d, %Y") if mou.created_at else "N/A", # Submission Date
             "details": mou.organization_name,
             "purpose": mou.purpose, 
             "document_url": mou.document_url, 
@@ -51,13 +51,17 @@ def get_all_user_requests(
 
     # 2. Fetch Permission Letters
     permissions = db.query(models.PermissionLetter).filter(models.PermissionLetter.club_id == current_user.id).all()
-    permission_ids = [str(p.id) for p in permissions]
+    permission_gen_ids = [p.generated_id for p in permissions if p.generated_id]
 
     for perm in permissions:
+        created = getattr(perm, 'created_at', None)
         unified_records.append({
             "id": perm.id,
             "type": "PERMISSION",
-            "date": getattr(perm, 'date', "N/A"),
+            "date": created.strftime("%b %d, %Y") if created else "N/A", # Submission Date
+            "event_date": perm.date,
+            "time": perm.time,
+            "reason": perm.reason,
             "details": perm.event_name,
             "status": simplify_status(perm.status),
             "raw_status": perm.status,
@@ -65,17 +69,22 @@ def get_all_user_requests(
             "generated_id": perm.generated_id
         })
 
-    # 3. Fetch Venue Bookings 
-    if permission_ids:
+    # 3. Fetch Venue Bookings (Fixed to use generated_id)
+    if permission_gen_ids:
         venues = db.query(models.VenueBooking).filter(
-            models.VenueBooking.permission_letter_id.in_(permission_ids)
+            models.VenueBooking.permission_letter_id.in_(permission_gen_ids)
         ).all()
         
         for venue in venues:
+            created = getattr(venue, 'created_at', None)
             unified_records.append({
                 "id": venue.id,
                 "type": "VENUE",
-                "date": venue.date, 
+                "date": created.strftime("%b %d, %Y") if created else "N/A", # Submission Date
+                "event_date": venue.date,
+                "time": venue.time,
+                "expected_attendees": getattr(venue, 'expected_attendees', 0),
+                "description": getattr(venue, 'description', 'N/A'),
                 "details": venue.event_title,
                 "status": simplify_status(venue.status),
                 "raw_status": venue.status,
@@ -87,7 +96,6 @@ def get_all_user_requests(
 
     return unified_records
 
-# Map the user's role to the exact status string they are allowed to approve
 # Map the user's role to the exact status string they are allowed to approve
 AUTHORITY_STATUS_MAP = {
     "gensec": "Pending GenSec",
