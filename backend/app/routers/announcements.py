@@ -92,7 +92,8 @@ def get_announcements(
                 "sender_username": sender_username,
                 "heading": ann.heading, 
                 "message": ann.message,
-                "target_clubs": []
+                "target_clubs": [],
+                "timestamp": ann.timestamp
             })
         else:
             clubs = ann.target_clubs.split(",")
@@ -103,7 +104,8 @@ def get_announcements(
                     "sender_username": sender_username,
                     "heading": ann.heading, 
                     "message": ann.message,
-                    "target_clubs": clubs
+                    "target_clubs": clubs,
+                    "timestamp": ann.timestamp
                 })
 
     return relevant_announcements

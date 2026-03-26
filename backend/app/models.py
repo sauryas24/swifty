@@ -108,7 +108,7 @@ class Announcement(Base):
     # Since SQLite doesn't natively support arrays easily, we store target_clubs as a comma-separated string
     target_clubs = Column(String, nullable=True) 
     
-    timestamp = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)) # For log history 
 
     sender = relationship("User")
 
