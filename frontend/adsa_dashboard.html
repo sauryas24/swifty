@@ -423,26 +423,37 @@
         }
 
         // --- 2. DATA FETCHING & RENDERING (Requests) ---
-        // --- 2. DATA FETCHING & RENDERING (Requests) ---
         async function fetchRequests() {
             try {
-                const response = await fetch(`${API_BASE}/requests/pending`, {
+                // 1. Fetch ALL Pending Requests for this Authority
+                const pendingRes = await fetch(`${API_BASE}/requests/pending`, {
                     method: 'GET',
                     headers: authHeaders
                 });
                 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.detail || "API Fetch failed");
+                if (pendingRes.ok) {
+                    globalRequestsData = await pendingRes.json();
+                } else {
+                    globalRequestsData = [];
+                }
+
+                // 2. Fetch Processed History for this Authority
+                // Note: Ensure your FastAPI backend has this endpoint mapped!
+                const historyRes = await fetch(`${API_BASE}/requests/history`, {
+                    method: 'GET',
+                    headers: authHeaders
+                });
+
+                if (historyRes.ok) {
+                    processedRequestsData = await historyRes.json();
+                } else {
+                    processedRequestsData = [];
                 }
                 
-                globalRequestsData = await response.json();
-                
             } catch (error) {
-                console.error("Failed to load queue:", error);
-                // Instead of loading fake data, we show a clean empty state!
+                console.error("Failed to load queue or history:", error);
                 globalRequestsData = []; 
-                alert("Could not load your pending queue. Please ensure you are logged in correctly.");
+                processedRequestsData = [];
             }
             renderRequestsTable();
         }
@@ -454,52 +465,66 @@
             const dataToRender = currentTab === 'pending' ? globalRequestsData : processedRequestsData;
 
             if(dataToRender.length === 0) {
-                const emptyMsg = currentTab === 'pending' ? "Inbox Zero! No pending requests." : "No history to display.";
+                const emptyMsg = currentTab === 'pending' ? "Inbox Zero! No pending requests across any clubs." : "No processed history to display.";
                 tbody.innerHTML = `<tr><td colspan="3" class="px-6 py-12 text-center text-slate-500 font-medium">${emptyMsg}</td></tr>`;
                 return;
             }
 
             dataToRender.forEach(req => {
+                // Base colors for request types
                 let colorClass = "bg-slate-50 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border border-slate-200 dark:border-slate-700";
-                if(req.type === "VENUE") colorClass = "bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400 border border-pink-200 dark:border-pink-900/50";
-                if(req.type === "MOU") colorClass = "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50";
-                if(req.type === "PERMISSION") colorClass = "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50";
+                const reqType = (req.type || "").toUpperCase();
+                
+                if(reqType.includes("VENUE")) colorClass = "bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400 border border-pink-200 dark:border-pink-900/50";
+                else if(reqType.includes("MOU")) colorClass = "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50";
+                else if(reqType.includes("PERMISSION")) colorClass = "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/50";
 
-                const rowInteraction = currentTab === 'pending' ? 'hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer group' : 'bg-slate-50/30 dark:bg-slate-800/10 opacity-70';
+                const rowInteraction = currentTab === 'pending' ? 'hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer group' : 'bg-slate-50/30 dark:bg-slate-800/10 opacity-80';
 
-                let statusBadge = ""; let timeStamp = "";
+                let statusBadge = ""; 
+                let timeStampHtml = "";
+                
+                // Format the timestamp if it exists
+                if (req.timestamp || req.updated_at) {
+                    const dateObj = new Date(req.updated_at || req.timestamp);
+                    const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                    timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: ${dateStr}</div>`;
+                }
+
                 if (currentTab === 'processed') {
-                    const sColor = req.status === 'approved' ? 'text-emerald-500' : 'text-red-500';
-                    const sIcon = req.status === 'approved' ? 'check_circle' : 'cancel';
-                    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-2"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
-                    timeStamp = `<div class="text-[10px] text-slate-400 font-medium mt-1">${req.processedAt}</div>`;
+                    const statusStr = (req.status || "").toLowerCase();
+                    const isApproved = statusStr.includes('approved');
+                    const sColor = isApproved ? 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded' : 'text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded';
+                    const sIcon = isApproved ? 'check_circle' : 'cancel';
+                    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
                 }
 
                 const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full">`;
                 const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
 
+                // Render the Row
                 const tr = `
                     <tr data-id="${req.id}" class="transition-colors border-b border-pink-50 dark:border-pink-900/10 ${rowInteraction}">
                         <td class="px-6 py-5 whitespace-nowrap text-sm font-bold text-slate-800 dark:text-slate-200 max-w-[150px] truncate">
-                            ${wrapStart}<span class="block truncate" title="${req.club_name}">${req.club_name}</span>${wrapEnd}
+                            ${wrapStart}<span class="block truncate" title="${req.club_name || 'Unknown Club'}">${req.club_name || 'Unknown Club'}</span>${wrapEnd}
                         </td>
                         <td class="px-6 py-5 whitespace-nowrap">
-                            ${wrapStart}<span class="px-2.5 py-1 rounded-md ${colorClass} text-[10px] font-black uppercase tracking-wider shadow-sm">${req.type}</span>${wrapEnd}
+                            ${wrapStart}<span class="px-2.5 py-1 rounded-md ${colorClass} text-[10px] font-black uppercase tracking-wider shadow-sm">${reqType || 'GENERAL'}</span>${wrapEnd}
                         </td>
                         <td class="px-6 py-5 text-sm max-w-[250px] truncate">
                             ${wrapStart}
                                 <div class="flex items-center">
-                                    <span class="block font-medium text-slate-700 dark:text-slate-300 truncate" title="${req.event_title}">${req.event_title}</span>
+                                    <span class="block font-medium text-slate-700 dark:text-slate-300 truncate" title="${req.event_title || req.details || 'No Title'}">${req.event_title || req.details || 'No Title'}</span>
                                     ${statusBadge}
                                 </div>
-                                ${timeStamp}
+                                ${currentTab === 'processed' ? timeStampHtml : ''}
                             ${wrapEnd}
                         </td>
                     </tr>
                 `;
                 tbody.innerHTML += tr;
             });
-        }
+        }              
 
         // --- 3. MODAL LOGIC & REJECTION FLOW ---
         function resetReviewModal() {

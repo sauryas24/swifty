@@ -101,41 +101,41 @@ def master_seed():
         # ==========================================
         # 4. SEED MoU REQUESTS
         # ==========================================
-        print("🤝 Seeding MoUs...")
-        mous = [
-            MoURequest(coordinator_id=coordinator_music.id, organization_name="Brand-X", purpose="Sponsorship with Brand-X", document_url="static/docs/dummy_brand_x.pdf", status="Approved"),
-            MoURequest(coordinator_id=coordinator_dance.id, organization_name="Red Bull", purpose="Beverage Sponsorship", document_url="static/docs/dummy_redbull.pdf", status="Pending GenSec"),
-            MoURequest(coordinator_id=coordinator_drama.id, organization_name="Local Sound Rentals", purpose="Audio Equipment Supply", document_url="static/docs/dummy_audio.pdf", status="Rejected", comments="Revise payment terms.")
-        ]
-        db.add_all(mous)
-        db.commit()
+        # print("🤝 Seeding MoUs...")
+        # mous = [
+        #     MoURequest(coordinator_id=coordinator_music.id, organization_name="Brand-X", purpose="Sponsorship with Brand-X", document_url="static/docs/dummy_brand_x.pdf", status="Approved"),
+        #     MoURequest(coordinator_id=coordinator_dance.id, organization_name="Red Bull", purpose="Beverage Sponsorship", document_url="static/docs/dummy_redbull.pdf", status="Pending GenSec"),
+        #     MoURequest(coordinator_id=coordinator_drama.id, organization_name="Local Sound Rentals", purpose="Audio Equipment Supply", document_url="static/docs/dummy_audio.pdf", status="Rejected", comments="Revise payment terms.")
+        # ]
+        # db.add_all(mous)
+        # db.commit()
 
         # ==========================================
         # 5. SEED PERMISSION LETTERS
         # ==========================================
-        print("📝 Seeding Permission Letters...")
-        letters = [
-            PermissionLetter(event_name="Annual Music Showcase", date="2026-04-10", time="18:00", reason="End of semester performance", club_id=coordinator_music.id, status="Pending GenSec"),
-            PermissionLetter(event_name="Coding Hackathon", date="2026-04-15", time="14:00", reason="48-hour competitive programming", club_id=coordinator_prog.id, status="Pending FacAd"),
-            PermissionLetter(event_name="Acoustic Night", date="2026-03-25", time="19:00", reason="Unplugged performances", club_id=coordinator_music.id, status="Approved", generated_id="PL-2026-0001"),
-        ]
-        db.add_all(letters)
-        db.commit()
+        # print("📝 Seeding Permission Letters...")
+        # letters = [
+        #     PermissionLetter(event_name="Annual Music Showcase", date="2026-04-10", time="18:00", reason="End of semester performance", club_id=coordinator_music.id, status="Pending GenSec"),
+        #     PermissionLetter(event_name="Coding Hackathon", date="2026-04-15", time="14:00", reason="48-hour competitive programming", club_id=coordinator_prog.id, status="Pending FacAd"),
+        #     PermissionLetter(event_name="Acoustic Night", date="2026-03-25", time="19:00", reason="Unplugged performances", club_id=coordinator_music.id, status="Approved", generated_id="PL-2026-0001"),
+        # ]
+        # db.add_all(letters)
+        # db.commit()
 
         # ==========================================
         # 6. SEED VENUE BOOKINGS
         # ==========================================
-        print("📅 Seeding Venue Bookings...")
-        l20_id = next(r.id for r in rooms if r.name == "L-20")
-        l18_id = next(r.id for r in rooms if r.name == "L-18")
-        stadium_id = next(r.id for r in rooms if r.name == "Main Stadium")
+        # print("📅 Seeding Venue Bookings...")
+        # l20_id = next(r.id for r in rooms if r.name == "L-20")
+        # l18_id = next(r.id for r in rooms if r.name == "L-18")
+        # stadium_id = next(r.id for r in rooms if r.name == "Main Stadium")
         
-        bookings = [
-            VenueBooking(date="2026-03-20", time="18:00-20:00", room_id=l18_id, event_title="Acoustic Night", event_type="Cultural", expected_attendees=150, description="Unplugged music", permission_letter_id="PL-2026-0001", status="Pending President"),
-            VenueBooking(date="2026-04-15", time="06:30 AM", room_id=stadium_id, event_title="Sports Trials", event_type="Athletics", expected_attendees=100, description="Varsity team trials", permission_letter_id="PL-2026-005", status="Approved")
-        ]
-        db.add_all(bookings)
-        db.commit()
+        # bookings = [
+        #     VenueBooking(date="2026-03-20", time="18:00-20:00", room_id=l18_id, event_title="Acoustic Night", event_type="Cultural", expected_attendees=150, description="Unplugged music", permission_letter_id="PL-2026-0001", status="Pending President"),
+        #     VenueBooking(date="2026-04-15", time="06:30 AM", room_id=stadium_id, event_title="Sports Trials", event_type="Athletics", expected_attendees=100, description="Varsity team trials", permission_letter_id="PL-2026-005", status="Approved")
+        # ]
+        # db.add_all(bookings)
+        # db.commit()
 
         # ==========================================
         # 7. SEED ANNOUNCEMENTS
