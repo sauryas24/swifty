@@ -111,75 +111,80 @@
     <div class="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-pink-100/30 dark:from-pink-900/5 to-transparent pointer-events-none z-0"></div>
 
 </body>
-<script>
-    // Configures the structural back path out of the login portal.    const backButton = document.getElementById("poop");
-    if(backButton){
-        backButton.addEventListener("click", function(){
-            window.location.href = "index.html";
-        });
-    }
+<div class="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-pink-100/30 dark:from-pink-900/5 to-transparent pointer-events-none z-0"></div>
 
-    // Custom Dropdown Logic
-    const dropdownBtn = document.getElementById("custom-select-button");
-    const dropdownList = document.getElementById("custom-options-list");
-    const selectText = document.getElementById("custom-select-text");
-    const hiddenInput = document.getElementById("roleValue");
-    const dropdownArrow = document.getElementById("dropdown-arrow");
-    const container = document.getElementById("custom-dropdown-container");
-    const options = dropdownList.querySelectorAll("div[data-value]");
-
-    // Open/Close dropdown
-    dropdownBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        
-        if (dropdownList.classList.contains("hidden")) {
-            dropdownList.classList.remove("hidden");
-            setTimeout(() => dropdownList.classList.remove("opacity-0"), 10); 
-            dropdownArrow.style.transform = "rotate(180deg)";
-        } else {
-            // Close
-            dropdownList.classList.add("opacity-0");
-            setTimeout(() => dropdownList.classList.add("hidden"), 150);
-            dropdownArrow.style.transform = "rotate(0deg)";
+    <script>
+        // Configures the structural back path out of the login portal.    
+        const backButton = document.getElementById("poop");
+        if(backButton){
+            backButton.addEventListener("click", function(){
+                window.location.href = "publiccalender.html";
+            });
         }
-    });
 
-    // Handle Option Selection
-    options.forEach(option => {
-        option.addEventListener("click", () => {
-            selectText.textContent = option.textContent;
-            hiddenInput.value = option.getAttribute("data-value");
-            
-            // Close dropdown after selection
-            dropdownList.classList.add("opacity-0");
-            setTimeout(() => dropdownList.classList.add("hidden"), 150);
-            dropdownArrow.style.transform = "rotate(0deg)";
-        });
-    });
+        // --- Custom Dropdown Logic ---
+        const dropdownBtn = document.getElementById("custom-select-button");
+        const dropdownList = document.getElementById("custom-options-list");
+        const selectText = document.getElementById("custom-select-text");
+        const hiddenInput = document.getElementById("roleValue");
+        const dropdownArrow = document.getElementById("dropdown-arrow");
+        const container = document.getElementById("custom-dropdown-container");
+        const options = dropdownList.querySelectorAll("div[data-value]");
 
-    // Close dropdown if clicking anywhere outside of it
-    document.addEventListener("click", (e) => {
-        if (!container.contains(e.target) && !dropdownList.classList.contains("hidden")) {
-            dropdownList.classList.add("opacity-0");
-            setTimeout(() => dropdownList.classList.add("hidden"), 150);
-            dropdownArrow.style.transform = "rotate(0deg)";
-        }
-    });
-    
-    // Assesses the selected value and redirects to the requested role access point.    const enter = document.getElementById("enter");
-    if(enter){
-        enter.addEventListener("click", function(){
-            const selectedValue = document.getElementById("roleValue").value;
+        // Open/Close dropdown
+        dropdownBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
             
-            if(selectedValue === "club-coordinator"){
-                window.location.href = "coordinator_login.html";
-            }
-            else if(selectedValue === "authority"){
-                window.location.href = "authority_login.html";
+            if (dropdownList.classList.contains("hidden")) {
+                dropdownList.classList.remove("hidden");
+                setTimeout(() => dropdownList.classList.remove("opacity-0"), 10); 
+                dropdownArrow.style.transform = "rotate(180deg)";
             } else {
-                alert("Please select a role before continuing.");
+                // Close
+                dropdownList.classList.add("opacity-0");
+                setTimeout(() => dropdownList.classList.add("hidden"), 150);
+                dropdownArrow.style.transform = "rotate(0deg)";
             }
         });
-    }
-</script>
+
+        // Handle Option Selection
+        options.forEach(option => {
+            option.addEventListener("click", () => {
+                selectText.textContent = option.textContent;
+                hiddenInput.value = option.getAttribute("data-value");
+                
+                // Close dropdown after selection
+                dropdownList.classList.add("opacity-0");
+                setTimeout(() => dropdownList.classList.add("hidden"), 150);
+                dropdownArrow.style.transform = "rotate(0deg)";
+            });
+        });
+
+        // Close dropdown if clicking anywhere outside of it
+        document.addEventListener("click", (e) => {
+            if (!container.contains(e.target) && !dropdownList.classList.contains("hidden")) {
+                dropdownList.classList.add("opacity-0");
+                setTimeout(() => dropdownList.classList.add("hidden"), 150);
+                dropdownArrow.style.transform = "rotate(0deg)";
+            }
+        });
+        
+        // Assesses the selected value and redirects to the requested role access point.    
+        const enter = document.getElementById("enter");
+        if(enter){
+            enter.addEventListener("click", function(){
+                const selectedValue = document.getElementById("roleValue").value;
+                
+                if(selectedValue === "club-coordinator"){
+                    window.location.href = "coordinator_login.html";
+                }
+                else if(selectedValue === "authority"){
+                    window.location.href = "authority_login.html";
+                } else {
+                    alert("Please select a role before continuing.");
+                }
+            });
+        }
+    </script>
+</body>
 </html>
