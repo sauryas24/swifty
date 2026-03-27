@@ -410,6 +410,9 @@ past_requests.forEach((button) => {
 
             recentRecords.forEach(record => {
                 // 1. Determine Badge Colors based on Type
+
+
+
                 let typeColor = "bg-slate-50 text-slate-600";
                 const typeUpper = (record.type || "").toUpperCase();
                 if (typeUpper.includes("VENUE")) typeColor = "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400";
@@ -419,10 +422,10 @@ past_requests.forEach((button) => {
 
                 // 2. Determine Status Dot Color
                 let statusDot = "bg-slate-400"; // Default Gray
-                const statusLower = (record.status || "").toLowerCase();
+                const statusLower = (record.status || "");
                 if (statusLower.includes("approved")) statusDot = "bg-emerald-400";
                 else if (statusLower.includes("rejected")) statusDot = "bg-rose-500";
-                else if (statusLower.includes("pending")) statusDot = "bg-amber-400";
+                else if (statusLower.includes("Pending")) statusDot = "bg-amber-400";
 
                 // 3. Inject Row HTML
                 tbody.innerHTML += `
