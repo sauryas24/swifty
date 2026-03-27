@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <script>
+        // Apply designated layout styles to the framework interface structure.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -33,6 +34,7 @@
         body {
             font-family: "Inter", sans-serif;
         }
+        /* Layout logic associated with sidebar transition mechanisms */
         .sidebar-drawer {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -163,7 +165,8 @@
 </main>
 </body>
 <script>
-        const finances = document.querySelectorAll(".finances");
+    // Map required interface dependencies for establishing local navigational pathways.
+    const finances = document.querySelectorAll(".finances");
     const permission_letter= document.querySelectorAll(".permission_letter");
     const MOU_form= document.querySelectorAll(".MOU_form");
     const venue_booking= document.querySelectorAll(".venue_booking");
@@ -212,6 +215,7 @@ past_requests.forEach((button) => {
         window.location.href = "past requests.html";
     });
 });
+    // Dynamically retrieve user organization identifiers from local persistence layers.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
@@ -219,6 +223,7 @@ past_requests.forEach((button) => {
         clubName.textContent= enterName? enterName.toUpperCase(): "MUSIC CLUB";
     }
 
+// Process financial statistics requests to project the appropriate metrics mapping.
 async function loadFinances() {
     try {
         const token = localStorage.getItem("token");
@@ -236,16 +241,16 @@ async function loadFinances() {
         
         const data = await response.json();
 
-        // 1. Update the Budget Numbers dynamically
+        // 1. Process allocation arrays into user-facing numeric aggregates dynamically.
         document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
         document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
         
-        // 2. Update the Progress Bar
+        // 2. Adjust interface visualization controls based on proportionate percentage calculation limits.
         const percent = data.utilization_percentage || 0;
         document.getElementById("progressBar").style.width = `${percent}%`;
         document.getElementById("budgetUtilized").textContent = `${percent}% of annual budget utilized`;
 
-        // 3. Update the Transactions Table
+        // 3. Render structured record arrays within designated table view containers.
         const tableBody = document.getElementById("transactionsTable");
         
         if (!data.transactions || data.transactions.length === 0) {
@@ -253,13 +258,13 @@ async function loadFinances() {
             return;
         }
 
-        // Build the rows assuming every transaction HAS a receipt
+        // Generate rows corresponding sequentially to available transaction payload entries.
         let rowsHTML = "";
         data.transactions.forEach((tx) => {
             const dateObj = new Date(tx.timestamp || new Date()); 
             const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
             
-            // Clean the URL and build the button directly
+            // Reformat URI references to ensure uniform endpoint resolution accuracy.
             const cleanUrl = tx.receipt_url.startsWith('/') ? tx.receipt_url.slice(1) : tx.receipt_url;
             const fullUrl = `http://127.0.0.1:8000/${cleanUrl}`;
             
@@ -285,7 +290,7 @@ async function loadFinances() {
     }
 }
 
-// Boot up!
+// Ensure the execution protocol runs the process immediately upon context loading.
 loadFinances();
 
 </script>

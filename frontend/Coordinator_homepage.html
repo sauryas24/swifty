@@ -10,12 +10,15 @@
       
 </script>
 <script>
+      // Validate session authentication upon initialization.
+      // Redirect unauthenticated users to the login portal immediately to prevent unauthorized access.
       if (!localStorage.getItem("token")) {
-
             window.location.replace("select_role_login.html"); 
         }
+        
+        // Prevent access via the browser's "Back" button after a user has logged out.
         window.addEventListener('pageshow', function(event) {
-            // event.persisted is true if the page was loaded from the bfcache (Back button)
+            // The persisted property indicates if the page was loaded from the browser's Back/Forward cache.
             if (event.persisted && !localStorage.getItem("token")) {
                 window.location.replace("select_role_login.html");
             }
@@ -26,6 +29,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script>
+        // Configure custom Tailwind CSS theme properties, including brand colors and typography.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -50,6 +54,7 @@
         };
     </script>
 <style type="text/tailwindcss">
+        /* Base styling and layout constraints */
         :root {
             --bg-pink: #fdf2f8;
             --sidebar-width: 280px;
@@ -58,6 +63,7 @@
             font-family: "Inter", sans-serif;
             background-color: var(--bg-pink);
         }
+        /* Sidebar slide-in animation logic */
         .sidebar-drawer {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -70,18 +76,24 @@
         }
         .main-content {
             transition: margin-left 0.3s ease-in-out;
-        }.watermark-bg {
+        }
+        /* Aesthetic watermark gradient for the main background */
+        .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
         }
         .dark .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
         }
+        /* Utility class for active navigation items */
         .nav-item-active {
             @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold;
         }
+        /* Icon font weight standardizations */
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }details > summary {
+        }
+        /* Remove default disclosure markers for details/summary elements */
+        details > summary {
             list-style: none;
         }
         details > summary::-webkit-details-marker {
@@ -97,6 +109,7 @@
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
 <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+
 <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
 <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
 <span class="material-icons-round">menu</span>
@@ -109,6 +122,7 @@
   <span>Logout</span>
 </button>
 </header>
+
 <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
 <div class="flex flex-col h-full">
 <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
@@ -148,19 +162,19 @@
 </div>
 </div>
 </aside>
+
 <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
 <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
 <div>
-<h1 id= "clubName"class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
+<h1 id="clubName" class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
 </div>
 <div class="flex items-center gap-4">
-
-
 
 </div>
 </div>
 <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
 <div class="lg:col-span-2 space-y-8">
+
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
 <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center bg-white dark:bg-slate-900">
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Recent Requests and Status</h3>
@@ -189,6 +203,7 @@
 </table>
 </div>
 </div>
+
 <div class="space-y-4 pb-12">
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Quick Access</h3>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -219,18 +234,19 @@
 </div>
 </div>
 </div>
+
 <div class="space-y-6">
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-6">
 <div class="flex items-center justify-between mb-6">
 <h3 class="font-display font-bold text-lg text-slate-800 dark:text-slate-100">Announcements</h3>
 <span class="material-icons-round text-slate-400">campaign</span>
 </div>
-<div id ="addAnnouncements">
+<div id="addAnnouncements">
 Loading Announcements...
 </div>
 
 </div>
-<button id="Announcements"class="bg-white w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
+<button id="Announcements" class="bg-white w-full mt-6 py-3 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white font-medium hover:border-slate-400 transition-all">
 View All Announcements
 </button>
 </div>
@@ -238,39 +254,42 @@ View All Announcements
 </div>
 </main>
 </body>
+
 <script>
     
-    
-    // (If the token exists, the page will continue loading normally)
-
+    // Retrieve navigation elements from the DOM to bind routing events.
     const finances = document.querySelectorAll(".finances");
-    const permission_letter= document.querySelectorAll(".permission_letter");
-    const MOU_form= document.querySelectorAll(".MOU_form");
-    const venue_booking= document.querySelectorAll(".venue_booking");
-    const past_requests=document.querySelectorAll(".past_requests");
-    const dashboard= document.getElementById("dashboard");
-    const Announcements= document.getElementById("Announcements")
-    const logoutBtn= document.getElementById("logoutBtn");
+    const permission_letter = document.querySelectorAll(".permission_letter");
+    const MOU_form = document.querySelectorAll(".MOU_form");
+    const venue_booking = document.querySelectorAll(".venue_booking");
+    const past_requests = document.querySelectorAll(".past_requests");
+    const dashboard = document.getElementById("dashboard");
+    const Announcements = document.getElementById("Announcements");
+    const logoutBtn = document.getElementById("logoutBtn");
+    
+    // Process user logout by clearing local storage and redirecting to the authentication gateway.
     if(logoutBtn){
         logoutBtn.addEventListener("click",function(){
            
             localStorage.removeItem("token");
-        localStorage.removeItem("userRole");
-        localStorage.removeItem("club");
-        localStorage.removeItem("club_id");
-         window.location.href="select_role_login.html";
+            localStorage.removeItem("userRole");
+            localStorage.removeItem("club");
+            localStorage.removeItem("club_id");
+            window.location.href="select_role_login.html";
         });
     }
+
+    // Asynchronously retrieve and display recent announcements targeted to the authenticated coordinator.
     async function addAnnouncements() {
         try {
-            // 1. Grab the auth token
+            // Ensure the request includes the required authorization token.
             const token = localStorage.getItem("token");
             if (!token) {
                 document.getElementById("addAnnouncements").innerHTML = "<p class='text-slate-500 text-sm'>Please log in to view announcements.</p>";
                 return;
             }
 
-            // 2. Fetch using the correct endpoint and Authorization headers
+            // Execute the network call to the announcements endpoint.
             const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announcements", {
                 method: "GET",
                 headers: {
@@ -283,22 +302,23 @@ View All Announcements
 
             const result = await response.json();
             const container = document.getElementById("addAnnouncements");
-            container.innerHTML = ""; // Clear the loading text
+            container.innerHTML = ""; // Clear preliminary loading text.
 
             if (result.length === 0) {
                 container.innerHTML = "<p class='text-slate-500 text-sm'>No recent announcements.</p>";
                 return;
             }
 
-            // 3. Take the latest 3 announcements (assuming backend returns them newest first)
+            // Restrict the rendered view to the three most recent items to preserve layout structure.
             const topAnnouncements = result.slice(0, 3);
 
             topAnnouncements.forEach((announcement) => {
-                // Format the timestamp into a readable Date and Time
+                // Convert timestamp data into standardized, user-readable formats.
                 const dateObj = new Date(announcement.timestamp);
                 const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                 const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
+                // Construct and append the HTML representation for the announcement.
                 const cardHTML = `
                 <div class="mb-4 p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 dark:hover:border-pink-800 transition-all group cursor-pointer">
                     <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${announcement.heading}</h4>
@@ -324,7 +344,11 @@ View All Announcements
             document.getElementById("addAnnouncements").innerHTML = "<p class='text-red-500 text-sm'>Failed to load announcements.</p>";
         }
     }
+    
+    // Execute the announcement data fetch on page load.
     addAnnouncements();
+    
+    // Establish routing logic for all sidebar navigation elements.
     if(dashboard){
         dashboard.addEventListener("click", function(){
             window.location.href= "Coordinator_homepage.html";
@@ -336,41 +360,37 @@ View All Announcements
         });
     }
     finances.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Finances.html";
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); 
+            window.location.href = "Finances.html";
+        });
     });
-});
-MOU_form.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Mou.html";
+    MOU_form.forEach((button) => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); 
+            window.location.href = "Mou.html";
+        });
     });
-});
-venue_booking.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Venue_booking.html";
+    venue_booking.forEach((button) => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); 
+            window.location.href = "Venue_booking.html";
+        });
     });
-});
-permission_letter.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "permissionletter.html";
+    permission_letter.forEach((button) => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); 
+            window.location.href = "permissionletter.html";
+        });
     });
-});
-
-past_requests.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "past requests.html";
+    past_requests.forEach((button) => {
+        button.addEventListener("click", function(event) {
+            event.preventDefault(); 
+            window.location.href = "past requests.html";
+        });
     });
-});
+
+    // Populate the dashboard header dynamically with the organization's name from local storage.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
@@ -380,6 +400,7 @@ past_requests.forEach((button) => {
 
 
     // --- FETCH & RENDER RECENT REQUESTS ---
+    // Retrieve the historical record of submissions (MOU, Venue, Permission) to populate the status overview table.
     async function loadRecentRequests() {
         const token = localStorage.getItem("token");
         const tbody = document.getElementById("recent-requests-body");
@@ -399,26 +420,31 @@ past_requests.forEach((button) => {
             const records = await response.json();
             tbody.innerHTML = ""; 
 
+            // Handle scenarios where no historical data is present.
             if (!records || records.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 font-medium">No recent requests submitted.</td></tr>`;
                 return;
             }
 
+            // Limit rendering to the five most recent requests to ensure interface conciseness.
             const recentRecords = records.slice(0, 5);
 
             recentRecords.forEach(record => {
+                // Apply semantic coloring based on the category of the request.
                 let typeColor = "bg-slate-50 text-slate-600";
                 const typeUpper = (record.type || "").toUpperCase();
                 if (typeUpper.includes("VENUE")) typeColor = "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400";
                 else if (typeUpper.includes("MOU")) typeColor = "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400";
                 else if (typeUpper.includes("PERMISSION")) typeColor = "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
 
+                // Map standard approval statuses to corresponding visual indicators.
                 let statusDot = "bg-slate-400"; 
                 const statusLower = (record.status || "").toLowerCase();
                 if (statusLower.includes("approved")) statusDot = "bg-emerald-400";
                 else if (statusLower.includes("rejected")) statusDot = "bg-rose-500";
                 else if (statusLower.includes("pending")) statusDot = "bg-amber-400";
 
+                // Inject the structured row data into the table body.
                 tbody.innerHTML += `
                     <tr class="hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer" onclick="window.location.href='past requests.html'">
                         <td class="px-6 py-5 align-top whitespace-nowrap">
@@ -444,7 +470,7 @@ past_requests.forEach((button) => {
         }
     }
 
-    // Call it alongside your announcements function!
+    // Execute the request data fetch sequentially alongside other initializations.
     loadRecentRequests();
 </script>
 </html>

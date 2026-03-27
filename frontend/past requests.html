@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -19,17 +20,20 @@
             },
         };
     </script>
+    
     <style type="text/tailwindcss">
         @layer base {
             body { @apply bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200; font-family: "Inter", sans-serif; }
         }
         :root { --sidebar-width: 280px; }
+        
+        /* Sidebar layout animation properties */
         .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
         #sidebar-toggle:checked ~ .sidebar-drawer { transform: translateX(0); }
         #sidebar-toggle:checked ~ .main-content { margin-left: var(--sidebar-width); }
         .main-content { transition: margin-left 0.3s ease-in-out; }
         
-        /* Universal Modal Logic */
+        /* Modal visibility logic linked to a hidden checkbox state */
         #details-modal-toggle:checked ~ #details-modal-overlay { display: flex; }
         #details-modal-toggle:checked ~ body { overflow: hidden; }
     </style>
@@ -92,6 +96,7 @@
                 <div class="px-8 py-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
                     <h2 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100">Request Records</h2>
                 </div>
+                
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="bg-pink-50/50 dark:bg-pink-900/10 text-slate-500 text-xs font-bold uppercase tracking-wider">
@@ -106,6 +111,7 @@
                             </tbody>
                     </table>
                 </div>
+                
                 <div class="px-8 py-5 flex items-center justify-between border-t border-pink-50 dark:border-pink-900/10">
                     <p id="pagination-info" class="text-[13px] text-slate-500 font-medium"></p>
                     <div id="pagination-controls" class="flex items-center gap-2"></div>
@@ -117,6 +123,7 @@
     <input class="hidden" id="details-modal-toggle" type="checkbox" />
     <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="details-modal-overlay">
         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('details-modal-toggle').checked = false"></div>
+        
         <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-6 border-b border-pink-50 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 z-10">
                 <h3 class="font-display font-bold text-2xl text-slate-800 dark:text-white" id="modal-title">Request Details</h3>
@@ -135,20 +142,22 @@
 
 </body>
 <script>
-    // Navigation Links Setup
+    // System Event Bindings: Configure routing for navigation elements.
     document.getElementById("dashboard")?.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Coordinator_homepage.html"; });
     document.querySelectorAll(".finances").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
     document.querySelectorAll(".MOU_form").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
     document.querySelectorAll(".venue_booking").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Venue_booking.html"; }));
     document.querySelectorAll(".permission_letter").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
     
+    // User Context Initialization: Retrieve and display the current user's organization name.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     if(clubName) clubName.textContent = enterName ? enterName.toUpperCase() : "CLUB";
 
+    // Application Bootstrap: Initiate data retrieval once the DOM is fully constructed.
     document.addEventListener("DOMContentLoaded", fetchRequests);
 
-    // Helpers
+    // Determines the visual styling classes based on the specific type of request.
     function getTypeStyle(type) {
         const typeMap = {
             'MOU': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -158,6 +167,7 @@
         return typeMap[type?.toUpperCase()] || 'bg-slate-100 text-slate-700';
     }
 
+    // Constructs a formatted badge displaying the current status of a request.
     function getStatusUI(status) {
         let colorClass = "";
         let icon = "";
@@ -176,11 +186,12 @@
         return `<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${colorClass} text-xs font-bold"><span class="material-icons-round text-sm">${icon}</span> ${status}</div>`;
     }
 
-    // Pagination Logic
+    // State Variables for Pagination Tracking
     let allRecords = []; 
     let currentPage = 1;
     const rowsPerPage = 7;
 
+    // Asynchronously fetches the user's historical request data from the server.
     async function fetchRequests() {
         try {
             const response = await fetch("http://127.0.0.1:8000/api/requests/all", {
@@ -197,10 +208,12 @@
         }
     }
 
+    // Processes the retrieved data and updates the HTML table with the current page's records.
     function renderTable() {
         const tableBody = document.getElementById("request-table-body");
         tableBody.innerHTML = ""; 
 
+        // Handle empty state gracefully
         if (allRecords.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-slate-500">No records found.</td></tr>`;
             updatePaginationUI(0, 0, 0, 0);
@@ -212,6 +225,7 @@
         const endIndex = Math.min(startIndex + rowsPerPage, allRecords.length);
         const paginatedRecords = allRecords.slice(startIndex, endIndex);
 
+        // Iterate through the selected segment and construct table rows
         paginatedRecords.forEach(record => {
             const typeClass = getTypeStyle(record.type);
             const statusBadge = getStatusUI(record.status);
@@ -232,9 +246,11 @@
             tableBody.innerHTML += row;
         });
 
+        // Synchronize pagination controls with the current display state
         updatePaginationUI(startIndex + 1, endIndex, allRecords.length, totalPages);
     }
 
+    // Rebuilds the pagination interface, including summary text and interactive buttons.
     function updatePaginationUI(start, end, total, totalPages) {
         const infoText = document.getElementById("pagination-info");
         const controls = document.getElementById("pagination-controls");
@@ -246,7 +262,7 @@
 
         controls.innerHTML = "";
         
-        // Prev Button
+        // Generate Previous Button
         const prevBtn = document.createElement("button");
         prevBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === 1 ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
         prevBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_left</span>`;
@@ -254,7 +270,7 @@
         prevBtn.onclick = () => { currentPage--; renderTable(); };
         controls.appendChild(prevBtn);
 
-        // Page Nums
+        // Generate Numeric Page Selectors
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement("button");
             if (i === currentPage) {
@@ -267,7 +283,7 @@
             controls.appendChild(pageBtn);
         }
 
-        // Next Button
+        // Generate Next Button
         const nextBtn = document.createElement("button");
         nextBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === totalPages ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
         nextBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_right</span>`;
@@ -276,14 +292,16 @@
         controls.appendChild(nextBtn);
     }
 
-    // --- UNIVERSAL VIEW DETAILS INJECTOR ---
+    // Constructs and displays a detailed view of a specific request inside the modal window.
     window.viewDetails = (type, id) => {
+        // Locate the target record in the local dataset
         const record = allRecords.find(r => r.id === id && r.type === type);
         if (!record) return;
 
         document.getElementById('modal-title').textContent = `${type} Details`;
         const contentDiv = document.getElementById('modal-content');
         
+        // Dynamically build the modal layout based on the record type
         if (type === 'MOU') {
             contentDiv.innerHTML = `
                 <div class="grid grid-cols-2 gap-4">
@@ -360,7 +378,7 @@
             `;
         }
 
-        // Toggle Rejection Reason Block
+        // Manage the visibility of the rejection context block based on the record's status.
         const rejectionBlock = document.getElementById('modal-rejection-block');
         const rejectionReason = document.getElementById('modal-rejection-reason');
         
@@ -371,6 +389,7 @@
             rejectionBlock.classList.add('hidden');
         }
 
+        // Trigger the visual display of the modal window
         document.getElementById('details-modal-toggle').checked = true;
     };
 </script>

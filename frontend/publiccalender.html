@@ -33,6 +33,7 @@
                 },
             },
         };
+        // Handles manual interface theme inversion.
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
@@ -139,6 +140,7 @@
         let currentDate = new Date();
         let allEvents = [];
 
+        // Generates the correct month view by calculating the start day offsets and length of the month.
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -155,11 +157,13 @@
             const calendarGrid = document.getElementById('calendar-grid');
             calendarGrid.innerHTML = '';
 
+            // Populates padding days from the previous month to maintain structural alignment.
             for (let i = 0; i < firstDay; i++) {
                 const dayNum = daysInPrevMonth - firstDay + i + 1;
                 calendarGrid.innerHTML += `<div class="text-slate-300 dark:text-slate-600 w-8 h-8 flex items-center justify-center mx-auto">${dayNum}</div>`;
             }
 
+            // Builds out the active month grid and highlights corresponding active events.
             for (let i = 1; i <= daysInMonth; i++) {
                 const monthStr = String(month + 1).padStart(2, '0');
                 const dayStr = String(i).padStart(2, '0');
@@ -177,6 +181,7 @@
             }
         }
 
+        // Filters and presents the event feed based on a selected target date.
         function displayEvents(filterDateStr = null) {
             const container = document.getElementById("events-container");
             const clearBtn = document.getElementById("clear-filter-btn");
@@ -199,6 +204,7 @@
                 return;
             }
 
+            // Iterates through verified objects to mount visually descriptive event blocks to the view.
             filteredEvents.forEach((event) => {
                 const [year, month, day] = event.date.split('-');
                 const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -233,11 +239,13 @@
             });
         }
 
+        // Adjusts the calendar to view future or past cycles based on user input.
         function changeMonth(offset) {
             currentDate.setMonth(currentDate.getMonth() + offset);
             renderCalendar();
         }
 
+        // Retrieves public event data securely from the backend to ensure accurate display schedules.
         async function loadEvents() {
             try {
                 const response = await fetch("http://127.0.0.1:8000/api/calendar/events");

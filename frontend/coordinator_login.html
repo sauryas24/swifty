@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
+        // Set up framework configurations to support standard UI themes.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -111,7 +112,7 @@
     </main>
 </body>
 <script>
-    // Navigation and UI Toggles
+    // Initialize navigation handlers for interfacing elements.
     const back = document.getElementById('goBack');
     if (back) {
         back.addEventListener("click", function(e) {
@@ -120,6 +121,7 @@
         });
     }
 
+    // Configure the toggle logic to mask or unmask user password inputs.
     const passwordInput = document.getElementById('passwordEntered');
     const togglePassword = document.getElementById('visibilityToggle');
     if (togglePassword && passwordInput) {
@@ -130,7 +132,7 @@
         });
     }
 
-    // Custom Dropdown Logic
+    // Execute state management and interaction logic for the custom organizational dropdown menu.
     const clubBtn = document.getElementById("club-select-button");
     const clubList = document.getElementById("club-options-list");
     const clubText = document.getElementById("club-select-text");
@@ -170,7 +172,7 @@
         }
     });
 
-    // CLEANED UP LOGIN LOGIC
+    // Handle the authentication submission process and subsequent routing paths.
     const loginBtn = document.getElementById("loginButton");
 
     if (loginBtn) {
@@ -199,7 +201,7 @@
             loginBtn.disabled = true;
 
             try {
-                // STEP 1: VERIFY PASSWORD
+                // Initial Authentication: Validate user credentials with the primary security endpoint.
                 const loginResponse = await fetch("http://127.0.0.1:8000/api/auth/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -208,17 +210,17 @@
                 
                 const loginResult = await loginResponse.json();
                 
-                // STEP 2: CHECK IF BACKEND REQUESTS OTP
+                // Secondary Authentication: Verify whether multi-factor authorization is enforced for the session.
                 if (loginResponse.ok && loginResult.requires_2fa === true) {
                     
-                    // Save ONLY the email for now so the OTP page knows who to verify
+                    // Retain the authenticated email identifier securely for the subsequent OTP challenge.
                     localStorage.setItem("userEmail", loginResult.email_id);
 
-                    // Redirect to the OTP verification page
+                    // Redirect the user interface flow to execute the OTP challenge.
                     window.location.href = "./otp.html";
 
                 } else {
-                    // If password was wrong or role is incorrect
+                    // Display error feedback gracefully if authorization parameters fail to resolve.
                     alert(loginResult.detail || loginResult.message || "Invalid credentials");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;

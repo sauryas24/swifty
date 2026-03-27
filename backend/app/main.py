@@ -18,18 +18,21 @@ from .routers import calendar
 from .routers import otp
 
 
-# Create the database tables automatically when the server starts
+# Initialize database schemas
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Swifty API", version="1.0")
-# Mount static files to serve receipt images/PDFs and MoU documents
+
+# Configure directories for images/PDFs and MoU documents
 if not os.path.exists("static/receipts"):
     os.makedirs("static/receipts")
 if not os.path.exists("static/mou_documents"):      
     os.makedirs("static/mou_documents")               
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-# Plug the routers into the main app
+
+
+# Configure Cross-Origin Resource Sharing (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -39,6 +42,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 # Plug the routers into the main app
 app.include_router(venues.router)
 app.include_router(auth.router)

@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, ConfigDict
 from typing import List
 
-# Assuming these are your local imports based on main.py structure
 from .. import models, schemas
 from ..database import get_db
 
@@ -12,19 +11,15 @@ router = APIRouter(
     tags=["Public Calendar"]
 )
 
-# --- API Endpoints ---
 @router.get("/events", response_model=List[schemas.CalendarEventResponse])
 def get_public_calendar_events(db: Session = Depends(get_db)):
-    """
-    Fetches all upcoming approved events for the Public Calendar UI.
-    """
-    # 1. Fetch bookings where the status is 'Approved' 
-    # (This assumes the final approval state changes status from 'Pending FacAd' to 'Approved')
+    # Retrieves all approved upcoming events to be displayed on the public calendar.
+
+    # Fetch bookings where the status is 'Approved' 
     approved_bookings = db.query(models.VenueBooking).filter(
         models.VenueBooking.status == "Approved"
     ).all()
 
-    # 2. Format the response to match frontend requirements
     public_events = []
     for booking in approved_bookings:
         # Retrieve the room name for the venue
@@ -44,15 +39,8 @@ def get_public_calendar_events(db: Session = Depends(get_db)):
         
     return public_events
 
-# --- Utility Functions ---
 def approve_and_publish_event(booking_id: int, db: Session):
-    """
-    Implements the logic from the sequence diagram: 
-    Approval System -> Upcoming Events DB -> Public Calendar DB
-    
-    Call this function from your approval endpoints when an authority 
-    finally approves a permission letter.
-    """
+    # Finalizes the approval status of a venue booking and publishes it to the public calendar.
     booking = db.query(models.VenueBooking).filter(
         models.VenueBooking.id == booking_id
     ).first()

@@ -9,7 +9,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
     <script>
+        // Customizes Tailwind boundaries to fit the dark aesthetic parameters required.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -34,6 +36,7 @@
         }
     </script>
     <style type="text/tailwindcss">
+        /* Creates the subtle dotted background pattern effect for depth. */
         .dot-pattern {
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 20px 20px;
@@ -108,8 +111,7 @@
 
 </body>
 <script>
-    // Navigation back button
-    const backButton = document.getElementById("poop");
+    // Configures the structural back path out of the login portal.    const backButton = document.getElementById("poop");
     if(backButton){
         backButton.addEventListener("click", function(){
             window.location.href = "publiccalender.html";
@@ -130,9 +132,7 @@
         e.stopPropagation();
         
         if (dropdownList.classList.contains("hidden")) {
-            // Open
             dropdownList.classList.remove("hidden");
-            // small delay to allow display:block to apply before animating opacity
             setTimeout(() => dropdownList.classList.remove("opacity-0"), 10); 
             dropdownArrow.style.transform = "rotate(180deg)";
         } else {
@@ -165,8 +165,7 @@
         }
     });
     
-    // Enter Button Logic
-    const enter = document.getElementById("enter");
+    // Assesses the selected value and redirects to the requested role access point.    const enter = document.getElementById("enter");
     if(enter){
         enter.addEventListener("click", function(){
             const selectedValue = document.getElementById("roleValue").value;

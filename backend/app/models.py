@@ -39,21 +39,19 @@ class VenueBooking(Base):
     event_type = Column(String)
     expected_attendees = Column(Integer)
     description = Column(String)
-    permission_letter_id = Column(String)   # This will be provided to the user after the permission letter is approved.
+    permission_letter_id = Column(String)    # This will be provided to the user after the permission letter is approved.
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    status = Column(String, default="Pending GenSec") # Starts the approval chain
-    # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
-    comments = Column(String, nullable=True) # Stores the rejection message
-    # Links the booking to the actual room details
-    room = relationship("Room")
+    status = Column(String, default="Pending GenSec")    # Starts the approval chain
+    comments = Column(String, nullable=True)    # Stores the rejection message
+    room = relationship("Room")     # Links the booking to the actual room details
+
 
 class Club(Base):
     __tablename__ = "clubs"
     id = Column(Integer, primary_key=True, index=True)
-    # ADD THIS LINE: This links the ledger directly to the coordinator's login!
     user_id = Column(Integer, ForeignKey("users.id"), unique=True)
     name = Column(String, unique=True, index=True)
-    total_allocated = Column(Float, default=500000.0) # From HTML: ₹5,00,000
+    total_allocated = Column(Float, default=500000.0) 
     total_spent = Column(Float, default=0.0)
     
     transactions = relationship("Transaction", back_populates="club")
@@ -64,8 +62,8 @@ class Transaction(Base):
     club_id = Column(Integer, ForeignKey("clubs.id"))
     amount = Column(Float) # Amount (₹) 
     description = Column(String) # Description
-    receipt_url = Column(String, nullable=True) # File attachment path 
-    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)) # For log history 
+    receipt_url = Column(String, nullable=True) 
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)) 
     
     club = relationship("Club", back_populates="transactions")
     
@@ -80,16 +78,12 @@ class PermissionLetter(Base):
     time = Column(String)
     reason = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    # Attached automatically by the backend
     club_id = Column(Integer, ForeignKey("users.id"))
-    
-    # The Approval Tracker
     status = Column(String, default="Pending GenSec") 
     #in case of rejection
-    # Add this inside your VenueBooking, PermissionLetter, and MoURequest classes
     comments = Column(String, nullable=True) # Stores the rejection message
     
-    # Auto-generated upon final approval, e.g. "PL-2026-0001"
+    # Auto-generated upon final approval of form "PL-2026-0001"
     generated_id = Column(String, nullable=True, unique=True)
 
     # Relationship to fetch club details 
@@ -99,13 +93,11 @@ class PermissionLetter(Base):
 class Announcement(Base):
     __tablename__ = "announcements"
 
-    # Required attributes from the SRS Data Dictionary
     id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     message = Column(String, nullable=False)
     heading = Column(String, nullable=False)
     
-    # Since SQLite doesn't natively support arrays easily, we store target_clubs as a comma-separated string
     target_clubs = Column(String, nullable=True) 
     
     timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc)) # For log history 
@@ -126,11 +118,7 @@ class MoURequest(Base):
     document_url = Column(String, nullable=False)
 
     status = Column(String, default="Pending Gensec")
-    # pending_gensec
-    # pending_faculty
-    # pending_adsa
-    # approved
-    # rejected
+   
 
     comments = Column(String, nullable=True)
 
