@@ -9,6 +9,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <script id="tailwind-config">
+        // Embed the requisite Tailwind configuration to uphold framework design parity.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -33,7 +34,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         
-        /* --- Sidebar Animation --- */
+        /* --- Execute standardized transitions dictating sidebar component visibility --- */
         #sidebar { transition: transform 0.3s ease-in-out; }
         .sidebar-closed { transform: translateX(-100%); }
         .sidebar-open { transform: translateX(0); }
@@ -43,7 +44,7 @@
             .sidebar-open { margin-left: 0; transform: none; }
         }
 
-        /* --- Date Input Fix --- */
+        /* --- Enforce reliable rendering for browser-native date input interfaces --- */
         input[type="date"]::-webkit-calendar-picker-indicator {
             position: absolute;
             top: 0;
@@ -124,20 +125,17 @@
                         
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-text-main dark:text-gray-200 text-sm font-medium">Partner Organization Name</label>
-                            <!-- Added id="orgName" -->
                             <input id="orgName" class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600" placeholder="Enter the name of the organization" type="text" required/>
                         </div>
 
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-text-main dark:text-gray-200 text-sm font-medium">Detailed Scope of Work</label>
-                            <!-- Added id="purpose" -->
                             <textarea id="purpose" class="w-full rounded-xl text-text-main dark:text-white border border-border-light dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-text-muted dark:placeholder:text-gray-600 resize-y" placeholder="Describe the deliverables, responsibilities, and terms of the agreement..." required></textarea>
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <span class="text-text-main dark:text-gray-200 text-sm font-medium">Attach Files</span>
                             <div class="relative w-full border-2 border-dashed border-border-light dark:border-gray-700 rounded-xl bg-background-light dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 transition-colors p-8 flex flex-col items-center justify-center gap-3 text-center cursor-pointer group">
-                                <!-- Added id="docFile" -->
                                 <input id="docFile" class="absolute inset-0 opacity-0 cursor-pointer" type="file" accept=".pdf,.docx" required/>
                                 <div class="size-12 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
                                     <span class="material-symbols-outlined text-primary text-[24px]">cloud_upload</span>
@@ -153,7 +151,6 @@
                             <button class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-text-muted dark:text-gray-300 font-medium transition-colors" type="button">
                                 Cancel
                             </button>
-                            <!-- Added id="submitBtn" -->
                             <button id="submitBtn" class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
                                 <span>Submit Request</span>
                                 <span class="material-symbols-outlined text-lg">send</span>
@@ -167,20 +164,21 @@
 </div>
 
 <script>
+    // Initialize primary elements representing the interface navigation layer.
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
 
-    // 1. Sidebar Toggle Logic
+    // 1. Establish toggle constraints distinguishing sidebar logic across screen sizes.
     function toggleSidebar() {
         if (window.innerWidth < 768) {
-            // Mobile behavior
+            // Configure mobile-responsive class assignments.
             sidebar.classList.toggle('sidebar-closed'); 
             sidebar.classList.toggle('sidebar-open');
             sidebarOverlay.classList.toggle('hidden');
         } else {
-            // Desktop behavior (Collapse width)
+            // Administer desktop class manipulation constraints.
             sidebar.classList.toggle('sidebar-closed');
             sidebar.classList.toggle('sidebar-open');
         }
@@ -241,6 +239,7 @@
             window.location.href = "past requests.html";
         });
     });
+    // Formulate the appropriate dashboard title mapping corresponding to the user's role array context.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
     const getToken = localStorage.getItem("token");
@@ -250,7 +249,7 @@
         clubName.textContent = "CLUB DASHBOARD";
     }
 
-    // 1. Update UI when a file is selected
+    // 1. Configure event listeners parsing DOM changes post-file-selection rendering logic.
     const docFileInput = document.getElementById("docFile");
     const fileNameDisplay = document.getElementById("fileNameDisplay");
     
@@ -258,7 +257,7 @@
         docFileInput.addEventListener("change", function(e) {
             if(e.target.files.length > 0) {
                 fileNameDisplay.textContent = e.target.files[0].name;
-                fileNameDisplay.classList.add("text-primary"); // Optional: highlight the selected file name
+                fileNameDisplay.classList.add("text-primary"); // Optional: highlight the selected file name visually.
             } else {
                 fileNameDisplay.textContent = "Click to upload or drag and drop";
                 fileNameDisplay.classList.remove("text-primary");
@@ -266,7 +265,7 @@
         });
     }
 
-    // 2. Handle the Submit Button Click
+    // 2. Transmit assembled form contents integrating FormData payload parsing properties.
     const submitBtn = document.getElementById("submitBtn");
 
     if (submitBtn) {
@@ -282,7 +281,7 @@
                 return;
             }
             
-            // GRAB THE FRESH TOKEN RIGHT BEFORE SENDING
+            // Re-validate the active authorization token state immediately preceding dispatch.
             const freshToken = localStorage.getItem("token");
             if (!freshToken) {
                 alert("Security Error: No token found. Please log in again.");
@@ -299,7 +298,7 @@
             submitBtn.innerHTML = `<span>Submitting...</span>`;
 
             try {
-                // FIXED: Changed localhost to 127.0.0.1 to match your login domain!
+                // Ensure endpoint compliance correlates directly to established domain specifications.
                 const response = await fetch("http://127.0.0.1:8000/api/mou/submit", {
                     method: "POST",
                     headers: {

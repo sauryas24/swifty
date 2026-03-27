@@ -10,7 +10,7 @@ from .calendar import approve_and_publish_event
 
 router = APIRouter(prefix="/api/approvals", tags=["Approvals"])
 
-# --- Shared Pipeline Configuration ---
+# Configuration for the sequential approval workflow
 SHARED_PIPELINE = {
     "Pending GenSec": "Pending President",
     "Pending President": "Pending FacAd",
@@ -25,9 +25,8 @@ ROLE_AUTHORIZATION_MAP = {
     "Pending ADSA": "adsa"
 }
 
-# ---------------------------------------------------------
-# SECURITY HELPER: OTP Verification
-# ---------------------------------------------------------
+
+# OTP Verification
 def _verify_otp(email_id: str, otp_code: str, db: Session):
     """Validates the OTP, checks expiration, and consumes it."""
     if not otp_code:
@@ -45,14 +44,12 @@ def _verify_otp(email_id: str, otp_code: str, db: Session):
         db.commit()
         raise HTTPException(status_code=400, detail="OTP has expired. Please request a new one.")
         
-    # Valid! Delete it so it cannot be used twice
+    #  If Valid, delete it so it cannot be used twice
     db.delete(otp_record)
     db.commit()
 
 
-# ---------------------------------------------------------
-# 1. VENUE BOOKING APPROVALS
-# ---------------------------------------------------------
+# VENUE BOOKING APPROVALS
 @router.put("/venue/{booking_id}/process")
 def process_venue_approval(
     booking_id: int, 
@@ -60,6 +57,7 @@ def process_venue_approval(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
+    # Processes approval or rejection for venue booking requests.
     booking = db.query(models.VenueBooking).filter(models.VenueBooking.id == booking_id).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Venue request not found")
@@ -85,7 +83,7 @@ def process_venue_approval(
         if current_status not in SHARED_PIPELINE:
             raise HTTPException(status_code=400, detail="Request is already fully processed or rejected.")
             
-        # --- OTP SECURITY CHECK ---
+        # OTP security check
         _verify_otp(current_user.email_id, action_data.otp_code, db)
             
         next_status = SHARED_PIPELINE[current_status]
@@ -112,9 +110,7 @@ def process_venue_approval(
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
 
 
-# ---------------------------------------------------------
-# 2. MoU PIPELINE APPROVALS
-# ---------------------------------------------------------
+# MoU PIPELINE APPROVALS
 @router.put("/mou/{mou_id}/process")
 def process_mou_approval(
     mou_id: int, 
@@ -122,6 +118,7 @@ def process_mou_approval(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
+    """Processes approval or rejection for MoU requests."""
     mou = db.query(models.MoURequest).filter(models.MoURequest.id == mou_id).first()
     if not mou:
         raise HTTPException(status_code=404, detail="MoU request not found")
@@ -148,7 +145,7 @@ def process_mou_approval(
         if current_status not in SHARED_PIPELINE:
             raise HTTPException(status_code=400, detail="Request is already fully processed or rejected.")
             
-        # --- OTP SECURITY CHECK ---
+        # OTP security check
         _verify_otp(current_user.email_id, action_data.otp_code, db)
             
         next_status = SHARED_PIPELINE[current_status]
@@ -174,13 +171,10 @@ def process_mou_approval(
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
 
 
-# ---------------------------------------------------------
-# 3. PERMISSION LETTER APPROVALS
-# ---------------------------------------------------------
-# ---------------------------------------------------------
-# 3. PERMISSION LETTER APPROVALS
-# ---------------------------------------------------------
+
+# PERMISSION LETTER APPROVALS
 def _generate_permission_letter_id(db: Session) -> str:
+    # Generates a sequential ID for finalized permission letters.
     year = datetime.now().year
     prefix = f"PL-{year}-"
     approved_this_year = db.query(models.PermissionLetter).filter(models.PermissionLetter.generated_id.like(f"{prefix}%")).count()
@@ -206,9 +200,7 @@ def process_permission_approval(
     if current_user.role != required_role:
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
-    # ---------------------------------------------------------
-    # NEW DYNAMIC EMAIL LOOKUP: Find the exact coordinator
-    # ---------------------------------------------------------
+    # Find the exact coordinator
     coordinator = db.query(models.User).filter(models.User.id == letter.club_id).first()
     # Fallback to a default just in case the user was deleted
     coordinator_email = coordinator.email_id if coordinator else "admin@iitk.ac.in"
@@ -220,7 +212,7 @@ def process_permission_approval(
         db.commit()
 
         email_service.send_notification_email(
-            coordinator_email, # <-- Sends to the actual coordinator
+            coordinator_email, # Sends to the actual coordinator
             f"Update: Permission Letter '{letter.event_name}' Rejected",
             (
                 f"Hello {coordinator_name},\n\n"
@@ -234,7 +226,7 @@ def process_permission_approval(
         if current_status not in SHARED_PIPELINE:
             raise HTTPException(status_code=400, detail="Request is already fully processed or rejected.")
 
-        # --- OTP SECURITY CHECK ---
+        # OTP security check
         _verify_otp(current_user.email_id, action_data.otp_code, db)
 
         next_status = SHARED_PIPELINE[current_status]
@@ -247,7 +239,7 @@ def process_permission_approval(
             db.commit()
 
             email_service.send_notification_email(
-                coordinator_email, # <-- Sends the ID directly to the actual coordinator
+                coordinator_email, # Sends the ID directly to the actual coordinator
                 f"Permission Letter '{letter.event_name}' Approved",
                 (
                     f"Hello {coordinator_name},\n\n"
@@ -263,7 +255,7 @@ def process_permission_approval(
         else:
             db.commit()
             email_service.send_notification_email(
-                coordinator_email, # <-- Sends to the actual coordinator
+                coordinator_email, # Sends to the actual coordinator
                 f"Progress: Permission Letter '{letter.event_name}' moved to {next_status}",
                 f"Hello {coordinator_name},\n\nYour permission letter was approved by {current_user.role} and is now {next_status}."
             )
@@ -271,15 +263,15 @@ def process_permission_approval(
 
     else:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
-# ---------------------------------------------------------
-# 4. HELPER: Look up a Permission Letter by its generated ID
-# ---------------------------------------------------------
+    
+# Look up a Permission Letter by its generated ID
 @router.get("/permission/lookup/{generated_id}", response_model=schemas.PermissionLetterResponse)
 def lookup_permission_letter(
     generated_id: str,
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
+    # Retrieves an approved permission letter using its designated ID.
     letter = db.query(models.PermissionLetter).filter(models.PermissionLetter.generated_id == generated_id).first()
     if not letter:
         raise HTTPException(status_code=404, detail=f"No approved permission letter found with ID '{generated_id}'.")

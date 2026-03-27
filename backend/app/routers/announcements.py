@@ -6,26 +6,26 @@ from ..utils import security, email_service
 
 router = APIRouter(prefix="/api/announcements", tags=["Announcements"])
 
-# We define the authority list so both endpoints can use it!
-AUTHORITY_ROLES = ["admin", "authority", "gensec", "president", "facad", "adsa", "dosa"]
+# Authorized roles permitted to manage announcements
+AUTHORITY_ROLES = ["admin", "authority", "gensec", "president", "facad", "adsa"]
 
-# Endpoint 1: Create / Publish announcement
+# Endpoint: Create / Publish announcement
 @router.post("/publish")
 def publish_announcement(
     announcement_data: schemas.AnnouncementCreate,
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    """Allows administrative authorities to publish announcements and emails targets."""
+    # Allows administrative authorities to publish announcements and emails targets.
 
-    # 1. Let ALL authority types publish
+    # Let ALL authority types publish
     if current_user.role not in AUTHORITY_ROLES:
         raise HTTPException(
             status_code=403,
             detail="Only administrative authorities can publish announcements."
         )
 
-    # 2. Save the Announcement to the database
+    # Format target clubs as a comma-separated string for database storage
     target_string = ",".join(announcement_data.target_clubs) if announcement_data.target_clubs else ""
     
     new_announcement = models.Announcement(
@@ -39,7 +39,7 @@ def publish_announcement(
     db.commit()
     db.refresh(new_announcement)
 
-    # 3. Fetch the target users to get their email addresses
+    # Fetch the target users to get their email addresses
     if announcement_data.target_clubs:
         target_users = db.query(models.User).filter(
             models.User.username.in_(announcement_data.target_clubs),
@@ -48,7 +48,7 @@ def publish_announcement(
     else:
         target_users = db.query(models.User).filter(models.User.role == "coordinator").all()
 
-    # 4. Dispatch the emails!
+    # Dispatch the emails!
     for user in target_users:
         email_service.send_notification_email(
             to_email=user.email_id,
@@ -64,16 +64,16 @@ def publish_announcement(
         "target_clubs": announcement_data.target_clubs
     }
 
-# Endpoint 2: View announcements
+# Endpoint: View announcements
 @router.get("/my-announcements")
 def get_announcements(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    """
-    Club coordinators can view announcements relevant to their club.
-    Authorities can view ALL announcements on their dashboard.
-    """
+    
+    # Club coordinators can view announcements relevant to their club.
+    # Authorities can view ALL announcements on their dashboard.
+    
     announcements_with_senders = db.query(
         models.Announcement, 
         models.User.username.label("sender_username")
@@ -92,18 +92,21 @@ def get_announcements(
                 "sender_username": sender_username,
                 "heading": ann.heading, 
                 "message": ann.message,
-                "target_clubs": []
+                "target_clubs": [],
+                "timestamp": ann.timestamp
             })
         else:
             clubs = ann.target_clubs.split(",")
-            # Let Authorities see everything, but restrict Coordinators to their own!
+
+            # Let Authorities see everything, but restrict Coordinators to their own
             if current_user.role in AUTHORITY_ROLES or current_user.username in clubs:
                 relevant_announcements.append({
                     "id": ann.id,
                     "sender_username": sender_username,
                     "heading": ann.heading, 
                     "message": ann.message,
-                    "target_clubs": clubs
+                    "target_clubs": clubs,
+                    "timestamp": ann.timestamp
                 })
 
     return relevant_announcements

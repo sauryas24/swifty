@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -29,7 +30,7 @@
 <style>
         body { font-family: 'Inter', sans-serif; }
         
-        /* --- Sidebar Animation --- */
+        /* Handles the smooth transition of the sidebar sliding in and out on mobile screens. */
         #sidebar { transition: transform 0.3s ease-in-out; }
         .sidebar-closed { transform: translateX(-100%); }
         .sidebar-open { transform: translateX(0); }
@@ -39,9 +40,7 @@
             .sidebar-open { margin-left: 0; transform: none; }
         }
 
-        /* --- Date & Time Input Fix --- */
-        /* This stretches the native picker over the whole input but makes it invisible. 
-           Clicking anywhere on the input now triggers the picker. */
+        /* Expands the hit area for native date and time pickers to cover the entire input field seamlessly. */
         input[type="date"]::-webkit-calendar-picker-indicator,
         input[type="time"]::-webkit-calendar-picker-indicator {
             position: absolute;
@@ -78,7 +77,6 @@
                     <span class="material-icons-round text-xl">dashboard</span>
                     <span class="text-sm">Dashboard</span>
                     </a>
-                
                 <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">account_balance_wallet</span>
                     <span class="text-sm">Finances</span>
@@ -101,9 +99,7 @@
                 </a>
                 </nav>
         </div>
-        <div class="p-4 border-t border-[#e5dce0] dark:border-gray-800">
-            
-        </div>
+        <div class="p-4 border-t border-[#e5dce0] dark:border-gray-800"></div>
     </aside>
 
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
@@ -112,15 +108,17 @@
         <div class="bg-white dark:bg-[#2a1721] px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-[#e5dce0] dark:border-gray-800 sticky top-0 z-10">
             <h1 id="clubName"class="text-[#171114] dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
         </div>
+        
         <div class="flex-1 px-4 md:px-10 lg:px-16 py-10 flex justify-center">
             <div class="w-full max-w-[960px] flex flex-col gap-6">
+                
                 <div class="bg-white dark:bg-[#2a1721] rounded-2xl p-6 md:p-10 shadow-sm border border-[#e5dce0] dark:border-gray-800">
                     <div class="mb-8 text-center border-b border-[#e5dce0] dark:border-gray-800 pb-6">
                         <h2 class="text-[#171114] dark:text-white tracking-tight text-[28px] font-bold leading-tight">Permission Letter Form</h2>
                         <p class="text-[#876475] dark:text-gray-400 mt-2 text-sm">Submit a new request for an upcoming club event</p>
                     </div>
+                    
                     <form class="flex flex-col gap-6">
-                        
                         <div class="flex flex-col w-full gap-2">
                             <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Name of Event</label>
                             <input id="eventName" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
@@ -147,8 +145,9 @@
                             <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Reason to Conduct Event</label>
                             <textarea id="reason" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
                         </div>
+                        
                         <div class="pt-4 flex justify-end gap-3">
-                            <button type ="reset"id="cancelButton"class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
+                            <button type="reset" id="cancelButton" class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
                                 Cancel
                             </button>
                             <button id="submitButton" class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
@@ -168,17 +167,13 @@
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     
-    
-
-    // 1. Sidebar Toggle Logic
+    // Manages the visual state of the sidebar between mobile overlay and desktop docked modes.
     function toggleSidebar() {
         if (window.innerWidth < 768) {
-            // Mobile behavior
             sidebar.classList.toggle('sidebar-closed'); 
             sidebar.classList.toggle('sidebar-open');
             sidebarOverlay.classList.toggle('hidden');
         } else {
-            // Desktop behavior (Collapse width)
             sidebar.classList.toggle('sidebar-closed');
             sidebar.classList.toggle('sidebar-open');
         }
@@ -187,10 +182,7 @@
     menuBtn.addEventListener('click', toggleSidebar);
     sidebarOverlay.addEventListener('click', toggleSidebar);
 
-    
-
-    // 3. Theme Switch Logic
-    
+    // Binds navigation events to the sidebar links to manage internal application routing.
     const finances = document.querySelectorAll(".finances");
     const permission_letter= document.querySelectorAll(".permission_letter");
     const MOU_form= document.querySelectorAll(".MOU_form");
@@ -204,102 +196,90 @@
         });
     }
     
-    finances.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
+    finances.forEach(button => button.addEventListener("click", (event) => {
         event.preventDefault(); 
         window.location.href = "Finances.html";
-    });
-});
-MOU_form.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
+    }));
+    
+    MOU_form.forEach(button => button.addEventListener("click", (event) => {
         event.preventDefault(); 
         window.location.href = "Mou.html";
-    });
-});
-venue_booking.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
+    }));
+    
+    venue_booking.forEach(button => button.addEventListener("click", (event) => {
         event.preventDefault(); 
         window.location.href = "Venue_booking.html";
-    });
-});
-permission_letter.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
+    }));
+    
+    permission_letter.forEach(button => button.addEventListener("click", (event) => {
         event.preventDefault(); 
         window.location.href = "permissionletter.html";
-    });
-});
+    }));
 
-past_requests.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
+    past_requests.forEach(button => button.addEventListener("click", (event) => {
         event.preventDefault(); 
         window.location.href = "past requests.html";
-    });
-});
+    }));
+    
+    // Reads contextual information from local storage to personalize the UI header.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
-    const getToken = localStorage.getItem("token");
     if(clubName){
         clubName.textContent= enterName.toUpperCase();
     }
 
-const submitButton = document.getElementById("submitButton");
-const cancelButton = document.getElementById("cancelButton");
-
-if(submitButton){
-    submitButton.addEventListener("click", async(event) => {
-        event.preventDefault(); // Prevent accidental page reloads
-        
-        const eventName = document.getElementById("eventName").value;
-        const eventDate = document.getElementById("eventDate").value;
-        const eventTime = document.getElementById("eventTime").value;
-        const reason = document.getElementById("reason").value;
-        
-        // GRAB THE FRESH TOKEN RIGHT BEFORE SENDING
-        const freshToken = localStorage.getItem("token");
-        
-        if (!freshToken) {
-            alert("Security Error: No token found. Please log in again.");
-            return;
-        }
-
-        const PermissionLetter = {
-            event_name: eventName,
-            date: eventDate,
-            time: eventTime,
-            reason: reason
-        };
-
-        try {
-            const response = await fetch("http://127.0.0.1:8000/api/permission/submit", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${freshToken}` 
-                },
-                body: JSON.stringify(PermissionLetter)
-            });
-
-            if (response.ok) {
-                alert("Permission letter sent successfully!");
-                // Clear the form
-                document.getElementById("eventName").value = "";
-                document.getElementById("eventDate").value = "";
-                document.getElementById("eventTime").value = "";
-                document.getElementById("reason").value = "";
-            } else {
-                const errorData = await response.json();
-                alert(`Submission Failed: ${errorData.detail}`);
+    const submitButton = document.getElementById("submitButton");
+    
+    // Intercepts the form action to transmit data asynchronously and securely to the backend endpoint.
+    if(submitButton){
+        submitButton.addEventListener("click", async(event) => {
+            event.preventDefault(); 
+            
+            const eventName = document.getElementById("eventName").value;
+            const eventDate = document.getElementById("eventDate").value;
+            const eventTime = document.getElementById("eventTime").value;
+            const reason = document.getElementById("reason").value;
+            
+            // Verifies active authentication status prior to network requests.
+            const freshToken = localStorage.getItem("token");
+            
+            if (!freshToken) {
+                alert("Security Error: No token found. Please log in again.");
+                return;
             }
-        } catch(e) {
-            console.error("Fetch failed entirely:", e);
-        }
-    });
-}
+
+            const PermissionLetter = {
+                event_name: eventName,
+                date: eventDate,
+                time: eventTime,
+                reason: reason
+            };
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/api/permission/submit", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${freshToken}` 
+                    },
+                    body: JSON.stringify(PermissionLetter)
+                });
+
+                if (response.ok) {
+                    alert("Permission letter sent successfully!");
+                    document.getElementById("eventName").value = "";
+                    document.getElementById("eventDate").value = "";
+                    document.getElementById("eventTime").value = "";
+                    document.getElementById("reason").value = "";
+                } else {
+                    const errorData = await response.json();
+                    alert(`Submission Failed: ${errorData.detail}`);
+                }
+            } catch(e) {
+                console.error("Fetch failed entirely:", e);
+            }
+        });
+    }
 </script>
 </body>
 </html>

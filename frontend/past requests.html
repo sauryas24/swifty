@@ -8,57 +8,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        primary: "#db2777",
-                        "baby-pink": "#fdf2f8",
-                        "background-dark": "#1a1013",
-                    },
-                    fontFamily: {
-                        display: ["Outfit", "Inter", "sans-serif"],
-                        sans: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: { DEFAULT: "12px" },
+                    colors: { primary: "#db2777", "baby-pink": "#fdf2f8", "background-dark": "#1a1013" },
+                    fontFamily: { display: ["Outfit", "Inter", "sans-serif"], sans: ["Inter", "sans-serif"] },
                 },
             },
         };
     </script>
+    
     <style type="text/tailwindcss">
         @layer base {
-            body {
-                @apply bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200;
-                font-family: "Inter", sans-serif;
-            }
+            body { @apply bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200; font-family: "Inter", sans-serif; }
         }
         :root { --sidebar-width: 280px; }
+        
+        /* Sidebar layout animation properties */
         .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
         #sidebar-toggle:checked ~ .sidebar-drawer { transform: translateX(0); }
         #sidebar-toggle:checked ~ .main-content { margin-left: var(--sidebar-width); }
         .main-content { transition: margin-left 0.3s ease-in-out; }
-        .watermark-bg { background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9)); }
-        .dark .watermark-bg { background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9)); }
-        .nav-item-active { @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold; }
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
-        details[open] summary .arrow-icon { transform: rotate(180deg); }
-        .arrow-icon { transition: transform 0.2s ease-in-out; }
         
-        /* Modal Logic */
-        #modal-toggle:checked ~ #rejection-modal,
-        #mou-modal-toggle:checked ~ #mou-details-modal,
-        #perm-modal-toggle:checked ~ #perm-details-modal { display: flex; }
+        /* Modal visibility logic linked to a hidden checkbox state */
+        #details-modal-toggle:checked ~ #details-modal-overlay { display: flex; }
+        #details-modal-toggle:checked ~ body { overflow: hidden; }
     </style>
 </head>
 <body>
     <input checked="" class="hidden" id="sidebar-toggle" type="checkbox" />
-    <input class="hidden" id="modal-toggle" type="checkbox" />
-    <input class="hidden" id="mou-modal-toggle" type="checkbox" />
-    <input class="hidden" id="perm-modal-toggle" type="checkbox" />
-
+    
     <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
         <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
             <span class="material-icons-round">menu</span>
@@ -74,219 +56,118 @@
                 <div class="flex flex-col">
                 <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
                 </div>
-                </div>
+            </div>
             <nav class="flex-1 px-4 py-4 space-y-1">
                 <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">dashboard</span>
                     <span class="text-sm">Dashboard</span>
-                    </a>
-                
+                </a>
                 <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">account_balance_wallet</span>
                     <span class="text-sm">Finances</span>
-                    </a>
+                </a>
                 <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">description</span>
                     <span class="text-sm">Permission Letter</span>
-                    </a>
+                </a>
                 <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">assignment</span>
                     <span class="text-sm">MOU Form</span>
-                    </a>
+                </a>
                 <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                <span class="material-icons-round text-xl">event_seat</span>
-                <span class="text-sm">Venue Booking</span>
+                    <span class="material-icons-round text-xl">event_seat</span>
+                    <span class="text-sm">Venue Booking</span>
                 </a>
                 <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-                <span class="material-icons-round text-xl">history</span>
-                <span class="text-sm">Past Requests</span>
+                    <span class="material-icons-round text-xl">history</span>
+                    <span class="text-sm">Past Requests</span>
                 </a>
-                </nav>
-            
+            </nav>
         </div>
     </aside>
 
-    <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-        <div class="bg-white dark:bg-surface-dark px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-border-light dark:border-gray-800 sticky top-0 z-10">
+    <main class="main-content ml-0 mt-14 p-0 relative min-h-screen">
+        <div class="bg-white dark:bg-surface-dark px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-slate-200 dark:border-gray-800 sticky top-0 z-10">
             <h1 id="clubName"class="text-text-main dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
         </div>
 
-        <div class="px-8 pb-12 relative z-10">
+        <div class="px-8 pb-12 mt-6 relative z-10">
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm overflow-hidden">
                 <div class="px-8 py-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
                     <h2 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100">Request Records</h2>
-                    
                 </div>
-
+                
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead class="bg-pink-50/50 dark:bg-pink-900/10 text-slate-500 text-xs font-bold uppercase tracking-wider">
                             <tr>
-                                <th class="px-8 py-4">Type</th>
-                                <th class="px-8 py-4">Date</th>
-                                <th class="px-8 py-4">Details</th>
-                                <th class="px-8 py-4">Status</th>
-                                <th class="px-8 py-4 text-center">Action</th>
+                                <th class="px-8 py-4 w-1/6">Type</th>
+                                <th class="px-8 py-4 w-1/4">Submitted Date</th>
+                                <th class="px-8 py-4 w-1/3">Details</th>
+                                <th class="px-8 py-4 w-1/4">Status</th>
                             </tr>
                         </thead>
                         <tbody id="request-table-body" class="divide-y divide-pink-50 dark:divide-pink-900/10">
-                            <!-- Data will be injected here -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
-
+                
                 <div class="px-8 py-5 flex items-center justify-between border-t border-pink-50 dark:border-pink-900/10">
-                    <p id="pagination-info" class="text-[13px] text-slate-500 font-medium">Showing 1 to 7 of 68 history records</p>
-                    <div id="pagination-controls" class="flex items-center gap-2">
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#111827] text-white hover:bg-slate-800 transition-colors">
-                            <span class="material-icons-round text-sm">chevron_left</span>
-                        </button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#111827] text-white text-xs font-bold">1</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-900 text-xs font-medium hover:bg-slate-50 transition-colors">2</button>
-                        <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#111827] text-white hover:bg-slate-800 transition-colors">
-                            <span class="material-icons-round text-sm">chevron_right</span>
-                        </button>
-                    </div>
+                    <p id="pagination-info" class="text-[13px] text-slate-500 font-medium"></p>
+                    <div id="pagination-controls" class="flex items-center gap-2"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="rejection-modal">
-        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('modal-toggle').checked = false"></div>
-        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-pink-100">
-            <div class="p-6 border-b border-pink-50 flex justify-between items-center">
-                <h3 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2"><span class="material-icons-round text-rose-500">error_outline</span>Rejection Comments</h3>
-                <label class="p-2 cursor-pointer text-slate-400" for="modal-toggle"><span class="material-icons-round">close</span></label>
+    <input class="hidden" id="details-modal-toggle" type="checkbox" />
+    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="details-modal-overlay">
+        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('details-modal-toggle').checked = false"></div>
+        
+        <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-pink-50 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 z-10">
+                <h3 class="font-display font-bold text-2xl text-slate-800 dark:text-white" id="modal-title">Request Details</h3>
+                <label class="p-2 cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" for="details-modal-toggle"><span class="material-icons-round">close</span></label>
             </div>
-            <div class="p-8"><div class="bg-pink-50/50 rounded-2xl p-6 border border-pink-100 text-slate-700 leading-relaxed">Please ensure the Faculty-in-Charge has signed the latest security clearance form.</div></div>
-            <div class="px-8 pb-8 flex justify-end"><label class="px-6 py-2.5 bg-pink-600 text-white font-bold rounded-xl cursor-pointer text-sm" for="modal-toggle">Close</label></div>
-        </div>
-    </div>
+            
+            <div class="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-6" id="modal-content">
+                </div>
 
-    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="mou-details-modal">
-        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('mou-modal-toggle').checked = false"></div>
-        <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-pink-50 flex justify-between items-center">
-                <h3 class="font-display font-bold text-2xl text-slate-800 dark:text-slate-100">MOU Details</h3>
-                <label class="p-2 cursor-pointer text-slate-400" for="mou-modal-toggle"><span class="material-icons-round">close</span></label>
-            </div>
-            <div class="p-8 grid grid-cols-2 gap-4">
-                <div class="col-span-1">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Partner Organization</label>
-                    <div id="view-mou-partner" class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium">N/A</div>
-                </div>
-                <!-- Inside mou-details-modal, add this at the bottom of the grid -->
-            <div class="col-span-1" id="mou-file-container"> <!-- Added ID here -->
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Attached Document</label>
-                <div class="mt-2 flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/10 rounded-xl border border-pink-100 dark:border-pink-900/20">
-                    <span class="material-icons-round text-pink-600">picture_as_pdf</span>
-                    <span id="view-mou-filename" class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate flex-1">mou_draft.pdf</span>
-                    <a id="view-mou-link" href="#" target="_blank" class="px-4 py-1.5 bg-white dark:bg-slate-800 text-pink-600 text-xs font-bold rounded-lg border border-pink-200 shadow-sm hover:bg-pink-50 transition-colors">
-                        OPEN PDF
-                    </a>
-                </div>
-            </div>
-                <div class="col-span-2">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Scope of Work</label>
-                    <div id="view-mou-scope" class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm leading-relaxed">N/A</div>
-                </div>
+            <div id="modal-rejection-block" class="hidden p-6 bg-rose-50 dark:bg-rose-900/20 border-t border-rose-100 dark:border-rose-900/50">
+                <h4 class="font-bold text-rose-700 dark:text-rose-400 flex items-center gap-2 mb-2"><span class="material-icons-round text-sm">error</span> Reason for Rejection</h4>
+                <p id="modal-rejection-reason" class="text-sm text-rose-600 dark:text-rose-300 leading-relaxed font-medium"></p>
             </div>
         </div>
     </div>
 
-    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="perm-details-modal">
-        <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('perm-modal-toggle').checked = false"></div>
-        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-pink-50 flex justify-between items-center">
-                <h3 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100">Permission Letter</h3>
-                <label class="p-2 cursor-pointer text-slate-400" for="perm-modal-toggle"><span class="material-icons-round">close</span></label>
-            </div>
-            <div class="p-8 text-center">
-                <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border border-pink-100 dark:border-pink-900/50">
-                    <span class="material-icons-round text-pink-600 text-3xl">verified</span>
-                </div>
-                <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Your Booking ID</h4>
-                
-                <div id="view-perm-id" class="text-3xl font-black text-slate-900 dark:text-white tracking-wider bg-slate-50 dark:bg-slate-800 py-4 rounded-xl border border-slate-200 dark:border-slate-700">
-                    PENDING
-                </div>
-                
-                <p class="text-xs text-slate-400 mt-4 px-4">Copy this ID and paste it into the Venue Booking form to secure your room.</p>
-            </div>
-        </div>
-    </div>
 </body>
 <script>
-    const finances = document.querySelectorAll(".finances");
-    const permission_letter= document.querySelectorAll(".permission_letter");
-    const MOU_form= document.querySelectorAll(".MOU_form");
-    const venue_booking= document.querySelectorAll(".venue_booking");
-    const past_requests=document.querySelectorAll(".past_requests");
-    const dashboard= document.getElementById("dashboard");
+    // System Event Bindings: Configure routing for navigation elements.
+    document.getElementById("dashboard")?.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Coordinator_homepage.html"; });
+    document.querySelectorAll(".finances").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
+    document.querySelectorAll(".MOU_form").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
+    document.querySelectorAll(".venue_booking").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Venue_booking.html"; }));
+    document.querySelectorAll(".permission_letter").forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
     
-    if(dashboard){
-        dashboard.addEventListener("click", function(){
-            window.location.href= "Coordinator_homepage.html";
-        });
-    }
-    
-    finances.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Finances.html";
-    });
-});
-MOU_form.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Mou.html";
-    });
-});
-venue_booking.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "Venue_booking.html";
-    });
-});
-permission_letter.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "permissionletter.html";
-    });
-});
-
-past_requests.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "past requests.html";
-    });
-});
+    // User Context Initialization: Retrieve and display the current user's organization name.
     const clubName = document.getElementById("clubName");
     const enterName = localStorage.getItem("club");
-    const getToken = localStorage.getItem("token");
-    if(clubName){
-        clubName.textContent= enterName.toUpperCase();
+    if(clubName) clubName.textContent = enterName ? enterName.toUpperCase() : "CLUB";
+
+    // Application Bootstrap: Initiate data retrieval once the DOM is fully constructed.
+    document.addEventListener("DOMContentLoaded", fetchRequests);
+
+    // Determines the visual styling classes based on the specific type of request.
+    function getTypeStyle(type) {
+        const typeMap = {
+            'MOU': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+            'PERMISSION': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+            'VENUE': 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
+        };
+        return typeMap[type?.toUpperCase()] || 'bg-slate-100 text-slate-700';
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        fetchRequests();
-    });
-// Function to provide Tailwind CSS classes based on the request type
-function getTypeStyle(type) {
-    const typeMap = {
-        'MOU': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-        'PERMISSION': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-        'FINANCE': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-        'VENUE': 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
-    };
-    return typeMap[type?.toUpperCase()] || 'bg-slate-100 text-slate-700';
-}
+    // Constructs a formatted badge displaying the current status of a request.
 
 // Function to generate the HTML for the status column
 // Function to generate the HTML for the status column
@@ -298,126 +179,99 @@ function getStatusUI(status, comments) {
     const lowerStatus = (status || "");
 
     // Use .includes() so "Pending GenSec" and "Pending ADSA" both trigger the yellow badge!
-    if (lowerStatus.includes('approved')) {
-        colorClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20";
-        icon = "check_circle";
-    } else if (lowerStatus.includes('rejected')) {
-        colorClass = "text-rose-600 bg-rose-50 dark:bg-rose-900/20";
-        icon = "cancel";
-    } else if (lowerStatus.includes('Pending')) {
-        colorClass = "text-amber-600 bg-amber-50 dark:bg-amber-900/20";
-        icon = "schedule";
-    } else {
-        colorClass = "text-slate-600 bg-slate-50";
-        icon = "help_outline";
+   
+
+        if (lowerStatus.includes('approved')) {
+            colorClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20"; icon = "check_circle";
+        } else if (lowerStatus.includes('rejected')) {
+            colorClass = "text-rose-600 bg-rose-50 dark:bg-rose-900/20"; icon = "cancel";
+        } else if (lowerStatus.includes('pending')) {
+            colorClass = "text-amber-600 bg-amber-50 dark:bg-amber-900/20"; icon = "schedule";
+        } else {
+            colorClass = "text-slate-600 bg-slate-50 dark:bg-slate-800"; icon = "help_outline";
+        }
+
+        return `<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${colorClass} text-xs font-bold"><span class="material-icons-round text-sm">${icon}</span> ${status}</div>`;
+
     }
 
-    // If there are comments and it's rejected, show the info icon to trigger the modal
-    const commentTrigger = (lowerStatus.includes('rejected') && comments) 
-        ? `<label for="modal-toggle" class="cursor-pointer hover:text-rose-800 ml-1"><span class="material-icons-round text-xs">info</span></label>` 
-        : "";
-
-    return `
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${colorClass} text-xs font-bold">
-            <span class="material-icons-round text-sm">${icon}</span>
-            ${status} ${commentTrigger}
-        </div>
-    `;
-}
- // --- PAGINATION STATE ---
+    // State Variables for Pagination Tracking
     let allRecords = []; 
     let currentPage = 1;
-    const rowsPerPage = 7; // You can change this number to show more/less rows per page!
+    const rowsPerPage = 7;
 
-    // --- FETCH DATA ---
+    // Asynchronously fetches the user's historical request data from the server.
     async function fetchRequests() {
-        const token = localStorage.getItem("token");
-        const tableBody = document.getElementById("request-table-body");
-
         try {
-            const response = await fetch("http://localhost:8000/api/requests/all", {
+            const response = await fetch("http://127.0.0.1:8000/api/requests/all", {
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
+                headers: { "Authorization": `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" }
             });
 
             if (!response.ok) throw new Error("Failed to fetch records");
-            
             allRecords = await response.json(); 
-            currentPage = 1; // Reset to page 1 whenever new data is loaded
-            
-            renderTable(); // Call the render function instead of looping here
-            
+            currentPage = 1; 
+            renderTable(); 
         } catch (error) {
-            console.error("Detailed Error:", error); 
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-rose-500">Error: ${error.message}</td></tr>`;
+            document.getElementById("request-table-body").innerHTML = `<tr><td colspan="4" class="p-10 text-center text-rose-500">Error: ${error.message}</td></tr>`;
         }
     }
 
-    // --- RENDER TABLE (SLICED DATA) ---
+    // Processes the retrieved data and updates the HTML table with the current page's records.
     function renderTable() {
         const tableBody = document.getElementById("request-table-body");
         tableBody.innerHTML = ""; 
 
+        // Handle empty state gracefully
         if (allRecords.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-slate-500">No records found.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-slate-500">No records found.</td></tr>`;
             updatePaginationUI(0, 0, 0, 0);
             return;
         }
 
-        // Calculate Pagination Math
         const totalPages = Math.ceil(allRecords.length / rowsPerPage);
         const startIndex = (currentPage - 1) * rowsPerPage;
         const endIndex = Math.min(startIndex + rowsPerPage, allRecords.length);
-        
-        // Slice the array to only get the records for the current page
         const paginatedRecords = allRecords.slice(startIndex, endIndex);
 
-        // Render the sliced records
+        // Iterate through the selected segment and construct table rows
         paginatedRecords.forEach(record => {
-            const row = document.createElement("tr");
-            row.className = "hover:bg-pink-50/20 transition-colors";
-
             const typeClass = getTypeStyle(record.type);
-            const statusBadge = getStatusUI(record.status, record.comments);
+            const statusBadge = getStatusUI(record.status);
 
-            row.innerHTML = `
-                <td class="px-8 py-4"><span class="px-2 py-1 rounded ${typeClass} text-[10px] font-bold uppercase">${record.type}</span></td>
-                <td class="px-8 py-4 text-sm text-slate-500">${record.date || 'N/A'}</td>
-                <td class="px-8 py-4 text-sm font-medium">${record.details}</td>
-                <td class="px-8 py-4">${statusBadge}</td>
-                <td class="px-8 py-4 text-center">
-                    <button onclick="viewDetails('${record.type}', ${record.id})" class="text-xs font-bold underline text-slate-900 dark:text-white hover:text-pink-600">
-                        View Details
-                    </button>
-                </td>
+            const row = `
+                <tr class="hover:bg-pink-50/20 dark:hover:bg-pink-900/10 transition-colors">
+                    <td class="px-8 py-5 align-top"><span class="px-2 py-1 rounded ${typeClass} text-[10px] font-bold uppercase">${record.type}</span></td>
+                    <td class="px-8 py-5 align-top text-sm text-slate-500 dark:text-slate-400">${record.date || 'N/A'}</td>
+                    <td class="px-8 py-5 align-top">
+                        <div class="text-sm font-medium text-slate-800 dark:text-slate-200 mb-2">${record.details}</div>
+                        <button onclick="viewDetails('${record.type}', ${record.id})" class="text-xs font-bold underline text-slate-500 hover:text-pink-600 dark:text-slate-400 dark:hover:text-pink-400 transition-colors">View Details</button>
+                    </td>
+                    <td class="px-8 py-5 align-top">
+                        ${statusBadge}
+                    </td>
+                </tr>
             `;
-            tableBody.appendChild(row);
+            tableBody.innerHTML += row;
         });
 
-        // Update the text and buttons
+        // Synchronize pagination controls with the current display state
         updatePaginationUI(startIndex + 1, endIndex, allRecords.length, totalPages);
     }
 
-    // --- RENDER PAGINATION UI ---
+    // Rebuilds the pagination interface, including summary text and interactive buttons.
     function updatePaginationUI(start, end, total, totalPages) {
         const infoText = document.getElementById("pagination-info");
         const controls = document.getElementById("pagination-controls");
         
-        // 1. Update the Text
         if (total === 0) {
-            infoText.textContent = "Showing 0 records";
-            controls.innerHTML = "";
-            return;
+            infoText.textContent = "Showing 0 records"; controls.innerHTML = ""; return;
         }
         infoText.textContent = `Showing ${start} to ${end} of ${total} history records`;
 
-        // 2. Generate the Buttons
         controls.innerHTML = "";
-
-        // Previous Button
+        
+        // Generate Previous Button
         const prevBtn = document.createElement("button");
         prevBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === 1 ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
         prevBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_left</span>`;
@@ -425,7 +279,7 @@ function getStatusUI(status, comments) {
         prevBtn.onclick = () => { currentPage--; renderTable(); };
         controls.appendChild(prevBtn);
 
-        // Page Numbers
+        // Generate Numeric Page Selectors
         for (let i = 1; i <= totalPages; i++) {
             const pageBtn = document.createElement("button");
             if (i === currentPage) {
@@ -438,7 +292,7 @@ function getStatusUI(status, comments) {
             controls.appendChild(pageBtn);
         }
 
-        // Next Button
+        // Generate Next Button
         const nextBtn = document.createElement("button");
         nextBtn.className = `w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${currentPage === totalPages ? 'bg-slate-200 text-slate-400 cursor-not-allowed dark:bg-slate-800' : 'bg-[#111827] text-white hover:bg-slate-800'}`;
         nextBtn.innerHTML = `<span class="material-icons-round text-sm">chevron_right</span>`;
@@ -447,39 +301,105 @@ function getStatusUI(status, comments) {
         controls.appendChild(nextBtn);
     }
 
-   window.viewDetails = (type, id) => {
+    // Constructs and displays a detailed view of a specific request inside the modal window.
+    window.viewDetails = (type, id) => {
+        // Locate the target record in the local dataset
         const record = allRecords.find(r => r.id === id && r.type === type);
         if (!record) return;
 
+        document.getElementById('modal-title').textContent = `${type} Details`;
+        const contentDiv = document.getElementById('modal-content');
+        
+        // Dynamically build the modal layout based on the record type
         if (type === 'MOU') {
-            document.getElementById('view-mou-partner').textContent = record.details;
-            document.getElementById('view-mou-scope').textContent = record.purpose || "No specific scope provided.";
-            
-            const fileContainer = document.getElementById('mou-file-container');
-            if (record.document_url) {
-                fileContainer.classList.remove('hidden');
-                document.getElementById('view-mou-link').href = `http://127.0.0.1:8000/${record.document_url}`;
-                document.getElementById('view-mou-filename').textContent = record.document_url.split('/').pop();
-            } else {
-                fileContainer.classList.add('hidden');
-            }
-
-            document.getElementById('mou-modal-toggle').checked = true;
-        } 
-        else if (type === 'PERMISSION') {
-            // NEW LOGIC: Inject the generated ID into the modal
-            const idDisplay = document.getElementById('view-perm-id');
-            
-            if (record.generated_id) {
-                idDisplay.textContent = record.generated_id;
-                idDisplay.className = "text-3xl font-black text-pink-600 tracking-wider bg-pink-50 dark:bg-pink-900/20 py-4 rounded-xl border border-pink-200 dark:border-pink-900/50";
-            } else {
-                idDisplay.textContent = "NOT APPROVED YET";
-                idDisplay.className = "text-xl font-bold text-slate-400 tracking-wider bg-slate-50 dark:bg-slate-800 py-5 rounded-xl border border-slate-200 dark:border-slate-700";
-            }
-
-            document.getElementById('perm-modal-toggle').checked = true;
+            contentDiv.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Partner Organization</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.details || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Submission Date</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.date || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Scope of Work</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm leading-relaxed text-slate-800 dark:text-slate-200">${record.purpose || 'N/A'}</div>
+                    </div>
+                    ${record.document_url ? `
+                    <div class="col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Attached Document</label>
+                        <div class="mt-2 flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/10 rounded-xl border border-pink-100 dark:border-pink-900/20">
+                            <span class="material-icons-round text-pink-600">picture_as_pdf</span>
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate flex-1">${record.document_url.split('/').pop()}</span>
+                            <a href="http://127.0.0.1:8000/${record.document_url.replace(/\\/g, "/")}" target="_blank" class="px-4 py-1.5 bg-white dark:bg-slate-800 text-pink-600 text-xs font-bold rounded-lg border border-pink-200 shadow-sm hover:bg-pink-50 transition-colors">OPEN PDF</a>
+                        </div>
+                    </div>` : ''}
+                </div>
+            `;
+        } else if (type === 'PERMISSION') {
+            contentDiv.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Event Name</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.details || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Event Date & Time</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.event_date || 'N/A'} at ${record.time || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Reason / Description</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm leading-relaxed text-slate-800 dark:text-slate-200">${record.reason || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 text-center mt-4">
+                        <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Official Permission ID</h4>
+                        <div class="${record.generated_id ? 'text-3xl font-black text-pink-600 tracking-wider bg-pink-50 dark:bg-pink-900/20 py-4 rounded-xl border border-pink-200 dark:border-pink-900/50' : 'text-xl font-bold text-slate-400 tracking-wider bg-slate-50 dark:bg-slate-800 py-5 rounded-xl border border-slate-200 dark:border-slate-700'}">
+                            ${record.generated_id || 'PENDING / NOT APPROVED YET'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else if (type === 'VENUE') {
+            contentDiv.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Event Title</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.details || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Event Date & Time</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.event_date || 'N/A'} at ${record.time || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Expected Attendees</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.expected_attendees || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Submission Date</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200">${record.date || 'N/A'}</div>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Description</label>
+                        <div class="mt-1 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm leading-relaxed text-slate-800 dark:text-slate-200">${record.description || 'N/A'}</div>
+                    </div>
+                </div>
+            `;
         }
+
+        // Manage the visibility of the rejection context block based on the record's status.
+        const rejectionBlock = document.getElementById('modal-rejection-block');
+        const rejectionReason = document.getElementById('modal-rejection-reason');
+        
+        if (record.status.toLowerCase().includes('rejected') && record.comments) {
+            rejectionReason.textContent = record.comments;
+            rejectionBlock.classList.remove('hidden');
+        } else {
+            rejectionBlock.classList.add('hidden');
+        }
+
+        // Trigger the visual display of the modal window
+        document.getElementById('details-modal-toggle').checked = true;
     };
 </script>
 </html>

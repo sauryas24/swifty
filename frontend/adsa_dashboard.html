@@ -12,13 +12,17 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     
     <script>
-        const validRoles = ["authority", "adsa", "dosa", "gensec", "president", "facad"];
+        // Enforce access control immediately upon page load
+        const validRoles = ["authority", "adsa", "gensec", "president", "facad"];
         const currentToken = localStorage.getItem("token");
         const currentRole = localStorage.getItem("userRole");
         
+        // If credentials are missing or incorrect, bounce back to the login screen
         if (!currentToken || !validRoles.includes(currentRole)) {
             window.location.replace("select_role_login.html"); 
         }
+        
+        // Re-validate token presence when using back/forward browser navigation
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
                 window.location.replace("select_role_login.html");
@@ -31,6 +35,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <script>
+        // Apply brand colors and specific layout adjustments using Tailwind configuration
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -53,6 +58,7 @@
         };
     </script>
     <style type="text/tailwindcss">
+        /* Base application variables and styling */
         :root {
             --bg-pink: #fdf2f8;
             --sidebar-width: 280px;
@@ -61,6 +67,8 @@
             font-family: "Inter", sans-serif;
             background-color: var(--bg-pink);
         }
+        
+        /* Sidebar transition rules */
         .sidebar-drawer {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -74,6 +82,8 @@
         .main-content {
             transition: margin-left 0.3s ease-in-out;
         }
+        
+        /* Themed background properties */
         .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
         }
@@ -86,17 +96,20 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+        
+        /* Minor detail element cleanup */
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
         details[open] summary .arrow-icon { transform: rotate(180deg); }
         .arrow-icon { transition: transform 0.2s ease-in-out; }
         
+        /* Define consistent scrollbar appearances across components */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Modal Toggle Logic */
+        /* CSS-driven modal trigger rules (no JS needed for toggling) */
         #announcement-modal-toggle:checked ~ #announcement-modal-overlay,
         #request-review-toggle:checked ~ #request-review-modal-overlay,
         #modal-otp-toggle:checked ~ #modal-otp-overlay { 
@@ -382,25 +395,30 @@
     </div>
 
     <script>
+        // System variables needed for network calls
         const API_BASE = "http://127.0.0.1:8000/api"; 
         
         // --- 0. SECURITY & INIT LOGIC ---
+        // Retrieve and pack the token securely so it is attached to all API queries
         const authToken = localStorage.getItem("token");
         const authHeaders = {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${authToken}`
         };
 
+        // Match UI elements to represent the authenticated individual's role
         const displayRole = localStorage.getItem("displayRoleName") || localStorage.getItem("userRole") || "Authority";
         document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
         document.getElementById("main-dashboard-title").innerText = displayRole.toUpperCase() + " DASHBOARD";
 
+        // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
             localStorage.clear();
             window.location.replace("select_role_login.html");
         });
 
         // --- 1. STATE MANAGEMENT ---
+        // Manages which category of requests is currently visible
         let currentTab = 'pending'; 
         let globalRequestsData = [];
         let processedRequestsData = []; 
@@ -408,6 +426,7 @@
         document.getElementById("tab-pending").addEventListener("click", () => switchTab('pending'));
         document.getElementById("tab-processed").addEventListener("click", () => switchTab('processed'));
 
+        // Swaps between active and history tabs visually and practically
         function switchTab(tab) {
             currentTab = tab;
             const btnPending = document.getElementById("tab-pending");
@@ -427,6 +446,7 @@
         }
 
         // --- 2. DATA FETCHING & RENDERING (Requests) ---
+        // Connects to the backend and fetches the relevant queues for the logged-in authority
         async function fetchRequests() {
             try {
                 const pendingRes = await fetch(`${API_BASE}/requests/pending`, {
@@ -459,6 +479,7 @@
             renderRequestsTable();
         }
 
+        // Projects fetched request objects onto the HTML table surface
         function renderRequestsTable() {
             const tbody = document.getElementById("dynamic-requests-body");
             tbody.innerHTML = "";
@@ -525,6 +546,7 @@
         }              
 
         // --- 3. MODAL LOGIC & REJECTION FLOW ---
+        // Restore modal interface to a default state, removing open reason boxes
         function resetReviewModal() {
             document.getElementById("rejection-reason-container").classList.add("hidden");
             document.getElementById("confirm-reject-buttons").classList.add("hidden");
@@ -532,12 +554,13 @@
             document.getElementById("rejection-reason-input").value = "";
         }
 
-        // Allow opening modal for history items too (to view documents)
+        // Open specific modal details when checking out past, processed requests
         window.openHistoryModal = function(reqId) {
             const reqData = processedRequestsData.find(r => r.id == reqId);
             if(reqData) populateModal(reqData, true);
         }
 
+        // Bind data from specific request array objects to the visual modal fields
         function populateModal(reqData, isHistory = false) {
             document.getElementById("modal-hidden-req-id").value = reqData.id;
             document.getElementById("modal-display-clubname").innerText = reqData.club_name;
@@ -551,7 +574,7 @@
             const safeName = reqData.club_name || "C";
             document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
             
-            // --- NEW DOCUMENT LOGIC ---
+            // Unpack document URLs associated with MoU type requests
             const docContainer = document.getElementById("modal-document-container");
             const docLink = document.getElementById("modal-document-link");
             
@@ -564,13 +587,14 @@
             
             resetReviewModal(); 
 
-            // Hide action buttons if viewing history
+            // Disable standard action buttons if the request is already processed
             if(isHistory) {
                 document.getElementById("default-action-buttons").classList.add("hidden");
                 document.getElementById("request-review-toggle").checked = true; 
             }
         }
 
+        // Map clicks to the appropriate modal based on where it occurs
         document.getElementById("dynamic-requests-body").addEventListener("click", function(e) {
             if (currentTab !== 'pending') return; 
             const row = e.target.closest("tr");
@@ -582,6 +606,7 @@
             if (reqData) populateModal(reqData, false);
         });
 
+        // Event behaviors matching initial refusal to providing justification
         document.getElementById("btn-initial-reject").addEventListener("click", function() {
             document.getElementById("default-action-buttons").classList.add("hidden");
             document.getElementById("rejection-reason-container").classList.remove("hidden");
@@ -592,6 +617,7 @@
         document.getElementById("btn-cancel-reject").addEventListener("click", () => resetReviewModal());
 
         // --- 4. EXECUTING APPROVAL & OTP SECURE FLOW ---
+        // Demand system sends an OTP upon "Approve" hit
         document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
             try {
                 const res = await fetch(`${API_BASE}/otp/send-approval`, {
@@ -610,6 +636,7 @@
             }
         });
 
+        // Confirms the OTP with the backend, triggering final progression along the approval pipeline
         document.getElementById("btn-verify-otp").addEventListener("click", async () => {
             const code = document.getElementById("input-otp-code").value;
 
@@ -621,12 +648,14 @@
             await executeFinalAction("approved", null, code); 
         });
 
+        // Commits to rejecting an item, asserting a mandatory reason is logged
         document.getElementById("btn-confirm-reject").addEventListener("click", function() {
             const reason = document.getElementById("rejection-reason-input").value.trim();
             if (reason === "") return alert("Action Blocked: A justification must be provided to reject a request.");
             executeFinalAction("rejected", reason, null);
         });
 
+        // Submits the ultimate approval or rejection payloads depending on routing mapping
         async function executeFinalAction(actionState, reason = null, otpCode = null) {
             const reqId = document.getElementById("modal-hidden-req-id").value;
             const backendAction = actionState === "approved" ? "approve" : "reject";
@@ -664,6 +693,7 @@
         }
 
         // --- 5. DATA FETCHING & RENDERING (Announcements) ---
+        // Retrieves the latest system-wide messages intended for various clubs
         async function fetchAnnouncements() {
             const container = document.getElementById("dynamic-announcements-container");
             try {
@@ -675,6 +705,7 @@
                 const data = await response.json();
                 renderAnnouncements(data.slice(0, 2), container);
             } catch(e) {
+                // Provides fallback data safely if the database layer drops
                 renderAnnouncements([
                     { heading: "URGENT: Semester Budget Audits", message: "All clubs must upload their final ledger receipts by Friday 5PM to the finance module.", timestamp: new Date().toISOString() }
                 ], container);
@@ -707,6 +738,7 @@
         }
 
         // --- 6. POSTING A NEW ANNOUNCEMENT ---
+        // Collects heading, message, and targets, then sends to backend via API
         document.getElementById("btn-submit-announcement").addEventListener("click", async function() {
             const headingStr = document.getElementById("input-announcement-title").value.trim();
             const messageStr = document.getElementById("input-announcement-content").value.trim();
@@ -749,6 +781,7 @@
                     </div>`;
                 container.innerHTML = localHtml + container.innerHTML;
             } finally {
+                // Clear fields and return the user UI to its base configuration post-submission
                 document.getElementById("input-announcement-title").value = "";
                 document.getElementById("input-announcement-content").value = "";
                 document.querySelectorAll('.club-cb').forEach(cb => cb.checked = false);
@@ -759,6 +792,7 @@
             }
         });
 
+        // Load dashboard initial state immediately as elements are prepared
         document.addEventListener("DOMContentLoaded", () => {
             fetchRequests();
             fetchAnnouncements();

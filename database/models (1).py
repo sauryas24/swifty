@@ -141,7 +141,7 @@ class Authority(Base):
     user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
     
     # Required attributes from the SRS Data Dictionary
-    designation = Column(String, nullable=False) # e.g., "DOSA", "Faculty In-Charge"
+    designation = Column(String, nullable=False) # e.g., "Faculty In-Charge"
     digital_signature_token = Column(String, nullable=True)
     otp_secret = Column(String, nullable=True) # Used to verify the email OTPs
 

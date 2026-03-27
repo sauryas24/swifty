@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
+        // Apply stylistic configurations representing brand identities.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -78,7 +79,7 @@
         .arrow-icon {
             transition: transform 0.2s ease-in-out;
         }
-        /* Custom scrollbar for sidebar */
+        /* Override default scrollbar constraints applied on sidebar content structures. */
         aside::-webkit-scrollbar {
             width: 4px;
         }
@@ -178,7 +179,7 @@
     </main>
 </body>
 <script>
-    const finances = document.querySelectorAll(".finances");
+const finances = document.querySelectorAll(".finances");
 const permission_letter= document.querySelectorAll(".permission_letter");
 const MOU_form= document.querySelectorAll(".MOU_form");
 const venue_booking= document.querySelectorAll(".venue_booking");
@@ -233,12 +234,11 @@ const getToken = localStorage.getItem("token");
 if(clubName){
     clubName.textContent= enterName.toUpperCase();
 }
-// --- NEW SEARCH & RENDER LOGIC STARTS HERE ---
 
-// Global array to store announcements for local filtering
+// Construct an array store initializing records accessible for local rendering filtering.
 let allAnnouncements = [];
 
-// Separate the rendering logic so we can reuse it when searching
+// Separate the rendering mechanism logic to allow for modular reuse when dispatching local filtering requests.
 function renderAnnouncements(announcementsToDisplay) {
     const containerA = document.getElementById("insertAnnouncement");
     
@@ -281,7 +281,7 @@ function renderAnnouncements(announcementsToDisplay) {
     containerA.innerHTML = htmlContent;
 }
 
-// Fetch the data and store it globally
+// Fetch the payload dataset to allocate directly onto the global variable store.
 async function loadAnnouncements() {
     try {
         const token = localStorage.getItem("token");
@@ -300,10 +300,10 @@ async function loadAnnouncements() {
 
         if (!response.ok) throw new Error("Failed to fetch announcements");
         
-        // Save to global array
+        // Finalize state variable definitions parsing data.
         allAnnouncements = await response.json(); 
         
-        // Render the full list initially
+        // Execute the preliminary view parsing rendering.
         renderAnnouncements(allAnnouncements);
 
     } catch(e) {
@@ -312,11 +312,11 @@ async function loadAnnouncements() {
     }
 }
 
-// Search Bar Event Listener
+// Attach input listeners directly referencing user-generated character parameters.
 document.getElementById("searchInput").addEventListener("input", function(e) {
     const searchTerm = e.target.value.toLowerCase();
     
-    // Filter by heading, message, or sender
+    // Evaluate logic iterating against titles, message contents, and sender identifiers independently.
     const filteredAnnouncements = allAnnouncements.filter(ann => {
         const headingMatch = (ann.heading || "").toLowerCase().includes(searchTerm);
         const messageMatch = (ann.message || "").toLowerCase().includes(searchTerm);
@@ -325,11 +325,11 @@ document.getElementById("searchInput").addEventListener("input", function(e) {
         return headingMatch || messageMatch || senderMatch;
     });
 
-    // Re-render with the filtered results
+    // Remap targeted DOM components reflecting modified parameter variables.
     renderAnnouncements(filteredAnnouncements);
 });
 
-// Boot up
+// Boot up logic calling corresponding initialization routines on load contexts.
 loadAnnouncements();
 
 loadAnnouncements();

@@ -37,11 +37,10 @@ def master_seed():
         president = User(username="President Gymkhana", email_id="hmalgatte@gmail.com", password=get_password_hash("psg123"), role="president")
         facad = User(username="Faculty Advisor", email_id="vanshikaagrawal1901@gmail.com", password=get_password_hash("admin123"), role="facad")
         adsa = User(username="ADSA", email_id="vanshikaagrawal868@gmail.com", password=get_password_hash("admin123"), role="adsa")
-        dosa = User(username="DOSA", email_id="sreejas24@iitk.ac.in", password=get_password_hash("admin123"), role="dosa")
 
         db.add_all([
             coordinator_music, coordinator_dance, coordinator_drama, coordinator_prog, 
-            gensec, president, facad, adsa, dosa
+            gensec, president, facad, adsa
         ])
         db.commit()
 

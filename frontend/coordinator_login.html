@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
+        // Set up framework configurations to support standard UI themes.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -60,7 +61,7 @@
     </header>
 
     <main class="flex-1 flex items-center justify-center p-6 mt-14">
-        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-10 md:p-14 text-center">
+        <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-10 md:p-14 text-center z-10 relative">
             <div class="flex justify-center mb-8">
                 <div class="bg-pink-50 dark:bg-pink-900/30 p-4 rounded-full border border-pink-100 dark:border-pink-900/10">
                     <span class="material-icons-round text-primary text-4xl">lock_person</span>
@@ -74,16 +75,20 @@
                     <label class="block text-[11px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase">
                         Club Affiliation
                     </label>
-                    <div class="relative">
-                        <select id="clubDrop" class="w-full bg-none h-12 bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 text-slate-800 dark:text-white appearance-none transition-all cursor-pointer font-medium text-sm">
-                            <option disabled selected value="">Choose your club</option>
-                            <option value="vanshikaag24@iitk.ac.in">Music Club (Test Email)</option>
-                            <option value="dance@iitk.ac.in">Dance Club</option>
-                            <option value="dramatics@iitk.ac.in">Dramatics Club</option>
-                        </select>
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-                            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+                    
+                    <div class="relative group" id="club-dropdown-container">
+                        <div id="club-select-button" class="w-full h-12 bg-pink-50/50 dark:bg-slate-800 rounded-xl px-4 flex items-center justify-between text-slate-800 dark:text-white cursor-pointer transition-all border-2 border-transparent focus-within:border-primary">
+                            <span id="club-select-text" class="font-medium text-sm">Choose your club</span>
+                            <span class="material-icons-round text-slate-400 text-xl transition-transform duration-200" id="club-dropdown-arrow">expand_more</span>
                         </div>
+                        
+                        <div id="club-options-list" class="absolute left-0 right-0 top-[calc(100%+8px)] bg-white dark:bg-slate-800 border border-pink-100 dark:border-pink-900/20 rounded-xl shadow-xl z-50 hidden overflow-hidden flex flex-col py-2 transition-all opacity-0 origin-top text-sm">
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="vanshikaag24@iitk.ac.in">Music Club (Test Email)</div>
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="dance@iitk.ac.in">Dance Club</div>
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="dramatics@iitk.ac.in">Dramatics Club</div>
+                        </div>
+                        
+                        <input type="hidden" id="clubDrop" value="">
                     </div>
                 </div>
                 <div class="space-y-2">
@@ -91,7 +96,7 @@
                         Club Password
                     </label>
                     <div class="relative">
-                        <input id="passwordEntered" class="w-full h-12 bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 placeholder-slate-400 text-slate-900 dark:text-white transition-all font-medium text-sm" placeholder="Enter Password" type="password"/>
+                        <input id="passwordEntered" class="w-full h-12 bg-pink-50/50 dark:bg-slate-800 border-2 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 placeholder-slate-400 text-slate-900 dark:text-white transition-all font-medium text-sm" placeholder="Enter Password" type="password"/>
                         <button id="visibilityToggle" class="material-icons-round absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" type="button">
                             visibility
                         </button>
@@ -107,7 +112,7 @@
     </main>
 </body>
 <script>
-    // Navigation and UI Toggles
+    // Initialize navigation handlers for interfacing elements.
     const back = document.getElementById('goBack');
     if (back) {
         back.addEventListener("click", function(e) {
@@ -116,6 +121,7 @@
         });
     }
 
+    // Configure the toggle logic to mask or unmask user password inputs.
     const passwordInput = document.getElementById('passwordEntered');
     const togglePassword = document.getElementById('visibilityToggle');
     if (togglePassword && passwordInput) {
@@ -126,7 +132,47 @@
         });
     }
 
-    // CLEANED UP LOGIN LOGIC
+    // Execute state management and interaction logic for the custom organizational dropdown menu.
+    const clubBtn = document.getElementById("club-select-button");
+    const clubList = document.getElementById("club-options-list");
+    const clubText = document.getElementById("club-select-text");
+    const clubHidden = document.getElementById("clubDrop");
+    const clubArrow = document.getElementById("club-dropdown-arrow");
+    const clubContainer = document.getElementById("club-dropdown-container");
+    const clubOptions = clubList.querySelectorAll("div[data-value]");
+
+    clubBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (clubList.classList.contains("hidden")) {
+            clubList.classList.remove("hidden");
+            setTimeout(() => clubList.classList.remove("opacity-0"), 10); 
+            clubArrow.style.transform = "rotate(180deg)";
+        } else {
+            clubList.classList.add("opacity-0");
+            setTimeout(() => clubList.classList.add("hidden"), 150);
+            clubArrow.style.transform = "rotate(0deg)";
+        }
+    });
+
+    clubOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            clubText.textContent = option.textContent;
+            clubHidden.value = option.getAttribute("data-value");
+            clubList.classList.add("opacity-0");
+            setTimeout(() => clubList.classList.add("hidden"), 150);
+            clubArrow.style.transform = "rotate(0deg)";
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!clubContainer.contains(e.target) && !clubList.classList.contains("hidden")) {
+            clubList.classList.add("opacity-0");
+            setTimeout(() => clubList.classList.add("hidden"), 150);
+            clubArrow.style.transform = "rotate(0deg)";
+        }
+    });
+
+    // Handle the authentication submission process and subsequent routing paths.
     const loginBtn = document.getElementById("loginButton");
 
     if (loginBtn) {
@@ -143,7 +189,7 @@
             if (!passEl.value) {
                 alert("Please enter a password.");
                 return;
-            } // <--- The missing bracket is fixed here!
+            }
 
             const loginData = {
                 email_id: emailEl.value,
@@ -155,7 +201,7 @@
             loginBtn.disabled = true;
 
             try {
-                // STEP 1: VERIFY PASSWORD
+                // Initial Authentication: Validate user credentials with the primary security endpoint.
                 const loginResponse = await fetch("http://127.0.0.1:8000/api/auth/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -164,17 +210,17 @@
                 
                 const loginResult = await loginResponse.json();
                 
-                // STEP 2: CHECK IF BACKEND REQUESTS OTP
+                // Secondary Authentication: Verify whether multi-factor authorization is enforced for the session.
                 if (loginResponse.ok && loginResult.requires_2fa === true) {
                     
-                    // Save ONLY the email for now so the OTP page knows who to verify
+                    // Retain the authenticated email identifier securely for the subsequent OTP challenge.
                     localStorage.setItem("userEmail", loginResult.email_id);
 
-                    // Redirect to the OTP verification page
+                    // Redirect the user interface flow to execute the OTP challenge.
                     window.location.href = "./otp.html";
 
                 } else {
-                    // If password was wrong or role is incorrect
+                    // Display error feedback gracefully if authorization parameters fail to resolve.
                     alert(loginResult.detail || loginResult.message || "Invalid credentials");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;

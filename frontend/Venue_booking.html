@@ -41,6 +41,8 @@
             font-family: "Inter", sans-serif;
             background-color: var(--bg-pink);
         }
+        
+        /* Defines positioning for side navigation drawers to slide correctly when clicked. */
         .sidebar-drawer {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -60,18 +62,9 @@
         .dark .watermark-bg {
             background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
         }
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: rgba(219, 39, 119, 0.2);
-            border-radius: 20px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: rgba(219, 39, 119, 0.2); border-radius: 20px; }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
@@ -244,9 +237,7 @@
     </main>
 
     <script>
-        // ==========================================
-        // 1. NAVIGATION & INITIALIZATION
-        // ==========================================
+        // Maps the sidebar links to correctly transition context safely.
         const finances = document.querySelectorAll(".finances");
         const permission_letter = document.querySelectorAll(".permission_letter");
         const MOU_form = document.querySelectorAll(".MOU_form");
@@ -257,60 +248,54 @@
         if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
         finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
         MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
-        // Current page, no need to redirect if clicked
         venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }));
         permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
         past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
 
+        // Accesses logged credentials to customize and authenticate user operations.
         const clubName = document.getElementById("clubName");
         const enterName = localStorage.getItem("club");
-        const getToken = localStorage.getItem("token"); // Critical for backend RBAC!
+        const getToken = localStorage.getItem("token"); 
         
         if(clubName && enterName){
             clubName.textContent = enterName.toUpperCase();
         }
 
-        // ==========================================
-        // 2. STATE MANAGEMENT & SETUP
-        // ==========================================
+        // Maintains the currently selected scheduling boundaries.
         let selectedDate = null;
         let selectedTime = null;
         const API_BASE_URL = "http://localhost:8000/api/venues"; 
 
-        // ==========================================
-        // 3. DATE & TIME SELECTION LOGIC
-        // ==========================================
         const dateInput = document.getElementById('booking-date');
+        
+        // Binds event listeners onto the date selector, restricting historical bookings.
         if (dateInput) {
-            // Prevent users from booking in the past
             const today = new Date().toISOString().split('T')[0];
             dateInput.min = today;
 
             dateInput.addEventListener('change', (e) => {
-                selectedDate = e.target.value; // Format: "YYYY-MM-DD"
+                selectedDate = e.target.value; 
                 checkAvailability(); 
             });
         }
 
         const timeButtons = document.querySelectorAll('.time-btn');
+        
+        // Manages individual slot interactions, enforcing singular selection states visually.
         timeButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // Reset all buttons to default styling
                 timeButtons.forEach(b => {
                     b.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all";
                 });
                 
-                // Highlight the clicked button
                 e.target.className = "time-btn px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50";
                 
-                selectedTime = e.target.innerText; // Format matches what the backend expects
+                selectedTime = e.target.innerText; 
                 checkAvailability(); 
             });
         });
 
-        // ==========================================
-        // 4. FETCH & RENDER ROOM AVAILABILITY
-        // ==========================================
+        // Queries the backend API regarding room occupancy data for chosen scheduling.
         async function checkAvailability() {
             if(!selectedDate || !selectedTime) return;
 
@@ -325,6 +310,7 @@
             }
         }
 
+        // Translates system payload data back into interactive user panels. 
         function renderRooms(available, unavailable) {
             const availableContainer = document.getElementById('available-rooms-grid');
             const unavailableContainer = document.getElementById('unavailable-rooms-grid');
@@ -338,7 +324,7 @@
                 availableContainer.innerHTML = `<p class="text-sm text-slate-500 dark:text-slate-400 col-span-full">No rooms available for this time slot.</p>`;
             }
 
-            // Render Clickable Available Rooms
+            // Builds out valid choices utilizing input radio mechanisms tied closely to CSS peer selections.
             available.forEach(room => {
                 availableContainer.innerHTML += `
                     <label class="cursor-pointer relative group h-full">
@@ -361,7 +347,7 @@
                 `;
             });
 
-            // Render Disabled Unavailable Rooms
+            // Provides feedback representing strictly locked spaces mapped dynamically.
             unavailable.forEach(room => {
                 unavailableContainer.innerHTML += `
                     <div class="relative opacity-70">
@@ -385,16 +371,13 @@
             });
         }
 
-        // ==========================================
-        // 5. SUBMIT BOOKING REQUEST TO BACKEND
-        // ==========================================
         const submitBtn = document.getElementById('submit-booking-btn');
         
+        // Oversees form packaging, running required validation checks before committing server transmission.
         if (submitBtn) {
             submitBtn.addEventListener('click', async (e) => {
                 e.preventDefault();
 
-                // Token Check for Protected Backend Route
                 if (!getToken) {
                     alert("You are not logged in. Please log in to book a venue.");
                     return;
@@ -407,13 +390,12 @@
                 const description = document.getElementById('details').value;
                 const permissionId = document.getElementById('permission-id').value; 
 
-                // Validation
+                // Guard clauses verifying the data integrity requirement thresholds.
                 if(!selectedDate || !selectedTime) return alert("Please select a date and time.");
                 if(!selectedRoomRadio) return alert("Please select an available room from the list.");
                 if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
                 if(attendees <= 0) return alert("Please enter a valid number of estimated attendees.");
 
-                // Payload matching schemas.BookingCreate
                 const bookingData = {
                     date: selectedDate,
                     time: selectedTime,
@@ -444,7 +426,6 @@
                         alert(`Success! ${result.message}`);
                         window.location.href = "past requests.html"; 
                     } else {
-                        // Surfaces backend errors (e.g. "Permission letter not found or invalid ID")
                         alert(`Error: ${result.detail}`);
                     }
                 } catch (error) {

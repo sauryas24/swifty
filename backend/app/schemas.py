@@ -138,13 +138,23 @@ class CalendarEventResponse(BaseModel):
 # Add this to app/schemas.py
 class RequestRecordResponse(BaseModel):
     id: int
-    type: str       # 'MOU', 'PERMISSION', 'VENUE'
-    date: str       # e.g., 'Feb 15, 2026'
-    details: str    # e.g., 'Outdoor Speaker setup at OAT'
-    status: str     # 'Pending', 'Approved', 'Rejected'
-    raw_status: str # Keeping the original (e.g., 'Pending GenSec') just in case!
+    type: str       
+    date: str       # Submission date (created_at)
+    details: str    
+    status: str     
+    raw_status: str 
     comments: Optional[str] = None
     generated_id: Optional[str] = None
+    
+    # --- NEW EXTENDED DETAIL FIELDS ---
+    purpose: Optional[str] = None
+    document_url: Optional[str] = None
+    event_date: Optional[str] = None # The date of the actual event
+    time: Optional[str] = None
+    reason: Optional[str] = None
+    expected_attendees: Optional[int] = None
+    description: Optional[str] = None
+
     model_config = ConfigDict(from_attributes=True)
 
     

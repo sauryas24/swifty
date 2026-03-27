@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
+        // Set standard configuration objects utilized internally by the tailwind class bindings.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -50,7 +51,7 @@
             outline: none;
             border-color: #db2777 !important;
         }
-        /* Remove number input spinners */
+        /* Overwrite standard browser spinner elements nested inside number input components. */
         .otp-input::-webkit-outer-spin-button,
         .otp-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -125,11 +126,11 @@
     </main>
 </body>
 <script>
-    // Get stored email from localStorage
+    // Access previously retained email credentials mapping within the local session object.
     const storedEmail = localStorage.getItem('userEmail') || 'your-email@iitk.ac.in';
     document.getElementById('userEmail').textContent = storedEmail;
 
-    // Back button functionality
+    // Direct interface navigation functionality bindings.
     const back = document.getElementById('goBack');
     if (back) {
         back.addEventListener("click", function(e) {
@@ -138,35 +139,35 @@
         });
     }
 
-    // OTP Input handling
+    // Process logic tracking structural keystroke progression between contiguous input modules.
     const otpInputs = document.querySelectorAll('.otp-input');
     const errorMsg = document.getElementById('errorMsg');
     
     otpInputs.forEach((input, index) => {
-        // Handle input
+        // Enforce input size limitations and auto-focus forwarding.
         input.addEventListener('input', function(e) {
-            // Only allow single digit
+            // Only allow single digit assignments per cell.
             if (this.value.length > 1) {
                 this.value = this.value.slice(0, 1);
             }
             
-            // Move to next input
+            // Advance the focus node when values increment accurately.
             if (this.value.length === 1 && index < otpInputs.length - 1) {
                 otpInputs[index + 1].focus();
             }
             
-            // Clear error message
+            // Reset existing error visibility states.
             errorMsg.classList.add('hidden');
         });
 
-        // Handle backspace
+        // Structure backspace tracking interactions accurately mapping decrement actions.
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Backspace' && this.value === '' && index > 0) {
                 otpInputs[index - 1].focus();
             }
         });
 
-        // Handle paste
+        // Govern bulk clipboard insertion procedures across segregated components.
         input.addEventListener('paste', function(e) {
             e.preventDefault();
             const pastedData = e.clipboardData.getData('text').trim();
@@ -182,17 +183,17 @@
         });
     });
 
-    // Resend OTP
+    // Implement dispatch procedures triggering authorization system endpoint resets.
     const resendButton = document.getElementById('resendButton');
     if (resendButton) {
         resendButton.addEventListener('click', async function() {
-            // Clear all inputs
+            // Nullify interface inputs preceding data initialization calls.
             otpInputs.forEach(input => input.value = '');
             otpInputs[0].focus();
             errorMsg.classList.add('hidden');
             
             try {
-                // Call actual API to resend OTP
+                // Execute API request demanding secondary token generation.
                 await fetch("http://127.0.0.1:8000/api/otp/send", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -205,7 +206,7 @@
         });
     }
 
-    // Form submission
+    // Formulate logic capturing the completed payload to authenticate local environments.
     const otpForm = document.getElementById('otpForm');
     const verifyButton = document.getElementById('verifyButton');
 
@@ -213,20 +214,20 @@
         otpForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Get OTP value
+            // Reconstruct disjointed parameters establishing an aggregated value string.
             let otp = '';
             otpInputs.forEach(input => {
                 otp += input.value;
             });
 
-            // Validate OTP Length
+            // Restrict progression processing if numeric lengths do not align cleanly.
             if (otp.length !== 6) {
                 errorMsg.textContent = 'Please enter complete 6-digit OTP';
                 errorMsg.classList.remove('hidden');
                 return;
             }
 
-            // Show loading state
+            // Reveal pending verification operation to limit duplicate requests.
             const originalText = verifyButton.innerHTML;
             verifyButton.innerHTML = '<span>Verifying...</span>';
             verifyButton.disabled = true;
@@ -258,13 +259,13 @@
                     if (result.username) localStorage.setItem("club", result.username);
                     if (result.id) localStorage.setItem("club_id", result.id);
 
-                    // 3. The Bulletproof Routing
-                    const authorityRoles = ["authority", "adsa", "dosa", "gensec", "president", "facad"];
+                    // Route the user to the appropriate dashboard based on their designated role configuration.
+                    const authorityRoles = ["authority", "adsa",  "gensec", "president", "facad"];
 
                     if (safeRole === "coordinator") {
                         window.location.href = "Coordinator_homepage.html";
                     } else if (authorityRoles.includes(safeRole)) {
-                        // ALL authorities share the same dashboard UI!
+                        // Standardize the dashboard environment presentation explicitly across all authority variants.
                         window.location.href = "adsa_dashboard.html"; 
                     } else {
                         alert(`Wait! The backend sent your role as: "${rawRole}". I don't know where to send you!`);
@@ -288,7 +289,7 @@
         });
     }
 
-    // Auto-focus first input on load
+    // Direct interface priority onto the initial input component preceding interaction.
     window.addEventListener('load', function() {
         otpInputs[0].focus();
     });

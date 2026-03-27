@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
+        // Set standard configuration objects utilized internally by the tailwind class bindings.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -61,7 +62,7 @@
     </header>
 
     <main class="flex-1 flex items-center justify-center p-6 mt-14">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-[480px] rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm p-10 md:p-14 text-center">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-[480px] rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm p-10 md:p-14 text-center z-10 relative">
             <div class="flex justify-center mb-6">
                 <div class="w-16 h-16 bg-pink-50 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center border border-pink-100 dark:border-pink-900/10">
                     <span class="material-icons-round text-primary text-3xl">admin_panel_settings</span>
@@ -73,24 +74,27 @@
             <form class="space-y-6 text-left" onsubmit="event.preventDefault();">
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Role</label>
-                    <div class="relative group">
-                        <select id="roleSelect" class="w-full bg-none bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all cursor-pointer font-medium text-sm appearance-none">
-                            <option disabled="" selected="" value="">Choose your role</option>
-                            <option value="vanshikaagrawal1901@gmail.com">Faculty Advisor</option>
-                            <option value="hmalgatte@gmail.com">Student Gymkhana President</option>
-                            <option value="mharsh24@iitk.ac.in">General Secretary</option>
-                            <option value="sreejas24@iitk.ac.in">DOSA Office</option>
-                            <option value="vanshikaagrawal868@gmail.com">ADSA</option>
-                        </select>
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-                            <span class="material-icons-round text-slate-400 text-xl">expand_more</span>
+                    
+                    <div class="relative group" id="role-dropdown-container">
+                        <div id="role-select-button" class="w-full h-[46px] bg-pink-50/50 dark:bg-slate-800 rounded-xl px-4 flex items-center justify-between text-slate-800 dark:text-slate-200 cursor-pointer transition-all border-2 border-transparent focus-within:border-primary">
+                            <span id="role-select-text" class="font-medium text-sm">Choose your role</span>
+                            <span class="material-icons-round text-slate-400 text-xl transition-transform duration-200" id="role-dropdown-arrow">expand_more</span>
                         </div>
+                        
+                        <div id="role-options-list" class="absolute left-0 right-0 top-[calc(100%+8px)] bg-white dark:bg-slate-800 border border-pink-100 dark:border-pink-900/20 rounded-xl shadow-xl z-50 hidden overflow-hidden flex flex-col py-2 transition-all opacity-0 origin-top">
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors" data-value="vanshikaagrawal1901@gmail.com">Faculty Advisor</div>
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors" data-value="hmalgatte@gmail.com">Student Gymkhana President</div>
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors" data-value="mharsh24@iitk.ac.in">General Secretary</div>
+                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors" data-value="vanshikaagrawal868@gmail.com">ADSA</div>
+                        </div>
+                        
+                        <input type="hidden" id="roleSelect" value="">
                     </div>
                 </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mb-2 uppercase">Password</label>
                     <div class="relative">
-                        <input id="passInput" class="w-full bg-pink-50/50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl py-3 px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" placeholder="••••••••"/>
+                        <input id="passInput" class="w-full h-[46px] bg-pink-50/50 dark:bg-slate-800 border-2 border-transparent focus:border-primary focus:ring-0 rounded-xl px-4 text-slate-800 dark:text-slate-200 transition-all font-medium text-sm" type="password" placeholder="••••••••"/>
                         <button id="visToggle" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" type="button">
                             <span class="material-icons-round text-lg">visibility</span>
                         </button>
@@ -105,7 +109,7 @@
     </main>
 </body>
 <script>
-    // Navigation
+    // Initialize standard navigation interfaces linking user states cleanly.
     const back = document.getElementById("goBack");
     if(back){
         back.addEventListener("click", function(e){
@@ -114,7 +118,7 @@
         });
     }
 
-    // Password Visibility Toggle
+    // Process logic modifying password string elements toggling explicit character arrays.
     const passEntered = document.getElementById("passInput");
     const visToggle = document.getElementById("visToggle");
 
@@ -130,7 +134,47 @@
         });
     }
 
-    // CLEANED UP LOGIN LOGIC
+    // Enforce standardized logic managing custom select parameters within form data.
+    const roleBtn = document.getElementById("role-select-button");
+    const roleList = document.getElementById("role-options-list");
+    const roleText = document.getElementById("role-select-text");
+    const roleHidden = document.getElementById("roleSelect");
+    const roleArrow = document.getElementById("role-dropdown-arrow");
+    const roleContainer = document.getElementById("role-dropdown-container");
+    const roleOptions = roleList.querySelectorAll("div[data-value]");
+
+    roleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (roleList.classList.contains("hidden")) {
+            roleList.classList.remove("hidden");
+            setTimeout(() => roleList.classList.remove("opacity-0"), 10); 
+            roleArrow.style.transform = "rotate(180deg)";
+        } else {
+            roleList.classList.add("opacity-0");
+            setTimeout(() => roleList.classList.add("hidden"), 150);
+            roleArrow.style.transform = "rotate(0deg)";
+        }
+    });
+
+    roleOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            roleText.textContent = option.textContent;
+            roleHidden.value = option.getAttribute("data-value");
+            roleList.classList.add("opacity-0");
+            setTimeout(() => roleList.classList.add("hidden"), 150);
+            roleArrow.style.transform = "rotate(0deg)";
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!roleContainer.contains(e.target) && !roleList.classList.contains("hidden")) {
+            roleList.classList.add("opacity-0");
+            setTimeout(() => roleList.classList.add("hidden"), 150);
+            roleArrow.style.transform = "rotate(0deg)";
+        }
+    });
+
+    // Handle authentication interactions and resolve access pathways securely.
     const LetMeIn = document.getElementById("LetMeIn");
 
     if(LetMeIn){
@@ -155,7 +199,7 @@
             LetMeIn.disabled = true;
 
             try {
-                // STEP 1: VERIFY PASSWORD
+                // Initialize request payload ensuring secure submission.
                 const response = await fetch("http://127.0.0.1:8000/api/auth/login", {
                     method: "POST",
                     headers: {"Content-type": "application/json"},
@@ -164,21 +208,21 @@
                 
                 const result = await response.json();
                 
-                // STEP 2: CHECK IF BACKEND REQUESTS OTP (True 2FA Flow)
+                // Identify potential secondary multi-factor requests validating subsequent pathways.
                 if(response.ok && result.requires_2fa === true){
                     
-                    // Save the email for the OTP page
+                    // Maintain verified email state mapping temporarily throughout sequence progression.
                     localStorage.setItem("userEmail", loginData.email_id);
                     
-                    // Save the display name for the dashboard greeting later
-                    const selectedText = roleSelect.options[roleSelect.selectedIndex].text;
+                    // Assign presentation parameter parsing corresponding directly towards dropdown resolution string.
+                    const selectedText = document.getElementById("role-select-text").innerText;
                     localStorage.setItem("displayRoleName", selectedText);
 
-                    // Redirect to OTP page immediately
+                    // Reassign user orientation redirecting actively to explicit authorization interface.
                     window.location.href = "./otp.html";
                     
                 } else {
-                    // If password was wrong or backend rejected it
+                    // Restructure component rendering handling unauthorized state resolutions dynamically.
                     alert(result.detail || result.message || "Invalid credentials");
                     LetMeIn.innerHTML = originalText;
                     LetMeIn.disabled = false;
