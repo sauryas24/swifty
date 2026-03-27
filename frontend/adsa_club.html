@@ -9,6 +9,8 @@
     <meta http-equiv="Expires" content="0">
     
     <title>Club Management - SWIFTY</title>
+
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     
     <script>
@@ -418,7 +420,7 @@
         
         // Fetch financial data and update the budget UI
         try {
-            const finRes = await fetch(`${API_BASE}/finances/${targetClubId}`, { headers: authHeaders });
+            const finRes = await fetch(`${API_BASE_URL}/api/finances/${targetClubId}`, { headers: authHeaders });
             if (!finRes.ok) throw new Error("Finance API Failed");
             
             const finData = await finRes.json();
@@ -461,7 +463,7 @@
 
         // Fetch club requests and delegate to the rendering function
         try {
-            const reqRes = await fetch(`${API_BASE}/requests/club/${targetClubId}`, { headers: authHeaders });
+            const reqRes = await fetch(`${API_BASE_URL}/api/requests/club/${targetClubId}`, { headers: authHeaders });
             if (!reqRes.ok) throw new Error("Requests API Failed");
             clubRequestsData = await reqRes.json();
             renderRequests(clubRequestsData);
@@ -578,7 +580,7 @@
     // Requests an OTP from the backend to authorize the approval action
     document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
         try {
-            const res = await fetch(`${API_BASE}/otp/send-approval`, {
+            const res = await fetch(`${API_BASE_URL}/api/otp/send-approval`, {
                 method: "POST",
                 headers: authHeaders
             });
@@ -647,7 +649,7 @@
         else if (rawType.includes("venue") || rawType.includes("room")) routeType = "venue";
 
         try {
-            const res = await fetch(`${API_BASE}/approvals/${routeType}/${reqId}/process`, {
+            const res = await fetch(`${API_BASE_URL}/api/approvals/${routeType}/${reqId}/process`, {
                 method: "PUT", 
                 headers: {
                     ...authHeaders,

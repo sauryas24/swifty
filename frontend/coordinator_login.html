@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Coordinator Login - SWIFTY</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
@@ -202,7 +203,7 @@
 
             try {
                 // Initial Authentication: Validate user credentials with the primary security endpoint.
-                const loginResponse = await fetch("http://127.0.0.1:8000/api/auth/login", {
+                const loginResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(loginData)

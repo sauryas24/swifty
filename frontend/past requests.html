@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Past Requests History | SWIFTY</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
@@ -203,7 +204,7 @@ function getStatusUI(status, comments) {
     // Asynchronously fetches the user's historical request data from the server.
     async function fetchRequests() {
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/requests/all", {
+            const response = await fetch(`${API_BASE_URL}/api/requests/all`, {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${localStorage.getItem("token")}`, "Content-Type": "application/json" }
             });

@@ -3,6 +3,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>SWIFTY</title>
+<script src="config.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -229,7 +230,7 @@ async function loadFinances() {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No authentication token found. Please log in.");
 
-        const response = await fetch(`http://127.0.0.1:8000/api/finances/status`, {
+        const response = await fetch(`${API_BASE_URL}/api/finances/status`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,

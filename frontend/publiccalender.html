@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Public Calendar - Refined Neutral Theme</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -248,7 +249,7 @@
         // Retrieves public event data securely from the backend to ensure accurate display schedules.
         async function loadEvents() {
             try {
-                const response = await fetch("http://127.0.0.1:8000/api/calendar/events");
+                const response = await fetch(`${API_BASE_URL}/api/calendar/events`);
                 allEvents = await response.json();
                 
                 renderCalendar();

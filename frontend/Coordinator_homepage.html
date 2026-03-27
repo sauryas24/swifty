@@ -6,6 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 <title>SWIFTY</title>
+<script src="config.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries">
       
 </script>
@@ -290,7 +291,7 @@ View All Announcements
             }
 
             // Execute the network call to the announcements endpoint.
-            const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announcements", {
+            const response = await fetch(`${API_BASE_URL}/api/announcements/my-announcements`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -407,7 +408,7 @@ View All Announcements
         if (!token) return;
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/requests/all", {
+            const response = await fetch(`${API_BASE_URL}/api/requests/all`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,

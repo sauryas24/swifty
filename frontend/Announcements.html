@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Announcements - SWIFTY</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
@@ -290,7 +291,7 @@ async function loadAnnouncements() {
             return;
         }
 
-        const response = await fetch("http://127.0.0.1:8000/api/announcements/my-announcements", {
+        const response = await fetch(`${API_BASE_URL}/api/announcements/my-announcements`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,

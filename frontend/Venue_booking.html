@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Venue Booking - SWIFTY</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
@@ -300,7 +301,7 @@
             if(!selectedDate || !selectedTime) return;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/availability?date=${selectedDate}&time=${selectedTime}`);
+                const response = await fetch(`${API_BASE_URL}/api/availability?date=${selectedDate}&time=${selectedTime}`);
                 if(!response.ok) throw new Error("Failed to fetch rooms");
                 
                 const data = await response.json();
@@ -411,7 +412,7 @@
                 submitBtn.disabled = true;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/book`, {
+                    const response = await fetch(`${API_BASE_URL}/api/book`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

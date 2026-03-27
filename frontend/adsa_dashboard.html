@@ -9,6 +9,7 @@
     <meta http-equiv="Expires" content="0">
     
     <title>Authority Dashboard - SWIFTY</title>
+    <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     
     <script>
@@ -449,7 +450,7 @@
         // Connects to the backend and fetches the relevant queues for the logged-in authority
         async function fetchRequests() {
             try {
-                const pendingRes = await fetch(`${API_BASE}/requests/pending`, {
+                const pendingRes = await fetch(`${API_BASE_URL}/api/requests/pending`, {
                     method: 'GET',
                     headers: authHeaders
                 });
@@ -460,7 +461,7 @@
                     globalRequestsData = [];
                 }
 
-                const historyRes = await fetch(`${API_BASE}/requests/history`, {
+                const historyRes = await fetch(`${API_BASE_URL}/api/requests/history`, {
                     method: 'GET',
                     headers: authHeaders
                 });
@@ -620,7 +621,7 @@
         // Demand system sends an OTP upon "Approve" hit
         document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
             try {
-                const res = await fetch(`${API_BASE}/otp/send-approval`, {
+                const res = await fetch(`${API_BASE_URL}/api/otp/send-approval`, {
                     method: "POST",
                     headers: authHeaders
                 });
@@ -670,7 +671,7 @@
             if (typeText.includes("permission")) routeType = "permission";
 
             try {
-                const res = await fetch(`${API_BASE}/approvals/${routeType}/${reqId}/process`, {
+                const res = await fetch(`${API_BASE_URL}/api/approvals/${routeType}/${reqId}/process`, {
                     method: "PUT",
                     headers: {
                         ...authHeaders,
@@ -697,7 +698,7 @@
         async function fetchAnnouncements() {
             const container = document.getElementById("dynamic-announcements-container");
             try {
-                const response = await fetch(`${API_BASE}/announcements/my-announcements`, {
+                const response = await fetch(`${API_BASE_URL}/api/announcements/my-announcements`, {
                     method: 'GET',
                     headers: authHeaders
                 });
@@ -761,7 +762,7 @@
             submitBtn.innerText = "Pushing...";
 
             try {
-                await fetch(`${API_BASE}/announcements/publish`, { 
+                await fetch(`${API_BASE_URL}/api/announcements/publish`, { 
                     method: "POST", 
                     headers: authHeaders, 
                     body: JSON.stringify(payload) 
