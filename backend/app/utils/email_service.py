@@ -18,12 +18,12 @@ SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 
 def send_notification_email(to_email: str, subject: str, body: str):
-    # --- DEV BYPASS: Comment this out when deploying to production! ---
-    print(f"\n" + "="*50)
-    print(f"📧 PRETENDING TO SEND EMAIL TO: {to_email}")
-    print(f"📝 EMAIL CONTENT:\n{body}")
-    print("="*50 + "\n")
-    return True 
+    # # --- DEV BYPASS: Comment this out when deploying to production! ---
+    # print(f"\n" + "="*50)
+    # print(f"📧 PRETENDING TO SEND EMAIL TO: {to_email}")
+    # print(f"📝 EMAIL CONTENT:\n{body}")
+    # print("="*50 + "\n")
+    # return True 
     # ------------------------------------------------------------------
     msg = EmailMessage()
     msg.set_content(body)

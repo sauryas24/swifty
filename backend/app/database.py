@@ -1,20 +1,30 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import declarative_base, sessionmaker
+from dotenv import load_dotenv
 
-# Creates a local file named swifty.db in your root folder
-SQLALCHEMY_DATABASE_URL = "sqlite:///./swifty.db"
+# 1. Load the hidden variables from the .env file
+load_dotenv()
 
-# connect_args is needed only for SQLite in FastAPI
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+# 2. Get the database URL (Fallback to local SQLite if .env is missing)
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./swifty.db")
+
+# SQLAlchemy 1.4+ requires 'postgresql://' instead of 'postgres://'
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# 3. Connect to the Database
+if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
+    # SQLite requires special thread arguments
+    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    # Postgres does not need thread arguments
+    engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# THIS IS THE LINE PYTHON IS LOOKING FOR:
 Base = declarative_base()
 
-# This function provides a database session to your routers
 def get_db():
     db = SessionLocal()
     try:
