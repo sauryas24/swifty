@@ -19,7 +19,12 @@ if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 else:
     # Postgres does not need thread arguments
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+    # NEW
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        pool_pre_ping=True,  # Tests the connection before using it
+        pool_recycle=300     # Automatically refreshes connections every 5 minutes
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
