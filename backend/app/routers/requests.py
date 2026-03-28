@@ -105,6 +105,8 @@ AUTHORITY_STATUS_MAP = {
 
 # --- HELPER LOGIC FOR AUTHORITY PERMISSIONS ---
 # Determines what an authority has currently on their plate, and what they have already dealt with historically.
+# --- HELPER LOGIC FOR AUTHORITY PERMISSIONS ---
+# Determines what an authority has currently on their plate, and what they have already dealt with historically.
 def get_authority_pipeline_data(user_role: str):
     target_status = AUTHORITY_STATUS_MAP.get(user_role)
     PIPELINE = ["Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"]
@@ -126,12 +128,22 @@ def get_authority_pipeline_data(user_role: str):
         if status.startswith("Rejected by "):
             rejecter_role = status.replace("Rejected by ", "")
             rejecter_status = AUTHORITY_STATUS_MAP.get(rejecter_role)
+            # If someone AFTER me rejected it, it's still in my history because I approved it first
             if rejecter_status in PIPELINE and PIPELINE.index(rejecter_status) > user_index:
                 return True
         return False
 
-    return target_status, is_history
+    # NEW: Translates the global pipeline status into a personalized status for the viewing authority
+    def format_status_for_viewer(status: str) -> str:
+        if status == target_status:
+            return status # Still pending for them, show exactly as is
+        if status == rejected_by_me:
+            return "Rejected"
+        if is_history(status):
+            return "Approved" # If it passed them and they didn't reject it, they approved it!
+        return status
 
+    return target_status, is_history, format_status_for_viewer
 # Gathers requests across all clubs that are currently waiting for this specific authority to approve or reject.
 @router.get("/pending")
 def get_pending_requests_for_authority(
@@ -141,7 +153,7 @@ def get_pending_requests_for_authority(
     if current_user.role not in AUTHORITY_STATUS_MAP:
         raise HTTPException(status_code=403, detail="Not authorized.")
         
-    target_status, _ = get_authority_pipeline_data(current_user.role)
+    target_status, _, _ = get_authority_pipeline_data(current_user.role)
     unified_records = []
     
     # Check for pending MoUs.
@@ -188,7 +200,7 @@ def get_history_for_authority(
     if current_user.role not in AUTHORITY_STATUS_MAP:
         raise HTTPException(status_code=403, detail="Not authorized.")
 
-    _, is_history = get_authority_pipeline_data(current_user.role)
+    _, is_history, format_status = get_authority_pipeline_data(current_user.role)
     unified_records = []
 
     # Filter MoUs that represent past work.
@@ -197,8 +209,10 @@ def get_history_for_authority(
             club = db.query(models.User).filter(models.User.id == mou.coordinator_id).first()
             unified_records.append({
                 "id": mou.id, "club_name": club.username if club else "Unknown",
-                "type": "MOU", "event_title": mou.organization_name, "status": simplify_status(mou.status),
-                "timestamp": mou.created_at.isoformat() if mou.created_at else "N/A"
+                "type": "MOU", "event_title": mou.organization_name, "status": format_status(mou.status),
+                "timestamp": mou.created_at.isoformat() if mou.created_at else "N/A",
+                "details": mou.purpose, # <--- ADD THIS
+                "document_url": getattr(mou, 'document_url', None) # <--- ADD THIS
             })
             
     # Filter Permissions that represent past work.
@@ -207,7 +221,8 @@ def get_history_for_authority(
             club = db.query(models.User).filter(models.User.id == perm.club_id).first()
             unified_records.append({
                 "id": perm.id, "club_name": club.username if club else "Unknown",
-                "type": "PERMISSION", "event_title": perm.event_name, "status": simplify_status(perm.status), "timestamp": perm.date
+                "type": "PERMISSION", "event_title": perm.event_name,"status": format_status(perm.status), "timestamp": perm.date,
+                "details": perm.reason
             })
             
     # Filter Venues that represent past work.
@@ -219,7 +234,10 @@ def get_history_for_authority(
                 if club: club_name = club.username
             unified_records.append({
                 "id": venue.id, "club_name": club_name, "type": "VENUE", "event_title": venue.event_title,
-                "status": simplify_status(venue.status), "timestamp": venue.date
+                "status": format_status(venue.status), "timestamp": venue.date,
+                "details": venue.description, # <--- ADD THIS
+                "expected_attendees": venue.expected_attendees, # <--- ADD THIS
+                "permission_letter_id": venue.permission_letter_id # <--- ADD THIS
             })
             
     unified_records.sort(key=lambda x: x["timestamp"] if x["timestamp"] else "", reverse=True)
@@ -239,7 +257,7 @@ def get_club_requests_for_authority(
     if not club: raise HTTPException(status_code=404, detail="Club not found")
         
     coordinator_id = club.user_id
-    target_status, is_history = get_authority_pipeline_data(current_user.role)
+    target_status, is_history, format_status = get_authority_pipeline_data(current_user.role)
     unified_records = []
 
     # Checks if a request falls into either pending status or historical processed status for this user.
@@ -251,7 +269,7 @@ def get_club_requests_for_authority(
         if is_relevant(mou.status):
             unified_records.append({
                 "id": mou.id, "type": "MOU", "event_title": mou.organization_name, "expected_attendees": 0,
-                "details": mou.purpose, "status": mou.status, "timestamp": mou.created_at.strftime("%Y-%m-%d") if mou.created_at else ""
+                "details": mou.purpose, "status": format_status(mou.status), "timestamp": mou.created_at.strftime("%Y-%m-%d") if mou.created_at else ""
             })
 
     permissions = db.query(models.PermissionLetter).filter(models.PermissionLetter.club_id == coordinator_id).all()
@@ -260,7 +278,7 @@ def get_club_requests_for_authority(
         if is_relevant(perm.status):
             unified_records.append({
                 "id": perm.id, "type": "PERMISSION", "event_title": perm.event_name, "expected_attendees": 0,
-                "details": perm.reason, "status": perm.status, "timestamp": perm.date or ""
+                "details": perm.reason, "status": format_status(perm.status), "timestamp": perm.date or ""
             })
 
     if permission_gen_ids:
@@ -269,7 +287,7 @@ def get_club_requests_for_authority(
             if is_relevant(venue.status):
                 unified_records.append({
                     "id": venue.id, "type": "VENUE", "event_title": venue.event_title, "expected_attendees": venue.expected_attendees,
-                    "details": venue.description, "status": venue.status, "timestamp": venue.date or ""
+                    "details": venue.description, "status": format_status(venue.status), "timestamp": venue.date or ""
                 })
 
     unified_records.sort(key=lambda x: x["timestamp"], reverse=True)

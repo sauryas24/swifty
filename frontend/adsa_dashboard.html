@@ -562,38 +562,86 @@
         }
 
         // Bind data from specific request array objects to the visual modal fields
-        function populateModal(reqData, isHistory = false) {
-            document.getElementById("modal-hidden-req-id").value = reqData.id;
-            document.getElementById("modal-display-clubname").innerText = reqData.club_name;
-            document.getElementById("modal-display-type").innerText = reqData.type + " REQUEST";
-            
-            document.getElementById("modal-event-title").value = reqData.event_title || "N/A"; 
-            document.getElementById("modal-event-attendees").value = reqData.expected_attendees || 0;
-            document.getElementById("modal-event-details").value = reqData.details || "";
-            document.getElementById("modal-perm-id").value = reqData.permission_letter_id || "N/A";
-            
-            const safeName = reqData.club_name || "C";
-            document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
-            
-            // Unpack document URLs associated with MoU type requests
-            const docContainer = document.getElementById("modal-document-container");
-            const docLink = document.getElementById("modal-document-link");
-            
-            if (reqData.document_url && reqData.document_url !== "N/A") {
-                docContainer.classList.remove("hidden");
-                docLink.href = `http://127.0.0.1:8000/${reqData.document_url.replace(/\\/g, "/")}`;
-            } else {
-                docContainer.classList.add("hidden");
-            }
-            
-            resetReviewModal(); 
+        // Bind data from specific request array objects to the visual modal fields
+function populateModal(reqData, isHistory = false) {
+    document.getElementById("modal-hidden-req-id").value = reqData.id;
+    
+    // Safely update club name if the element exists (dashboard vs club view)
+    const clubNameEl = document.getElementById("modal-display-clubname");
+    if(clubNameEl) clubNameEl.innerText = reqData.club_name || "Club Request";
+    
+    const reqType = (reqData.type || "GENERAL").toUpperCase();
+    document.getElementById("modal-display-type").innerText = reqType + " REQUEST";
+    
+    // 1. Grab the input fields
+    const titleInput = document.getElementById("modal-event-title");
+    const detailsInput = document.getElementById("modal-event-details");
+    const permInput = document.getElementById("modal-perm-id");
+    const capacityInput = document.getElementById("modal-event-attendees");
+    
+    // 2. Grab their labels and the grid holding Permission/Capacity
+    const titleLabel = titleInput.previousElementSibling;
+    const detailsLabel = detailsInput.previousElementSibling;
+    const permContainer = permInput.closest('.space-y-2');
+    const capacityContainer = capacityInput.closest('.space-y-2');
+    const gridContainer = permContainer.parentElement;
 
-            // Disable standard action buttons if the request is already processed
-            if(isHistory) {
-                document.getElementById("default-action-buttons").classList.add("hidden");
-                document.getElementById("request-review-toggle").checked = true; 
-            }
+    // Reset visibility before mapping
+    gridContainer.classList.remove("hidden");
+
+    // 3. DYNAMIC RENDERING: Adjust labels and hide irrelevant boxes
+    if (reqType.includes("MOU")) {
+        titleLabel.innerText = "Organization Name";
+        detailsLabel.innerText = "Purpose / Scope of Work";
+        gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+        
+    } else if (reqType.includes("PERMISSION")) {
+        titleLabel.innerText = "Event Name";
+        detailsLabel.innerText = "Reason / Description";
+        gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+        
+    } else {
+        // VENUE BOOKING
+        titleLabel.innerText = "Event Title";
+        detailsLabel.innerText = "Full Justification & Details";
+        permInput.value = reqData.permission_letter_id || "N/A";
+        capacityInput.value = reqData.expected_attendees || 0;
+    }
+
+    // Fill the standard text fields
+    titleInput.value = reqData.event_title || "N/A";
+    detailsInput.value = reqData.details || "N/A";
+
+    const safeName = reqData.club_name || "C";
+    document.getElementById("modal-club-initial").innerText = safeName.charAt(0).toUpperCase();
+    
+    // Unpack document URLs associated with MoU type requests
+    const docContainer = document.getElementById("modal-document-container");
+    const docLink = document.getElementById("modal-document-link");
+    if (docContainer && docLink) {
+        if (reqData.document_url && reqData.document_url !== "N/A") {
+            docContainer.classList.remove("hidden");
+            docLink.href = `http://127.0.0.1:8000/${reqData.document_url.replace(/\\/g, "/")}`;
+        } else {
+            docContainer.classList.add("hidden");
         }
+    }
+    
+    // Reset Rejection UI block
+    document.getElementById("rejection-reason-container").classList.add("hidden");
+    document.getElementById("confirm-reject-buttons").classList.add("hidden");
+    const defaultActions = document.getElementById("default-action-buttons");
+    if(defaultActions) defaultActions.classList.remove("hidden");
+
+    // Disable standard action buttons if the request is already processed
+    if(isHistory && defaultActions) {
+        defaultActions.classList.add("hidden");
+    }
+    
+    // Pop open the modal
+    const toggle = document.getElementById("request-review-toggle") || document.getElementById("modal-request-review-toggle");
+    if (toggle) toggle.checked = true;
+}
 
         // Map clicks to the appropriate modal based on where it occurs
         document.getElementById("dynamic-requests-body").addEventListener("click", function(e) {

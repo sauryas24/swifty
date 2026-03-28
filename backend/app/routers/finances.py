@@ -100,32 +100,48 @@ def submit_json_transaction(
 
 # 3. UPLOAD BILL (The Real-World Feature with Files)
 # Processes physical receipt uploads, saves the file securely, and updates the club's ledger.
-@router.post("/upload-bill")
-async def upload_bill(
+# 3. UNIFIED TRANSACTION & UPLOAD ROUTE 
+# Handles both coordinators (own club) and authorities (specific club via club_id)
+@router.post("/transaction")
+async def upload_transaction_receipt(
     amount: float = Form(...),
     description: str = Form(...),
-    file: UploadFile = File(...),
+    club_id: int = Form(None),         # Sent by the ADSA frontend
+    receipt: UploadFile = File(None),  # Must match the 'receipt' key in JS FormData
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    # Locate the club associated with the current user.
-    club = db.query(models.Club).filter(
-    (models.Club.user_id == current_user.id) | (models.Club.name == current_user.username)
-).first()
+    # 1. Determine which club is being billed
+    if club_id:
+        # Authority uploading for a specific club
+        if current_user.role not in ["authority", "adsa", "gensec", "president", "facad"]:
+            raise HTTPException(status_code=403, detail="Not authorized to upload bills for other clubs.")
+        club = db.query(models.Club).filter(models.Club.id == club_id).first()
+    else:
+        # Coordinator uploading for their own club
+        club = db.query(models.Club).filter(
+            (models.Club.user_id == current_user.id) | (models.Club.name == current_user.username)
+        ).first()
+
     if not club:
         raise HTTPException(status_code=404, detail="Club not found")
 
-    # Define the storage directory and create it if it doesn't already exist.
-    upload_dir = "static/receipts"
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
-    
-    # Save the uploaded file locally.
-    file_location = f"{upload_dir}/{file.filename}"
-    with open(file_location, "wb+") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # 2. Prevent overspending
+    if (club.total_spent + amount) > club.total_allocated:
+        raise HTTPException(status_code=400, detail="Insufficient budget available!")
 
-    # Add the transaction to the database, referencing the newly saved receipt file.
+    # 3. Handle the file upload securely
+    file_location = None
+    if receipt:
+        upload_dir = "static/receipts"
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        
+        file_location = f"{upload_dir}/{receipt.filename}"
+        with open(file_location, "wb+") as buffer:
+            shutil.copyfileobj(receipt.file, buffer)
+
+    # 4. Save the transaction to the ledger
     club.total_spent += amount
     new_transaction = models.Transaction(
         club_id=club.id,
@@ -136,5 +152,6 @@ async def upload_bill(
     
     db.add(new_transaction)
     db.commit()
+    db.refresh(new_transaction)
     
-    return {"message": "Bill uploaded successfully", "receipt_path": file_location}
+    return {"message": "Transaction logged successfully", "receipt_path": file_location}

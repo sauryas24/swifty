@@ -168,13 +168,14 @@
                 <textarea id="new-bill-desc" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 h-24 focus:ring-pink-500 focus:border-pink-500 text-slate-900 dark:text-white" placeholder="Enter bill description..."></textarea>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
-                <button class="w-full border-2 border-dashed border-pink-200 dark:border-slate-700 rounded-2xl p-6 text-center group cursor-pointer hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-all flex flex-col items-center gap-2">
-                    <span class="material-icons-round text-4xl text-pink-500">cloud_upload</span>
-                    <span class="text-sm font-bold text-pink-600">Upload File</span>
-                    <p class="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
-                </button>
-            </div>
+    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
+    <label for="new-bill-file" class="w-full border-2 border-dashed border-pink-200 dark:border-slate-700 rounded-2xl p-6 text-center group cursor-pointer hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-all flex flex-col items-center gap-2">
+        <span class="material-icons-round text-4xl text-pink-500">cloud_upload</span>
+        <span id="file-name-display" class="text-sm font-bold text-pink-600">Upload File</span>
+        <p class="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
+        <input id="new-bill-file" type="file" class="hidden" accept=".jpg,.jpeg,.png,.pdf" />
+    </label>
+</div>
         </div>
         <div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-pink-50 dark:border-pink-900/10 flex justify-end gap-3">
             <label class="px-6 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-all" for="modal-bill-add">Cancel</label>
@@ -552,24 +553,131 @@
     }
 
     // Placeholder behavior for the 'Add Bill' interface
-    document.getElementById("btn-submit-bill").addEventListener("click", () => {
-        alert("Upload feature is connected via Coordinator Portal.");
-        document.getElementById("modal-bill-add").checked = false;
+    // Update the visual text when a user selects a file so they know it worked
+    document.getElementById("new-bill-file").addEventListener("change", function(e) {
+        const fileNameDisplay = document.getElementById("file-name-display");
+        if (this.files && this.files.length > 0) {
+            fileNameDisplay.innerText = this.files[0].name; // Show the file name
+        } else {
+            fileNameDisplay.innerText = "Upload File";
+        }
+    });
+
+    // The actual submission logic
+    document.getElementById("btn-submit-bill").addEventListener("click", async () => {
+        const amount = document.getElementById("new-bill-amount").value;
+        const description = document.getElementById("new-bill-desc").value;
+        const fileInput = document.getElementById("new-bill-file");
+        
+        // Basic Validation
+        if (!amount || !description) {
+            return alert("Please provide both an amount and a description.");
+        }
+        
+        // Construct FormData (Required for sending files to FastAPI)
+        const formData = new FormData();
+        formData.append("amount", amount);
+        formData.append("description", description);
+        formData.append("club_id", targetClubId); // Automatically tie it to the club being viewed
+        
+        if (fileInput.files.length > 0) {
+            formData.append("receipt", fileInput.files[0]);
+        }
+        
+        // UI Loading State
+        const submitBtn = document.getElementById("btn-submit-bill");
+        const originalText = submitBtn.innerText;
+        submitBtn.innerHTML = `Uploading <span class="material-icons-round text-sm animate-spin">refresh</span>`;
+        submitBtn.disabled = true;
+
+        try {
+            // NOTE: Do NOT set "Content-Type": "application/json" here. 
+            // The browser will automatically set it to "multipart/form-data" when it sees FormData.
+            const response = await fetch(`${API_BASE_URL}/api/finances/transaction`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Bill uploaded successfully!");
+                document.getElementById("modal-bill-add").checked = false;
+                
+                // Clear the form for next time
+                document.getElementById("new-bill-amount").value = "";
+                document.getElementById("new-bill-desc").value = "";
+                document.getElementById("new-bill-file").value = "";
+                document.getElementById("file-name-display").innerText = "Upload File";
+                
+                // Reload the club profile so the new bill instantly appears in the table!
+                loadClubProfile();
+            } else {
+                const err = await response.json();
+                alert(`Upload failed: ${err.detail || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("A network error occurred while uploading. Is your backend running?");
+        } finally {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        }
     });
 
     // --- OTP & APPROVAL LOGIC ---
     
+    // Populates the modal allowing an authority to review a pending request
     // Populates the modal allowing an authority to review a pending request
     function openApprovalModal(reqId) {
         const reqData = clubRequestsData.find(r => r.id === reqId);
         if (!reqData) return;
 
         document.getElementById("modal-hidden-req-id").value = reqData.id;
-        document.getElementById("modal-display-type").innerText = reqData.type;
-        document.getElementById("modal-event-title").value = reqData.event_title || "N/A";
-        document.getElementById("modal-event-attendees").value = reqData.expected_attendees || 0;
-        document.getElementById("modal-event-details").value = reqData.details || "No details provided.";
         
+        const reqType = (reqData.type || "GENERAL").toUpperCase();
+        document.getElementById("modal-display-type").innerText = reqType + " REQUEST";
+
+        // 1. Grab the input fields
+        const titleInput = document.getElementById("modal-event-title");
+        const detailsInput = document.getElementById("modal-event-details");
+        const permInput = document.getElementById("modal-perm-id");
+        const capacityInput = document.getElementById("modal-event-attendees");
+        
+        // 2. Grab their labels and the grid holding Permission/Capacity
+        const titleLabel = titleInput.previousElementSibling;
+        const detailsLabel = detailsInput.previousElementSibling;
+        const permContainer = permInput.closest('.space-y-2');
+        const gridContainer = permContainer.parentElement;
+
+        // Reset visibility before mapping
+        gridContainer.classList.remove("hidden");
+
+        // 3. DYNAMIC RENDERING: Adjust labels and hide irrelevant boxes
+        if (reqType.includes("MOU")) {
+            titleLabel.innerText = "Organization Name";
+            detailsLabel.innerText = "Purpose / Scope of Work";
+            gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+            
+        } else if (reqType.includes("PERMISSION")) {
+            titleLabel.innerText = "Event Name";
+            detailsLabel.innerText = "Reason / Description";
+            gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+            
+        } else {
+            // VENUE BOOKING
+            titleLabel.innerText = "Event Title";
+            detailsLabel.innerText = "Full Justification & Details";
+            permInput.value = reqData.permission_letter_id || "N/A";
+            capacityInput.value = reqData.expected_attendees || 0;
+        }
+
+        // Fill the standard text fields
+        titleInput.value = reqData.event_title || "N/A";
+        detailsInput.value = reqData.details || "No details provided.";
+        
+        // Reset Rejection UI block
         document.getElementById("rejection-reason-container").classList.add("hidden");
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
         document.getElementById("default-action-buttons").classList.remove("hidden");

@@ -11,7 +11,16 @@ router = APIRouter(
     prefix="/api/venues", 
     tags=["Venue Booking"]
 )
-
+def get_time_variants(time_str: str) -> List[str]:
+    """Maps 12-hour frontend time strings to possible database formats (with and without spaces)."""
+    mapping = {
+        "09:00 AM - 11:00 AM": ["09:00 AM - 11:00 AM", "09:00 - 11:00", "09:00-11:00"],
+        "11:00 AM - 01:00 PM": ["11:00 AM - 01:00 PM", "11:00 - 13:00", "11:00-13:00"],
+        "02:00 PM - 04:00 PM": ["02:00 PM - 04:00 PM", "14:00 - 16:00", "14:00-16:00"],
+        "04:00 PM - 06:00 PM": ["04:00 PM - 06:00 PM", "16:00 - 18:00", "16:00-18:00"],
+        "06:00 PM - 08:00 PM": ["06:00 PM - 08:00 PM", "18:00 - 20:00", "18:00-20:00"]
+    }
+    return mapping.get(time_str, [time_str])
 
 # GET AVAILABILITY (Public/Coordinator)
 # Checks which rooms are open at a specific time. Requires no authentication so interfaces can query quickly.
@@ -24,15 +33,13 @@ def check_availability(
     all_rooms = db.query(models.Room).all()
     
     # Locate all bookings that occur on the specified date and time, and are somewhere in the approval pipeline.
+    time_variants = get_time_variants(time) # Get both formats
+    
     conflicting_bookings = db.query(models.VenueBooking).filter(
         models.VenueBooking.date == date,
-        models.VenueBooking.time == time,
+        models.VenueBooking.time.in_(time_variants), # <--- THE FIX
         models.VenueBooking.status.in_([
-            "Pending GenSec", 
-            "Pending President", 
-            "Pending FacAd", 
-            "Pending ADSA", 
-            "Approved"
+            "Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"
         ])
     ).all()
     
@@ -92,16 +99,15 @@ def submit_venue_booking(
         )
 
     # Perform a final check to guarantee no one secured the room in the time between searching and booking.
+    time_variants = get_time_variants(booking_data.time) # Get both formats
+    
+    # Perform a final check to guarantee no one secured the room...
     conflict = db.query(models.VenueBooking).filter(
         models.VenueBooking.date == booking_data.date,
-        models.VenueBooking.time == booking_data.time,
+        models.VenueBooking.time.in_(time_variants), # <--- THE FIX
         models.VenueBooking.room_id == booking_data.room_id,
         models.VenueBooking.status.in_([
-            "Pending GenSec", 
-            "Pending President", 
-            "Pending FacAd", 
-            "Pending ADSA", 
-            "Approved"
+            "Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"
         ])
     ).first()
     

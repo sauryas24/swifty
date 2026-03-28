@@ -52,7 +52,7 @@ def master_seed():
             Room(name="L-20", capacity=60),
             Room(name="L-18", capacity=45),
             Room(name="L-19", capacity=45),
-            Room(name="LHC Main", capacity=400),
+            Room(name="LHC Main", capacity=40),
             Room(name="LHC L-17", capacity=120),
             Room(name="Main Stadium", capacity=1000)
         ]
@@ -131,7 +131,7 @@ def master_seed():
         
         bookings = [
             VenueBooking(date="2026-03-20", time="18:00-20:00", room_id=l18_id, event_title="Acoustic Night", event_type="Cultural", expected_attendees=150, description="Unplugged music", permission_letter_id="PL-2026-0001", status="Pending President"),
-            VenueBooking(date="2026-04-15", time="06:30 AM", room_id=stadium_id, event_title="Sports Trials", event_type="Athletics", expected_attendees=100, description="Varsity team trials", permission_letter_id="PL-2026-005", status="Approved")
+            VenueBooking(date="2026-04-15", time="18:00-20:00", room_id=stadium_id, event_title="Sports Trials", event_type="Athletics", expected_attendees=100, description="Varsity team trials", permission_letter_id="PL-2026-005", status="Approved")
         ]
         db.add_all(bookings)
         db.commit()

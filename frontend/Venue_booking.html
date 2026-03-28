@@ -236,7 +236,6 @@
             </form>
         </div>
     </main>
-
     <script>
         // Maps the sidebar links to correctly transition context safely.
         const finances = document.querySelectorAll(".finances");
@@ -265,9 +264,15 @@
         // Maintains the currently selected scheduling boundaries.
         let selectedDate = null;
         let selectedTime = null;
-        const API_BASE_URL = "http://localhost:8000/api/venues"; 
-
+        //const API_BASE_URL = "http://localhost:8000/api/venues"; 
+        
         const dateInput = document.getElementById('booking-date');
+        const timeButtons = document.querySelectorAll('.time-btn');
+        
+        // 1. Store the exact time text safely in a data attribute for each button
+        timeButtons.forEach(btn => {
+            btn.dataset.time = btn.innerText.trim();
+        });
         
         // Binds event listeners onto the date selector, restricting historical bookings.
         if (dateInput) {
@@ -276,23 +281,64 @@
 
             dateInput.addEventListener('change', (e) => {
                 selectedDate = e.target.value; 
-                checkAvailability(); 
+
+                // Step A: Reset selected time and room grids when a new date is picked
+                selectedTime = null;
+                document.getElementById('available-rooms-grid').innerHTML = '<p class="text-sm text-slate-500 dark:text-slate-400 col-span-full">Please select an available time slot.</p>';
+                document.getElementById('unavailable-rooms-grid').innerHTML = '';
+
+                // Step B: Check all 5 time slots to see if ALL rooms are booked
+                timeButtons.forEach(async (btn) => {
+                    const slotTime = btn.dataset.time;
+
+                    // Disable temporarily and show a loading spinner on the button
+                    btn.disabled = true;
+                    btn.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-400 dark:text-slate-500 transition-all";
+                    btn.innerHTML = `<span class="opacity-70">${slotTime}</span> <span class="material-icons-round text-[14px] animate-spin inline-block ml-1 align-middle">refresh</span>`;
+
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/api/venues/availability?date=${selectedDate}&time=${slotTime}`);
+                        const data = await response.json();
+
+                        btn.innerHTML = slotTime; // Restore normal text
+
+                        // If NO rooms are available in this slot, visually lock it
+                        if (data.available_rooms && data.available_rooms.length === 0) {
+                            btn.disabled = true;
+                            btn.className = "time-btn px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-sm font-medium text-slate-400 dark:text-slate-600 cursor-not-allowed line-through opacity-60";
+                        } else {
+                            // Slot has at least one room open! Make it clickable.
+                            btn.disabled = false;
+                            btn.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all cursor-pointer";
+                        }
+                    } catch (error) {
+                        // On error, restore to default so they can still try to click it
+                        console.error("Error checking slot:", error);
+                        btn.innerHTML = slotTime;
+                        btn.disabled = false;
+                        btn.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all cursor-pointer";
+                    }
+                });
             });
         }
 
-        const timeButtons = document.querySelectorAll('.time-btn');
-        
-        // Manages individual slot interactions, enforcing singular selection states visually.
+        // Manages individual slot interactions, respecting the new locked states
         timeButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                if (btn.disabled) return; // Prevent clicking locked slots
+
+                // Reset all active buttons back to default (skipping disabled ones)
                 timeButtons.forEach(b => {
-                    b.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all";
+                    if (!b.disabled) {
+                        b.className = "time-btn px-4 py-3 rounded-xl border border-pink-100 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-medium text-slate-700 dark:text-white hover:border-pink-500 hover:text-pink-600 transition-all cursor-pointer";
+                    }
                 });
                 
-                e.target.className = "time-btn px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50";
+                // Highlight the newly clicked button
+                btn.className = "time-btn px-4 py-3 rounded-xl bg-pink-600 text-white text-sm font-bold shadow-md shadow-pink-500/20 ring-2 ring-pink-200 dark:ring-pink-900/50 cursor-pointer";
                 
-                selectedTime = e.target.innerText; 
-                checkAvailability(); 
+                selectedTime = btn.dataset.time; 
+                checkAvailability(); // Fetch the specific rooms for this slot
             });
         });
 
@@ -301,7 +347,7 @@
             if(!selectedDate || !selectedTime) return;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/api/availability?date=${selectedDate}&time=${selectedTime}`);
+                const response = await fetch(`${API_BASE_URL}/api/venues/availability?date=${selectedDate}&time=${selectedTime}`);
                 if(!response.ok) throw new Error("Failed to fetch rooms");
                 
                 const data = await response.json();
@@ -412,7 +458,7 @@
                 submitBtn.disabled = true;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/api/book`, {
+                    const response = await fetch(`${API_BASE_URL}/api/venues/book`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -73,7 +73,7 @@ def process_venue_approval(
         db.commit()
         
         email_service.send_notification_email(
-            "coordinator@institute.edu", 
+            "vanshikaag24@iitk.ac.in", 
             f"Update: Request '{booking.event_title}' Rejected",
             f"Your venue request was rejected by {current_user.role}. Reason: {action_data.message}"
         )
@@ -93,14 +93,14 @@ def process_venue_approval(
         if next_status == "Approved":
             approve_and_publish_event(booking.id, db)
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                "vanshikaag24@iitk.ac.in",
                 f"Success! Request '{booking.event_title}' Approved",
                 "Your venue request has been fully approved and is now on the public calendar."
             )
             return {"message": "Final approval granted. Event published to calendar!"}
         else:
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                "vanshikaag24@iitk.ac.in",
                 f"Progress: Request '{booking.event_title}' moved to {next_status}",
                 f"Your venue request was approved by {current_user.role} and is now {next_status}."
             )
@@ -135,7 +135,7 @@ def process_mou_approval(
         db.commit()
         
         email_service.send_notification_email(
-            "coordinator@institute.edu", 
+            "vanshikaag24@iitk.ac.in", 
             f"Update: MoU Request '{mou.organization_name}' Rejected",
             f"Your MoU request was rejected by {current_user.role}. Reason: {action_data.message}"
         )
@@ -154,14 +154,14 @@ def process_mou_approval(
         
         if next_status == "Approved":
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                "vanshikaag24@iitk.ac.in",
                 f"Success! MoU Request '{mou.organization_name}' Approved",
                 "Your MoU request has been fully approved."
             )
             return {"message": "Final approval granted for MoU!"}
         else:
             email_service.send_notification_email(
-                "coordinator@institute.edu",
+                "vanshikaag24@iitk.ac.in",
                 f"Progress: MoU '{mou.organization_name}' moved to {next_status}",
                 f"Your MoU request was approved by {current_user.role} and is now {next_status}."
             )

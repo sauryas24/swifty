@@ -177,7 +177,7 @@ function getStatusUI(status, comments) {
     let icon = "";
     
     // Convert to lowercase to make it easy to search
-    const lowerStatus = (status || "");
+    const lowerStatus = (status || "").toLowerCase();
 
     // Use .includes() so "Pending GenSec" and "Pending ADSA" both trigger the yellow badge!
    
