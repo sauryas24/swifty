@@ -543,7 +543,7 @@
         
         const linkBtn = document.getElementById("bill-modal-link");
         if (billData.receipt_url) {
-            linkBtn.href = `http://127.0.0.1:8000/${billData.receipt_url}`;
+            linkBtn.href = `${billData.receipt_url}`;
             linkBtn.classList.remove("hidden");
         } else {
             linkBtn.classList.add("hidden");
