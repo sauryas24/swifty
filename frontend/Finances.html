@@ -267,7 +267,7 @@ async function loadFinances() {
             
             // Reformat URI references to ensure uniform endpoint resolution accuracy.
             const cleanUrl = tx.receipt_url.startsWith('/') ? tx.receipt_url.slice(1) : tx.receipt_url;
-            const fullUrl = `http://127.0.0.1:8000/${cleanUrl}`;
+            const fullUrl = `${cleanUrl}`;
             
             rowsHTML += `
                 <tr class="hover:bg-slate-50/80 transition-colors">
