@@ -333,7 +333,7 @@ function getStatusUI(status, comments) {
                         <div class="mt-2 flex items-center gap-3 p-3 bg-pink-50 dark:bg-pink-900/10 rounded-xl border border-pink-100 dark:border-pink-900/20">
                             <span class="material-icons-round text-pink-600">picture_as_pdf</span>
                             <span class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate flex-1">${record.document_url.split('/').pop()}</span>
-                            <a href="${record.document_url.startsWith('http') ? record.document_url : 'http://127.0.0.1:8000/' + record.document_url.replace(/\\/g, '/')}" target="_blank" class="px-4 py-1.5 bg-white dark:bg-slate-800 text-pink-600 text-xs font-bold rounded-lg border border-pink-200 shadow-sm hover:bg-pink-50 transition-colors">OPEN PDF</a>
+                            <a href="${record.document_url.startsWith('http') ? record.document_url : record.document_url.replace(/\\/g, '/')}" target="_blank" class="px-4 py-1.5 bg-white dark:bg-slate-800 text-pink-600 text-xs font-bold rounded-lg border border-pink-200 shadow-sm hover:bg-pink-50 transition-colors">OPEN PDF</a>
                         </div>
                     </div>` : ''}
                 </div>
