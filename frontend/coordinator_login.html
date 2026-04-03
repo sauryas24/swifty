@@ -45,22 +45,25 @@
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 watermark-bg flex flex-col">
 
-    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
-        <div class="flex items-center gap-2">
-            <span class="font-display font-bold text-lg tracking-widest uppercase">SWIFTY</span>
-            <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">COORDINATOR</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
-                <span class="material-icons-round text-sm">calendar_today</span>
-                Calendar
-            </a>
-            <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
-                <span class="material-icons-round text-xl">dark_mode</span>
-            </button>
-        </div>
-    </header>
+ <header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
+    <div class="flex items-center gap-4 h-full">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+        <span class="h-6 w-px bg-slate-700"></span>
+        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">
+            COORDINATOR
+        </span>
+    </div>
 
+    <div class="flex items-center gap-4">
+        <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+            <span class="material-icons-round text-sm">calendar_today</span>
+            Calendar
+        </a>
+        <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+            <span class="material-icons-round text-xl">dark_mode</span>
+        </button>
+    </div>
+</header>
     <main class="flex-1 flex items-center justify-center p-6 mt-14">
         <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-10 md:p-14 text-center z-10 relative">
             <div class="flex justify-center mb-8">

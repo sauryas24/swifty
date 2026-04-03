@@ -55,17 +55,16 @@
     </style>
 </head>
 <body class="font-display bg-background-light dark:bg-background-dark min-h-screen transition-colors duration-200">
-    <header class="fixed top-0 left-0 right-0 h-16 bg-[#0E1116] dark:bg-[#050505] flex items-center justify-between px-6 z-50">
-        <div class="flex items-center">
-            <span class="text-white swifty-logo text-xl">SWIFTY</span>
-        </div>
-        <div class="flex items-center space-x-6 text-gray-300">
-            <a id="back-to-calendar" class="flex items-center space-x-2 text-sm hover:text-white transition-colors cursor-pointer">
-                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                <span class="font-medium">Back to Calendar</span>
-            </a>
-        </div>
-    </header>
+    <header class="fixed top-0 left-0 right-0 h-16 bg-[#0E1116] dark:bg-[#050505] flex items-center justify-between px-6 z-50 border-b border-pink-900/20 shadow-md">
+    <div class="flex items-center gap-4">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+    </div>
+
+    <a id="back-to-calendar" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+        <span class="font-medium">Back to Calendar</span>
+    </a>
+</header>
     
     <main class="relative pt-16 min-h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 dot-pattern opacity-50"></div>
