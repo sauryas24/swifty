@@ -29,15 +29,36 @@
 </script>
 
 <style type="text/tailwindcss">
-    body { font-family: "Inter", sans-serif; background-color: #fdf2f8; }
     
-    .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
-    #sidebar-toggle:checked ~ .sidebar-drawer { transform: translateX(0); }
-    
-    /* Hardcoded 260px gap fix! */
-    #sidebar-toggle:checked ~ .main-content { margin-left: 260px; }
-    
-    .main-content { transition: margin-left 0.3s ease-in-out; }
+    :root {
+            --bg-pink: #fdf2f8;
+            --sidebar-width: 260px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: var(--bg-pink);
+        }
+        
+        /* Defines positioning for side navigation drawers to slide correctly when clicked. */
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: var(--sidebar-width);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
     
     details > summary { list-style: none; }
     details > summary::-webkit-details-marker { display: none; }
@@ -49,70 +70,24 @@
     ::-webkit-scrollbar-thumb { background-color: rgba(219, 39, 119, 0.2); border-radius: 20px; }
 </style>
 </head>
-<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200 overflow-hidden">
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200">
     
     <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
-    
-<<<<<<< HEAD
-    <header class="fixed top-0 left-0 w-full h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
-=======
-    <header class="fixed top-0 left-0 right-0 h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
->>>>>>> 84c9848750820fd6c615afc0515bc0614c771b07
-        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-            <span class="material-icons-round text-2xl">menu</span>
-        </label>
-        <div class="flex items-center gap-4">
-<<<<<<< HEAD
-            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
-            <span class="h-6 w-px bg-slate-700"></span>
-            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
-=======
-            <img src="swifty logo.png" alt="Swifty Logo" class="h-10 object-contain drop-shadow-sm" />
-            
-            <span class="h-6 w-px bg-slate-700"></span>
-            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">AUTHORITY</span>
->>>>>>> 84c9848750820fd6c615afc0515bc0614c771b07
-        </div>
-        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
-            <span class="material-symbols-outlined text-[20px]">logout</span>
-            <span>Logout</span>
-        </button>
-    </header>
-<<<<<<< HEAD
-
-    <aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-5rem)] w-[260px] bg-white border-r border-pink-100 z-50 overflow-y-auto flex flex-col shadow-sm">
-=======
-    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
->>>>>>> 84c9848750820fd6c615afc0515bc0614c771b07
-        <div class="flex flex-col h-full">
-            <nav class="flex-1 px-4 py-4 space-y-1">
-                <a id="dashboard" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">dashboard</span>
-                    <span class="text-sm">Dashboard</span>
-                </a>
-                <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">account_balance_wallet</span>
-                    <span class="text-sm">Finances</span>
-                </a>
-                <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">description</span>
-                    <span class="text-sm">Permission Letter</span>
-                </a>
-                <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">assignment</span>
-                    <span class="text-sm">MOU Form</span>
-                </a>
-                <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">event_seat</span>
-                    <span class="text-sm">Venue Booking</span>
-                </a>
-                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-                    <span class="material-icons-round text-xl">history</span>
-                    <span class="text-sm">Past Requests</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
+    <header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+    <label id="menuBtn" class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+        <span class="material-icons-round text-2xl">menu</span>
+    </label>
+    <div class="flex items-center gap-4">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+        <span class="h-6 w-px bg-slate-700"></span>
+        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
+    </div>
+    <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Logout</span>
+    </button>
+</header>
+<div id="sidebar-container"></div>
 
     <main class="main-content ml-0 mt-20 p-0 relative min-h-screen">
         
@@ -133,6 +108,7 @@
 
         </div>
     </main>
+    <script src="components/sidebar.js"></script>
 </body>
 <script>
 const finances = document.querySelectorAll(".finances");
