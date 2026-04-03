@@ -109,8 +109,8 @@
             </div>
         </main>
 
-    <input class="hidden" id="details-modal-toggle" type="checkbox" />
-    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="details-modal-overlay">
+    <input class="peer hidden" id="details-modal-toggle" type="checkbox" />
+    <div class="fixed inset-0 z-[100] hidden peer-checked:flex items-center justify-center p-4" id="details-modal-overlay">
         <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="document.getElementById('details-modal-toggle').checked = false"></div>
         
         <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
