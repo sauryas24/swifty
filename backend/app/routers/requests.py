@@ -203,6 +203,8 @@ def get_history_for_authority(
     _, is_history, format_status = get_authority_pipeline_data(current_user.role)
     unified_records = []
 
+
+
     # Filter MoUs that represent past work.
     for mou in db.query(models.MoURequest).all():
         if is_history(mou.status):
@@ -212,6 +214,7 @@ def get_history_for_authority(
                 "type": "MOU", "event_title": mou.organization_name, "status": format_status(mou.status),
                 "timestamp": mou.created_at.isoformat() if mou.created_at else "N/A",
                 "details": mou.purpose, # <--- ADD THIS
+                "updated_at": mou.updated_at.isoformat() if getattr(mou, 'updated_at', None) else None,
                 "document_url": getattr(mou, 'document_url', None) # <--- ADD THIS
             })
             
@@ -222,6 +225,7 @@ def get_history_for_authority(
             unified_records.append({
                 "id": perm.id, "club_name": club.username if club else "Unknown",
                 "type": "PERMISSION", "event_title": perm.event_name,"status": format_status(perm.status), "timestamp": perm.date,
+                "updated_at": perm.updated_at.isoformat() if getattr(perm, 'updated_at', None) else None,
                 "details": perm.reason
             })
             
@@ -235,6 +239,7 @@ def get_history_for_authority(
             unified_records.append({
                 "id": venue.id, "club_name": club_name, "type": "VENUE", "event_title": venue.event_title,
                 "status": format_status(venue.status), "timestamp": venue.date,
+                "updated_at": venue.updated_at.isoformat() if getattr(venue, 'updated_at', None) else None,
                 "details": venue.description, # <--- ADD THIS
                 "expected_attendees": venue.expected_attendees, # <--- ADD THIS
                 "permission_letter_id": venue.permission_letter_id # <--- ADD THIS
