@@ -44,6 +44,8 @@ class VenueBooking(Base):
     status = Column(String, default="Pending GenSec")    # Starts the approval chain
     comments = Column(String, nullable=True)    # Stores the rejection message
     room = relationship("Room")     # Links the booking to the actual room details
+    # Add this exact line to all three classes in models.py
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
 class Club(Base):
@@ -85,7 +87,8 @@ class PermissionLetter(Base):
     
     # Auto-generated upon final approval of form "PL-2026-0001"
     generated_id = Column(String, nullable=True, unique=True)
-
+    # Add this exact line to all three classes in models.py
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     # Relationship to fetch club details 
     club = relationship("User")
 
@@ -119,7 +122,8 @@ class MoURequest(Base):
 
     status = Column(String, default="Pending Gensec")
    
-
+    # Add this exact line to all three classes in models.py
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     comments = Column(String, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())

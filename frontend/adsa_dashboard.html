@@ -521,20 +521,25 @@ document.getElementById("main-dashboard-title").innerText = dashboardTitle;
 
                 let statusBadge = ""; 
                 let timeStampHtml = "";
-                
-                if (req.timestamp || req.updated_at) {
-                    const dateObj = new Date(req.updated_at || req.timestamp);
-                    const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-                    timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: ${dateStr}</div>`;
-                }
 
-                if (currentTab === 'processed') {
-                    const statusStr = (req.status || "").toLowerCase();
-                    const isApproved = statusStr.includes('approved');
-                    const sColor = isApproved ? 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded' : 'text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded';
-                    const sIcon = isApproved ? 'check_circle' : 'cancel';
-                    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
-                }
+if (currentTab === 'processed') {
+    // 1. STRICTLY use updated_at. Do NOT fall back to req.timestamp (the event date).
+    if (req.updated_at && req.updated_at !== "N/A") {
+        const dateObj = new Date(req.updated_at);
+        const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: ${dateStr}</div>`;
+    } else {
+        // Fallback if the database hasn't recorded an update time yet
+        timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: Date Unavailable</div>`;
+    }
+
+    // 2. Existing Status Badge Logic
+    const statusStr = (req.status || "").toLowerCase();
+    const isApproved = statusStr.includes('approved');
+    const sColor = isApproved ? 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded' : 'text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded';
+    const sIcon = isApproved ? 'check_circle' : 'cancel';
+    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
+}
 
                 const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
                 const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
