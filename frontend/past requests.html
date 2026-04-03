@@ -6,17 +6,23 @@
     <title>Past Requests History | SWIFTY</title>
     <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: { primary: "#db2777", "baby-pink": "#fdf2f8", "background-dark": "#1a1013" },
-                    fontFamily: { display: ["Outfit", "Inter", "sans-serif"], sans: ["Inter", "sans-serif"] },
+                    colors: {
+                        primary: "#db2777", // Swifty Pink
+                        "baby-pink": "#fdf2f8", // Original Background
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
                 },
             },
         };
@@ -24,9 +30,9 @@
     
     <style type="text/tailwindcss">
         @layer base {
-            body { @apply bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200; font-family: "Inter", sans-serif; }
+            body { @apply bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200; font-family: "Inter", sans-serif; }
         }
-        :root { --sidebar-width: 280px; }
+        :root { --sidebar-width: 260px; }
         
         /* Sidebar layout animation properties */
         .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
@@ -39,25 +45,26 @@
         #details-modal-toggle:checked ~ body { overflow: hidden; }
     </style>
 </head>
-<body>
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200">
     <input checked="" class="hidden" id="sidebar-toggle" type="checkbox" />
     
-    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+    <header class="fixed top-0 left-0 right-0 h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
         <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-            <span class="material-icons-round">menu</span>
+            <span class="material-icons-round text-2xl">menu</span>
         </label>
-        <div class="flex items-center gap-2">
-            <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
         </div>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
+        </button>
     </header>
 
-    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
+    <aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-5rem)] w-[260px] bg-white border-r border-pink-100 z-50 overflow-y-auto flex flex-col shadow-sm">
         <div class="flex flex-col h-full">
-            <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-                <div class="flex flex-col">
-                <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-                </div>
-            </div>
             <nav class="flex-1 px-4 py-4 space-y-1">
                 <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">dashboard</span>
@@ -87,12 +94,10 @@
         </div>
     </aside>
 
-    <main class="main-content ml-0 mt-14 p-0 relative min-h-screen">
-        <div class="bg-white dark:bg-surface-dark px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-slate-200 dark:border-gray-800 sticky top-0 z-10">
-            <h1 id="clubName"class="text-text-main dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
-        </div>
+    <main class="main-content ml-0 mt-20 p-0 relative min-h-screen">
+        
 
-        <div class="px-8 pb-12 mt-6 relative z-10">
+        <div class="px-8 pb-12 mt-12 relative z-10">
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm overflow-hidden">
                 <div class="px-8 py-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
                     <h2 class="font-display font-bold text-xl text-slate-800 dark:text-slate-100">Request Records</h2>
@@ -171,16 +176,12 @@
     // Constructs a formatted badge displaying the current status of a request.
 
 // Function to generate the HTML for the status column
-// Function to generate the HTML for the status column
 function getStatusUI(status, comments) {
     let colorClass = "";
     let icon = "";
     
     // Convert to lowercase to make it easy to search
     const lowerStatus = (status || "").toLowerCase();
-
-    // Use .includes() so "Pending GenSec" and "Pending ADSA" both trigger the yellow badge!
-   
 
         if (lowerStatus.includes('approved')) {
             colorClass = "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20"; icon = "check_circle";

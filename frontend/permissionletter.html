@@ -5,29 +5,28 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>New Permission Letter Form - Music Club</title>
 <script src="config.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#df2080",
-                        "background-light": "#f8f6f7",
-                        "background-dark": "#211119",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#db2777", // Swifty Pink
+                    "baby-pink": "#fdf2f8", // Original Background
+                },
+                fontFamily: {
+                    sans: ["Inter", "sans-serif"],
                 },
             },
-        }
-    </script>
+        },
+    };
+</script>
 <style>
         body { font-family: 'Inter', sans-serif; }
         
@@ -55,24 +54,27 @@
         }
     </style>
 </head>
-<body class="bg-pink-50 dark:bg-background-dark text-[#171114] dark:text-white font-display overflow-hidden">
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200">
 
-<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 text-white z-[100] flex items-center px-4 md:px-6 shadow-md">
-    <button id="menuBtn" class="p-2 rounded-full hover:bg-white/10 transition-colors mr-4">
-        <span class="material-symbols-outlined block">menu</span>
+<header class="fixed top-0 left-0 right-0 h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+    <button id="menuBtn" class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
+        <span class="material-icons-round text-2xl">menu</span>
     </button>
-    <h1 class="text-lg font-bold uppercase tracking-widest">SWIFTY</h1>
+    <div class="flex items-center gap-4">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+        <span class="h-6 w-px bg-slate-700"></span>
+        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
+    </div>
+    <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Logout</span>
+    </button>
 </header>
 
-<div class="flex h-screen pt-14">
+<div class="flex h-screen pt-20">
     
-    <aside id="sidebar" class="sidebar-open fixed md:static inset-y-0 left-0 w-[280px] bg-white dark:bg-background-dark border-r border-[#e5dce0] dark:border-gray-800 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-50 transition-all duration-300">
-        <div class="py-6 px-4 flex flex-col gap-6">
-            <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-                <div class="flex flex-col">
-                <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-                </div>
-                </div>
+    <aside id="sidebar" class="sidebar-open fixed md:static inset-y-0 left-0 w-[260px] bg-white border-r border-pink-100 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-50 transition-all duration-300 shadow-sm">
+        <div class="flex flex-col gap-6">
             <nav class="flex-1 px-4 py-4 space-y-1">
                 <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
                     <span class="material-icons-round text-xl">dashboard</span>
@@ -105,50 +107,48 @@
 
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
 
-    <main class="flex-1 flex flex-col h-full overflow-y-auto relative bg-[#fdf2f8] dark:bg-background-dark">
-        <div class="bg-white dark:bg-[#2a1721] px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-[#e5dce0] dark:border-gray-800 sticky top-0 z-10">
-            <h1 id="clubName"class="text-[#171114] dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
-        </div>
+    <main class="flex-1 flex flex-col h-full overflow-y-auto relative bg-[#fdf2f8] text-slate-900">
+        
         
         <div class="flex-1 px-4 md:px-10 lg:px-16 py-10 flex justify-center">
             <div class="w-full max-w-[960px] flex flex-col gap-6">
                 
-                <div class="bg-white dark:bg-[#2a1721] rounded-2xl p-6 md:p-10 shadow-sm border border-[#e5dce0] dark:border-gray-800">
-                    <div class="mb-8 text-center border-b border-[#e5dce0] dark:border-gray-800 pb-6">
-                        <h2 class="text-[#171114] dark:text-white tracking-tight text-[28px] font-bold leading-tight">Permission Letter Form</h2>
-                        <p class="text-[#876475] dark:text-gray-400 mt-2 text-sm">Submit a new request for an upcoming club event</p>
+                <div class="bg-white dark:bg-[#2a1721] rounded-2xl p-6 md:p-10 shadow-sm border border-pink-100 dark:border-gray-800">
+                    <div class="mb-8 text-center border-b border-pink-50 dark:border-gray-800 pb-6">
+                        <h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight">Permission Letter Form</h2>
+                        <p class="text-slate-500 dark:text-gray-400 mt-2 text-sm">Submit a new request for an upcoming club event</p>
                     </div>
                     
                     <form class="flex flex-col gap-6">
                         <div class="flex flex-col w-full gap-2">
-                            <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Name of Event</label>
-                            <input id="eventName" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
+                            <label class="text-slate-900 dark:text-gray-200 text-sm font-medium">Name of Event</label>
+                            <input id="eventName" class="w-full rounded-xl text-slate-900 dark:text-white border border-pink-200 dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-slate-400 dark:placeholder:text-gray-600" placeholder="e.g., Annual Musical Showcase" type="text"/>
                         </div>
                         
                         <div class="flex flex-col md:flex-row gap-6 w-full">
                             <label class="flex flex-col flex-1 gap-2 relative">
-                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Date</span>
+                                <span class="text-slate-900 dark:text-gray-200 text-sm font-medium">Date</span>
                                 <div class="relative">
-                                    <input id="eventDate"class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="date"/>
-                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">calendar_month</span>
+                                    <input id="eventDate"class="w-full rounded-xl text-slate-900 dark:text-white border border-pink-200 dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-slate-400 dark:[color-scheme:dark]" type="date"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">calendar_month</span>
                                 </div>
                             </label>
                             <label class="flex flex-col flex-1 gap-2 relative">
-                                <span class="text-[#171114] dark:text-gray-200 text-sm font-medium">Time</span>
+                                <span class="text-slate-900 dark:text-gray-200 text-sm font-medium">Time</span>
                                 <div class="relative">
-                                    <input id="eventTime"class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:[color-scheme:dark]" type="time"/>
-                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#876475] pointer-events-none">schedule</span>
+                                    <input id="eventTime"class="w-full rounded-xl text-slate-900 dark:text-white border border-pink-200 dark:border-gray-700 bg-white dark:bg-transparent h-14 px-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-slate-400 dark:[color-scheme:dark]" type="time"/>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">schedule</span>
                                 </div>
                             </label>
                         </div>
 
                         <div class="flex flex-col w-full gap-2">
-                            <label class="text-[#171114] dark:text-gray-200 text-sm font-medium">Reason to Conduct Event</label>
-                            <textarea id="reason" class="w-full rounded-xl text-[#171114] dark:text-white border border-[#e5dce0] dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-[#876475] dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
+                            <label class="text-slate-900 dark:text-gray-200 text-sm font-medium">Reason to Conduct Event</label>
+                            <textarea id="reason" class="w-full rounded-xl text-slate-900 dark:text-white border border-pink-200 dark:border-gray-700 bg-white dark:bg-transparent min-h-[140px] p-4 text-base font-normal focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all placeholder:text-slate-400 dark:placeholder:text-gray-600 resize-none" placeholder="Describe the purpose, expected audience, and details..."></textarea>
                         </div>
                         
                         <div class="pt-4 flex justify-end gap-3">
-                            <button type="reset" id="cancelButton" class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-[#876475] dark:text-gray-300 font-medium transition-colors" type="button">
+                            <button type="reset" id="cancelButton" class="h-12 px-6 rounded-xl bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-slate-500 dark:text-gray-300 font-medium transition-colors" type="button">
                                 Cancel
                             </button>
                             <button id="submitButton" class="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">

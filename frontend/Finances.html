@@ -1,172 +1,145 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
+<html class="light" lang="en">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SWIFTY</title>
+<title>SWIFTY Finances</title>
 <script src="config.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
 <script>
-        // Apply designated layout styles to the framework interface structure.
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#be185d",
-                        "soft-pink": "#fdf2f8",
-                        "professional-gray": "#f1f5f9",
-                        "background-light": "#f8fafc",
-                    },
-                    fontFamily: {
-                        display: ["Outfit", "Inter", "sans-serif"],
-                        sans: ["Inter", "sans-serif"],
-                    },
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    primary: "#db2777", // Swifty Pink
+                    "baby-pink": "#fdf2f8", // Original Background
+                },
+                fontFamily: {
+                    sans: ["Inter", "sans-serif"],
                 },
             },
-        };
-    </script>
+        },
+    };
+</script>
+
 <style type="text/tailwindcss">
-        :root {
-            --sidebar-width: 280px;
-        }
-        body {
-            font-family: "Inter", sans-serif;
-        }
-        /* Layout logic associated with sidebar transition mechanisms */
-        .sidebar-drawer {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        #sidebar-toggle:checked ~ .sidebar-drawer {
-            transform: translateX(0);
-        }
-        #sidebar-toggle:checked ~ .main-content {
-            margin-left: var(--sidebar-width);
-        }
-        .main-content {
-            transition: margin-left 0.3s ease-in-out;
-        }
-        .nav-item-active {
-            @apply bg-pink-50 text-pink-700 font-semibold border-r-4 border-pink-600;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .card-shadow {
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-        }
-    </style>
-</head>
-<body class="bg-[#fdf2f8] text-slate-800 min-h-screen">
-<input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
-<header class="fixed top-0 left-0 right-0 h-16 bg-[#1e1e2d] text-white flex items-center justify-between px-6 z-[60] shadow-sm">
-<div class="flex items-center">
-<label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-<span class="material-symbols-outlined">menu</span>
-</label>
-<div class="flex items-center gap-3">
-<div class="flex flex-col">
-<span class="font-display font-bold text-lg tracking-wider text-white">SWIFTY</span>
-</div>
-</div>
-</div>
-</header>
-<aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100%-4rem)] w-[280px] bg-white border-r border-slate-200 z-50 overflow-y-auto">
-<div class="flex flex-col h-full">
-    <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-        <div class="flex flex-col">
-        <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-        </div>
-        </div>
-<nav class="flex-1 px-4 py-4 space-y-1">
-    <a id="dashboard"class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-        <span class="material-icons-round text-xl">dashboard</span>
-        <span class="text-sm">Dashboard</span>
-        </a>
+    body { font-family: "Inter", sans-serif; background-color: #fdf2f8; }
     
-    <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-        <span class="material-icons-round text-xl">account_balance_wallet</span>
-        <span class="text-sm">Finances</span>
-        </a>
-    <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-        <span class="material-icons-round text-xl">description</span>
-        <span class="text-sm">Permission Letter</span>
-        </a>
-    <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-        <span class="material-icons-round text-xl">assignment</span>
-        <span class="text-sm">MOU Form</span>
-        </a>
-    <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-    <span class="material-icons-round text-xl">event_seat</span>
-    <span class="text-sm">Venue Booking</span>
-    </a>
-    <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-    <span class="material-icons-round text-xl">history</span>
-    <span class="text-sm">Past Requests</span>
-    </a>
-    </nav>
-<div class="p-4 border-t border-slate-100">
+    .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+    #sidebar-toggle:checked ~ .sidebar-drawer { transform: translateX(0); }
+    
+    /* Hardcoded 260px gap fix! */
+    #sidebar-toggle:checked ~ .main-content { margin-left: 260px; }
+    
+    .main-content { transition: margin-left 0.3s ease-in-out; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: rgba(219, 39, 119, 0.2); border-radius: 20px; }
+    .card-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03); }
+</style>
+</head>
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200 overflow-hidden">
 
-</div>
-</div>
+<input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
+
+<header class="fixed top-0 left-0 w-full h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+    <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+        <span class="material-icons-round text-2xl">menu</span>
+    </label>
+    <div class="flex items-center gap-4">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+        <span class="h-6 w-px bg-slate-700"></span>
+        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
+    </div>
+    <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Logout</span>
+    </button>
+</header>
+
+<aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-5rem)] w-[260px] bg-white border-r border-pink-100 z-50 overflow-y-auto flex flex-col shadow-sm">
+    <div class="flex flex-col h-full">
+        <nav class="flex-1 px-4 py-4 space-y-1">
+            <a id="dashboard" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">dashboard</span>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            <a class="finances flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">account_balance_wallet</span>
+                <span class="text-sm">Finances</span>
+            </a>
+            <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">description</span>
+                <span class="text-sm">Permission Letter</span>
+            </a>
+            <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">assignment</span>
+                <span class="text-sm">MOU Form</span>
+            </a>
+            <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
+                <span class="material-icons-round text-xl">event_seat</span>
+                <span class="text-sm">Venue Booking</span>
+            </a>
+            <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
+                <span class="material-icons-round text-xl">history</span>
+                <span class="text-sm">Past Requests</span>
+            </a>
+        </nav>
+    </div>
 </aside>
-<main class="main-content ml-0 mt-16 min-h-screen">
-<div class="bg-white border-b border-slate-200 w-full px-8 py-4 flex justify-between items-center relative z-10 shadow-sm">
-<div class="flex items-center gap-2 text-2xl font-display font-bold">
-<span id="clubName"class="text-slate-900 uppercase"></span>
-</div>
-<div class="flex items-center gap-4">
 
-</div>
-</div>
-<div class="p-8 grid grid-cols-1 gap-8 max-w-[1400px] mx-auto">
-<div class="w-full space-y-8">
-<div class="bg-white rounded-2xl p-8 border border-slate-200 card-shadow">
-<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
-<div class="flex items-baseline gap-4 mb-6">
-<span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">Loading...</span>
-<span id="totalBudget" class="text-xl font-medium text-slate-400">/ Loading...</span>
-</div>
-<div class="relative w-full h-4 bg-slate-100 rounded-full overflow-hidden mb-3">
-<div id="progressBar" class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 48%"></div>
-</div>
-<p id="budgetUtilized" class="text-xs font-bold text-slate-500 uppercase tracking-tight">X% of annual budget utilized</p>
-</div>
-<div class="bg-white rounded-2xl border border-slate-200 card-shadow overflow-hidden">
-<div class="p-6 border-b border-slate-50 flex justify-between items-center">
-<h3 class="font-display font-bold text-lg text-slate-800">Previous Bills and Receipts</h3>
-<span class="material-symbols-outlined text-slate-400">receipt_long</span>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left">
-<thead>
-<tr class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 bg-slate-50/50">
-<th class="px-6 py-4">Date</th>
-<th class="px-6 py-4">Description</th>
-<th class="px-6 py-4 text-right">Amount (₹)</th>
-<th class="px-6 py-4 text-center">Receipt Link</th>
-</tr>
-</thead>
-<tbody id="transactionsTable" class="divide-y divide-slate-100">
-    <tr>
-        <td colspan="4" class="px-6 py-8 text-center text-slate-500 text-sm font-medium flex flex-col items-center justify-center gap-2">
-            <span class="material-symbols-outlined animate-spin text-pink-500">autorenew</span>
-            Syncing financial ledgers...
-        </td>
-    </tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
+<main class="main-content ml-0 mt-20 p-0 relative min-h-screen">
+    <div class="p-8 pt-12 grid grid-cols-1 gap-8 max-w-[1400px] mx-auto">
+        <div class="w-full space-y-8">
+            <div class="bg-white rounded-2xl p-8 border border-pink-100 dark:border-pink-900/20 shadow-sm">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
+                <div class="flex items-baseline gap-4 mb-6">
+                    <span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">Loading...</span>
+                    <span id="totalBudget" class="text-xl font-medium text-slate-400">/ Loading...</span>
+                </div>
+                <div class="relative w-full h-4 bg-pink-50 rounded-full overflow-hidden mb-3 border border-pink-100">
+                    <div id="progressBar" class="absolute top-0 left-0 h-full bg-pink-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="budgetUtilized" class="text-xs font-bold text-slate-500 uppercase tracking-tight">Loading utilization metrics...</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl border border-pink-100 dark:border-pink-900/20 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex justify-between items-center">
+                    <h3 class="font-display font-bold text-lg text-slate-800">Previous Bills and Receipts</h3>
+                    <span class="material-symbols-outlined text-slate-400">receipt_long</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-pink-50 bg-pink-50/50">
+                                <th class="px-6 py-4">Date</th>
+                                <th class="px-6 py-4">Description</th>
+                                <th class="px-6 py-4 text-right">Amount (₹)</th>
+                                <th class="px-6 py-4 text-center">Receipt Link</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTable" class="divide-y divide-pink-50 dark:divide-pink-900/10">
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-slate-500 text-sm font-medium flex flex-col items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined animate-spin text-pink-500">autorenew</span>
+                                    Syncing financial ledgers...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 </body>
 <script>
-    // Map required interface dependencies for establishing local navigational pathways.
     const finances = document.querySelectorAll(".finances");
     const permission_letter= document.querySelectorAll(".permission_letter");
     const MOU_form= document.querySelectorAll(".MOU_form");
@@ -175,124 +148,70 @@
     const dashboard= document.getElementById("dashboard");
     
     if(dashboard){
-        dashboard.addEventListener("click", function(){
-            window.location.href= "Coordinator_homepage.html";
-        });
+        dashboard.addEventListener("click", function(){ window.location.href= "Coordinator_homepage.html"; });
     }
-    
-    finances.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    finances.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Finances.html"; }); });
+    MOU_form.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Mou.html"; }); });
+    venue_booking.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Venue_booking.html"; }); });
+    permission_letter.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "permissionletter.html"; }); });
+    past_requests.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "past requests.html"; }); });
 
-        event.preventDefault(); 
-        window.location.href = "Finances.html";
-    });
-});
-MOU_form.forEach((button) => {
-    button.addEventListener("click", function(event) {
+    async function loadFinances() {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("No authentication token found. Please log in.");
 
-        event.preventDefault(); 
-        window.location.href = "Mou.html";
-    });
-});
-venue_booking.forEach((button) => {
-    button.addEventListener("click", function(event) {
+            const response = await fetch(`${API_BASE_URL}/api/finances/status`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+            });
 
-        event.preventDefault(); 
-        window.location.href = "Venue_booking.html";
-    });
-});
-permission_letter.forEach((button) => {
-    button.addEventListener("click", function(event) {
+            if (!response.ok) throw new Error("Failed to fetch finances");
+            const data = await response.json();
 
-        event.preventDefault(); 
-        window.location.href = "permissionletter.html";
-    });
-});
+            document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
+            document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
+            
+            const percent = data.utilization_percentage || 0;
+            document.getElementById("progressBar").style.width = `${percent}%`;
+            document.getElementById("budgetUtilized").textContent = `${percent}% of annual budget utilized`;
 
-past_requests.forEach((button) => {
-    button.addEventListener("click", function(event) {
-
-        event.preventDefault(); 
-        window.location.href = "past requests.html";
-    });
-});
-    // Dynamically retrieve user organization identifiers from local persistence layers.
-    const clubName = document.getElementById("clubName");
-    const enterName = localStorage.getItem("club");
-    const getToken = localStorage.getItem("token");
-    if(clubName){
-        clubName.textContent= enterName? enterName.toUpperCase(): "MUSIC CLUB";
-    }
-
-// Process financial statistics requests to project the appropriate metrics mapping.
-async function loadFinances() {
-    try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("No authentication token found. Please log in.");
-
-        const response = await fetch(`${API_BASE_URL}/api/finances/status`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+            const tableBody = document.getElementById("transactionsTable");
+            
+            if (!data.transactions || data.transactions.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400 font-medium">No transactions recorded yet.</td></tr>`;
+                return;
             }
-        });
 
-        if (!response.ok) throw new Error("Failed to fetch finances");
-        
-        const data = await response.json();
+            let rowsHTML = "";
+            data.transactions.forEach((tx) => {
+                const dateObj = new Date(tx.timestamp || new Date()); 
+                const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+                
+                const cleanUrl = tx.receipt_url.startsWith('/') ? tx.receipt_url.slice(1) : tx.receipt_url;
+                const fullUrl = `http://127.0.0.1:8000/${cleanUrl}`;
+                
+                rowsHTML += `
+                    <tr class="hover:bg-pink-50/20 transition-colors">
+                        <td class="px-6 py-5 text-sm font-medium text-slate-500">${formattedDate}</td>
+                        <td class="px-6 py-5 text-sm font-bold text-slate-800">${tx.description}</td>
+                        <td class="px-6 py-5 text-sm font-black text-slate-900 text-right">₹${tx.amount.toLocaleString('en-IN')}</td>
+                        <td class="px-6 py-5 text-center">
+                            <button onclick="window.open('${fullUrl}', '_blank')" class="text-pink-600 hover:bg-pink-100 bg-pink-50 p-2 rounded-full transition-colors shadow-sm" title="View Receipt">
+                                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = rowsHTML;
 
-        // 1. Process allocation arrays into user-facing numeric aggregates dynamically.
-        document.getElementById("spentAmount").textContent = `₹${data.total_spent.toLocaleString('en-IN')}`;
-        document.getElementById("totalBudget").textContent = `/ ₹${data.total_allocated.toLocaleString('en-IN')}`;
-        
-        // 2. Adjust interface visualization controls based on proportionate percentage calculation limits.
-        const percent = data.utilization_percentage || 0;
-        document.getElementById("progressBar").style.width = `${percent}%`;
-        document.getElementById("budgetUtilized").textContent = `${percent}% of annual budget utilized`;
-
-        // 3. Render structured record arrays within designated table view containers.
-        const tableBody = document.getElementById("transactionsTable");
-        
-        if (!data.transactions || data.transactions.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-slate-400 font-medium">No transactions recorded yet.</td></tr>`;
-            return;
+        } catch (error) {
+            console.error("Error loading finances:", error);
+            document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-8 text-red-500 font-bold bg-red-50">Failed to load financial data.</td></tr>`;
         }
-
-        // Generate rows corresponding sequentially to available transaction payload entries.
-        let rowsHTML = "";
-        data.transactions.forEach((tx) => {
-            const dateObj = new Date(tx.timestamp || new Date()); 
-            const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-            
-            // Reformat URI references to ensure uniform endpoint resolution accuracy.
-            const cleanUrl = tx.receipt_url.startsWith('/') ? tx.receipt_url.slice(1) : tx.receipt_url;
-            const fullUrl = `http://127.0.0.1:8000/${cleanUrl}`;
-            
-            rowsHTML += `
-                <tr class="hover:bg-slate-50/80 transition-colors">
-                    <td class="px-6 py-5 text-sm font-medium text-slate-500">${formattedDate}</td>
-                    <td class="px-6 py-5 text-sm font-bold text-slate-800">${tx.description}</td>
-                    <td class="px-6 py-5 text-sm font-black text-slate-900 text-right">₹${tx.amount.toLocaleString('en-IN')}</td>
-                    <td class="px-6 py-5 text-center">
-                        <button onclick="window.open('${fullUrl}', '_blank')" class="text-pink-600 hover:bg-pink-100 bg-pink-50 p-2 rounded-full transition-colors shadow-sm" title="View Receipt">
-                            <span class="material-symbols-outlined text-[18px]">visibility</span>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        tableBody.innerHTML = rowsHTML;
-
-    } catch (error) {
-        console.error("Error loading finances:", error);
-        document.getElementById("transactionsTable").innerHTML = `<tr><td colspan="4" class="text-center py-8 text-red-500 font-bold bg-red-50">Failed to load financial data.</td></tr>`;
     }
-}
 
-// Ensure the execution protocol runs the process immediately upon context loading.
-loadFinances();
-
+    loadFinances();
 </script>
 </html>

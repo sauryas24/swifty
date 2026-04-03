@@ -58,7 +58,7 @@
         /* Base styling and layout constraints */
         :root {
             --bg-pink: #fdf2f8;
-            --sidebar-width: 280px;
+            --sidebar-width: 260px;
         }
         body {
             font-family: "Inter", sans-serif;
@@ -73,7 +73,7 @@
             transform: translateX(0);
         }
         #sidebar-toggle:checked ~ .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 260px;
         }
         .main-content {
             transition: margin-left 0.3s ease-in-out;
@@ -111,25 +111,24 @@
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
 <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
 
-<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
-<label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-<span class="material-icons-round">menu</span>
-</label>
-<div class="flex items-center gap-2">
-<span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
-</div>
-<button id="logoutBtn" style="margin-left: auto;display: flex; align-items: center; background-color: #4b5563; color: white; border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500; text-transform: uppercase; border: none; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); outline: none;">
-  <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px;">logout</span>
-  <span>Logout</span>
-</button>
-</header>
+<header class="fixed top-0 left-0 right-0 h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+            <span class="material-icons-round text-2xl">menu</span>
+        </label>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
+        </div>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
+        </button>
+    </header>
 
-<aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
+<aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-3.5rem)] w-[260px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
 <div class="flex flex-col h-full">
 <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-<div class="flex flex-col">
-<span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-</div>
 </div>
 <nav class="flex-1 px-4 py-4 space-y-1">
 <a id="dashboard"class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-2" href="#">
@@ -164,8 +163,8 @@
 </div>
 </aside>
 
-<main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-<div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
+<main class="main-content ml-0 mt-20 p-0 relative watermark-bg min-h-screen">
+<div class="w-full bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
 <div>
 <h1 id="clubName" class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
 </div>
@@ -173,7 +172,7 @@
 
 </div>
 </div>
-<div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+<div class="px-8 pt-8 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
 <div class="lg:col-span-2 space-y-8">
 
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
