@@ -541,8 +541,8 @@ if (currentTab === 'processed') {
     statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
 }
 
-                const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
-                const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
+                const wrapStart = currentTab === 'pending' ? `<div class="cursor-pointer block w-full h-full">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
+                const wrapEnd = `</div>`;
 
                 const tr = `
                     <tr data-id="${req.id}" class="transition-colors border-b border-pink-50 dark:border-pink-900/10 ${rowInteraction}">

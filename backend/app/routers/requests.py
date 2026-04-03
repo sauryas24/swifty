@@ -274,7 +274,10 @@ def get_club_requests_for_authority(
         if is_relevant(mou.status):
             unified_records.append({
                 "id": mou.id, "type": "MOU", "event_title": mou.organization_name, "expected_attendees": 0,
-                "details": mou.purpose, "status": format_status(mou.status), "timestamp": mou.created_at.strftime("%Y-%m-%d") if mou.created_at else ""
+                "details": mou.purpose, "status": format_status(mou.status), 
+                "timestamp": mou.created_at.strftime("%Y-%m-%d") if mou.created_at else "",
+                "updated_at": mou.updated_at.isoformat() if getattr(mou, 'updated_at', None) else None,
+                "comments": getattr(mou, 'comments', None)
             })
 
     permissions = db.query(models.PermissionLetter).filter(models.PermissionLetter.club_id == coordinator_id).all()
@@ -283,7 +286,10 @@ def get_club_requests_for_authority(
         if is_relevant(perm.status):
             unified_records.append({
                 "id": perm.id, "type": "PERMISSION", "event_title": perm.event_name, "expected_attendees": 0,
-                "details": perm.reason, "status": format_status(perm.status), "timestamp": perm.date or ""
+                "details": perm.reason, "status": format_status(perm.status), 
+                "timestamp": perm.date or "",
+                "updated_at": perm.updated_at.isoformat() if getattr(perm, 'updated_at', None) else None,
+                "comments": getattr(perm, 'comments', None)
             })
 
     if permission_gen_ids:
@@ -292,8 +298,10 @@ def get_club_requests_for_authority(
             if is_relevant(venue.status):
                 unified_records.append({
                     "id": venue.id, "type": "VENUE", "event_title": venue.event_title, "expected_attendees": venue.expected_attendees,
-                    "details": venue.description, "status": format_status(venue.status), "timestamp": venue.date or ""
+                    "details": venue.description, "status": format_status(venue.status), 
+                    "timestamp": venue.date or "",
+                    "updated_at": venue.updated_at.isoformat() if getattr(venue, 'updated_at', None) else None,
+                    "comments": getattr(venue, 'comments', None)
                 })
-
     unified_records.sort(key=lambda x: x["timestamp"], reverse=True)
     return unified_records

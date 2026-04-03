@@ -490,13 +490,27 @@
         }
 
         data.forEach(req => {
-            const dateStr = new Date(req.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
-            
+            const lowerStatus = (req.status || "").toLowerCase();
+            const isPending = lowerStatus.includes("pending");
+
+            // SMART DATE LOGIC: Use updated_at for processed items, fallback to timestamp for pending
+            let displayDate = req.timestamp;
+            if (!isPending && req.updated_at && req.updated_at !== "N/A") {
+                displayDate = req.updated_at;
+            }
+
+            // Safely parse the determined date
+            let dateStr = "N/A";
+            if (displayDate) {
+                const dateObj = new Date(displayDate);
+                if (!isNaN(dateObj)) {
+                    dateStr = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                }
+            }
             // Determine the visual style depending on the current status of the request
             let borderClass = "border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 hover:border-pink-200";
             let badgeClass = "bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400";
             
-            const lowerStatus = req.status.toLowerCase();
             if(lowerStatus.includes('approved')) { 
                 borderClass = "border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200"; 
                 badgeClass = "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400"; 
@@ -506,9 +520,8 @@
                 badgeClass = "bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400"; 
             }
 
-            const isPending = lowerStatus.includes("pending");
-            const clickEvent = isPending ? `onclick="openApprovalModal(${req.id})"` : "";
-            const cursorClass = isPending ? "cursor-pointer hover:shadow-md" : "cursor-default opacity-90";
+            const clickEvent = `onclick="openApprovalModal(${req.id})"`; 
+            const cursorClass = "cursor-pointer hover:shadow-md opacity-90";
 
             sideList.innerHTML += `
                 <div ${clickEvent} class="p-4 rounded-xl border ${borderClass} transition-all group ${cursorClass}">
@@ -522,7 +535,7 @@
             `;
 
             fullTbody.innerHTML += `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <tr onclick="openApprovalModal(${req.id})" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">${dateStr}</td>
                     <td class="px-6 py-4 text-sm font-bold text-slate-800 dark:text-slate-200">${req.type}</td>
                     <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">${req.event_title || req.details || "N/A"}</td>
@@ -675,13 +688,35 @@
         }
 
         // Fill the standard text fields
+        // Fill the standard text fields
         titleInput.value = reqData.event_title || "N/A";
         detailsInput.value = reqData.details || "No details provided.";
         
-        // Reset Rejection UI block
-        document.getElementById("rejection-reason-container").classList.add("hidden");
+        const isPending = reqData.status.toLowerCase().includes("pending");
+        const isRejected = reqData.status.toLowerCase().includes("reject");
+
+        // 1. Toggle Action Buttons based on status
+        if (isPending) {
+            document.getElementById("default-action-buttons").classList.remove("hidden");
+        } else {
+            document.getElementById("default-action-buttons").classList.add("hidden");
+        }
+        
+        // 2. Handle Rejection Reason UI
+        const rejectContainer = document.getElementById("rejection-reason-container");
+        const rejectInput = document.getElementById("rejection-reason-input");
+        
+        if (isRejected && reqData.comments) {
+            rejectContainer.classList.remove("hidden");
+            rejectInput.value = reqData.comments;
+            rejectInput.readOnly = true; // Lock it so they can just read it
+        } else {
+            rejectContainer.classList.add("hidden");
+            rejectInput.value = "";
+            rejectInput.readOnly = false; // Reset for pending requests
+        }
+
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
-        document.getElementById("default-action-buttons").classList.remove("hidden");
 
         document.getElementById("modal-request-review-toggle").checked = true;
     }
@@ -720,8 +755,12 @@
     // Setup interface state when the user selects the 'Reject' option
     document.getElementById("btn-initial-reject").addEventListener("click", () => {
         document.getElementById("default-action-buttons").classList.add("hidden");
+        const rejectInput = document.getElementById("rejection-reason-input");
+        rejectInput.readOnly = false; // Unlock for typing
+        rejectInput.value = ""; 
         document.getElementById("rejection-reason-container").classList.remove("hidden");
         document.getElementById("confirm-reject-buttons").classList.remove("hidden");
+        rejectInput.focus();
     });
     
     // Cancel the rejection process and return to normal review options
@@ -729,6 +768,7 @@
         document.getElementById("rejection-reason-container").classList.add("hidden");
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
         document.getElementById("default-action-buttons").classList.remove("hidden");
+
     });
 
     // Processes the final rejection of a request after a reason is provided

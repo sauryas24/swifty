@@ -155,6 +155,12 @@
     document.body.addEventListener("click", function(event) {
         const target = event.target.closest('a, button, li'); 
         if (!target) return;
+        if (target.id === "logoutBtn") {
+            event.preventDefault();
+            localStorage.clear();
+            window.location.replace("Select_role_login.html"); // Ensure exact case matches your actual filename
+            return;
+        }
 
         if (target.classList.contains("finances")) { event.preventDefault(); window.location.href = "Finances.html"; }
         else if (target.classList.contains("MOU_form")) { event.preventDefault(); window.location.href = "Mou.html"; }

@@ -195,20 +195,30 @@
     </main>
     <script>
         // Maps the sidebar links to correctly transition context safely.
-        const finances = document.querySelectorAll(".finances");
-        const permission_letter = document.querySelectorAll(".permission_letter");
-        const MOU_form = document.querySelectorAll(".MOU_form");
-        const venue_booking = document.querySelectorAll(".venue_booking");
-        const past_requests = document.querySelectorAll(".past_requests");
-        const dashboard = document.getElementById("dashboard");
-        
-        if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
-        finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
-        MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
-        venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }));
-        permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
-        past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
+        // --- 1. NAVIGATION & LOGOUT LOGIC ---
+        // Using event delegation to safely handle clicks, even for dynamically loaded sidebar items
+        document.body.addEventListener("click", function(event) {
+            const target = event.target.closest('a, button, li'); 
+            if (!target) return;
 
+            // Logout Logic
+            if (target.id === "logoutBtn") {
+                event.preventDefault();
+                localStorage.clear();
+                window.location.replace("Select_role_login.html"); 
+                return;
+            }
+            
+            // Sidebar Navigation Logic
+            if(target.id === "dashboard") { event.preventDefault(); window.location.href= "Coordinator_homepage.html"; }
+            else if (target.classList.contains("finances")) { event.preventDefault(); window.location.href = "Finances.html"; }
+            else if (target.classList.contains("MOU_form")) { event.preventDefault(); window.location.href = "Mou.html"; }
+            else if (target.classList.contains("venue_booking")) { event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+            else if (target.classList.contains("permission_letter")) { event.preventDefault(); window.location.href = "permissionletter.html"; }
+            else if (target.classList.contains("past_requests")) { event.preventDefault(); window.location.href = "past requests.html"; }
+        });
+
+        // --- 2. USER CONTEXT LOGIC ---
         // Accesses logged credentials to customize and authenticate user operations.
         const clubName = document.getElementById("clubName");
         const enterName = localStorage.getItem("club");
@@ -218,6 +228,7 @@
             clubName.textContent = enterName.toUpperCase();
         }
 
+        // --- 3. VENUE BOOKING STATE LOGIC ---
         // Maintains the currently selected scheduling boundaries.
         let selectedDate = null;
         let selectedTime = null;
@@ -230,7 +241,6 @@
         timeButtons.forEach(btn => {
             btn.dataset.time = btn.innerText.trim();
         });
-        
         // Binds event listeners onto the date selector, restricting historical bookings.
         if (dateInput) {
             const today = new Date().toISOString().split('T')[0];
