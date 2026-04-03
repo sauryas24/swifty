@@ -4,6 +4,6 @@ function protectPage(allowedRoles) {
 
   if (!token || !allowedRoles.includes(role)) {
     localStorage.clear();
-    window.location.replace("select_role_login.html");
+    window.location.replace("Select_role_login.html");
   }
 }

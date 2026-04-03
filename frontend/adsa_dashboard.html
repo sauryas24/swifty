@@ -24,13 +24,13 @@
         
         // If credentials are missing or incorrect, bounce back to the login screen
         if (!currentToken || !validRoles.includes(currentRole)) {
-            window.location.replace("select_role_login.html"); 
+            window.location.replace("Select_role_login.html"); 
         }
         
         // Re-validate token presence when using back/forward browser navigation
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
-                window.location.replace("select_role_login.html");
+                window.location.replace("Select_role_login.html");
             }
         });
     </script>
@@ -423,7 +423,7 @@ document.getElementById("main-dashboard-title").innerText = dashboardTitle;
         // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
             localStorage.clear();
-            window.location.replace("select_role_login.html");
+            window.location.replace("Select_role_login.html");
         });
 
         // --- 1. STATE MANAGEMENT ---

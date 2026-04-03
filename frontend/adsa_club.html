@@ -21,13 +21,13 @@
         
         // Redirect to login if the user is unauthenticated or unauthorized
         if (!currentToken || !validRoles.includes(currentRole)) {
-            window.location.replace("select_role_login.html");
+            window.location.replace("Select_role_login.html");
         }
         
         // Re-check authentication when navigating via browser history
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
-                window.location.replace("select_role_login.html");
+                window.location.replace("Select_role_login.html");
             }
         });
     </script>
@@ -398,7 +398,7 @@
     // Attach functionality to terminate the user session securely
     document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.clear();
-        window.location.replace("select_role_login.html");
+        window.location.replace("Select_role_login.html");
     });
 
     // Identify which club to load based on the URL parameter, and highlight the matching sidebar link
