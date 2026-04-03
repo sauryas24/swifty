@@ -54,6 +54,7 @@
             },
         };
     </script>
+
 <style type="text/tailwindcss">
         /* Base styling and layout constraints */
         :root {
@@ -111,7 +112,7 @@
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
 <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
 
-<header class="fixed top-0 left-0 right-0 h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+<header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
         <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
             <span class="material-icons-round text-2xl">menu</span>
         </label>
@@ -126,53 +127,17 @@
         </button>
     </header>
 
-<aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-3.5rem)] w-[260px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
-<div class="flex flex-col h-full">
-<div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-</div>
-<nav class="flex-1 px-4 py-4 space-y-1">
-<a id="dashboard"class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-2" href="#">
-<span class="material-icons-round text-xl text-slate-900 dark:text-white">dashboard</span>
-<span class="text-sm">Dashboard</span>
-</a>
+<div id="sidebar-container"></div>
+<main class="main-content ml-0 mt-16 p-0 relative watermark-bg min-h-screen">
+    
+    <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 flex justify-between items-center sticky top-16 z-40 shadow-sm">
+        <div>
+            <h1 id="clubName" class="text-2xl font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide"></h1>
+        </div>
+        <div class="flex items-center gap-4"></div>
+    </div>
 
-<a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-    <span class="material-icons-round text-xl">account_balance_wallet</span>
-    <span class="text-sm">Finances</span>
-    </a>
-<a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-    <span class="material-icons-round text-xl">description</span>
-    <span class="text-sm">Permission Letter</span>
-    </a>
-<a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-    <span class="material-icons-round text-xl">assignment</span>
-    <span class="text-sm">MOU Form</span>
-    </a>
-<a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-<span class="material-icons-round text-xl">event_seat</span>
-<span class="text-sm">Venue Booking</span>
-</a>
-<a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-<span class="material-icons-round text-xl">history</span>
-<span class="text-sm">Past Requests</span>
-</a>
-</nav>
-<div class="p-4 border-t border-pink-50 dark:border-pink-900/10">
-
-</div>
-</div>
-</aside>
-
-<main class="main-content ml-0 mt-20 p-0 relative watermark-bg min-h-screen">
-<div class="w-full bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-<div>
-<h1 id="clubName" class="text-5xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter"></h1>
-</div>
-<div class="flex items-center gap-4">
-
-</div>
-</div>
-<div class="px-8 pt-8 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+    <div class="px-8 pt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 pb-12">
 <div class="lg:col-span-2 space-y-8">
 
 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
@@ -253,6 +218,7 @@ View All Announcements
 </div>
 </div>
 </main>
+<script src="components/sidebar.js"></script>
 </body>
 
 <script>
@@ -275,7 +241,7 @@ View All Announcements
             localStorage.removeItem("userRole");
             localStorage.removeItem("club");
             localStorage.removeItem("club_id");
-            window.location.href="select_role_login.html";
+            window.location.href="Select_role_login.html";
         });
     }
 
@@ -401,6 +367,8 @@ View All Announcements
 
     // --- FETCH & RENDER RECENT REQUESTS ---
     // Retrieve the historical record of submissions (MOU, Venue, Permission) to populate the status overview table.
+   // --- FETCH & RENDER RECENT REQUESTS ---
+    // Retrieve the historical record of submissions (MOU, Venue, Permission) to populate the status overview table.
     async function loadRecentRequests() {
         const token = localStorage.getItem("token");
         const tbody = document.getElementById("recent-requests-body");
@@ -418,26 +386,33 @@ View All Announcements
             if (!response.ok) throw new Error("Failed to fetch requests");
 
             const records = await response.json();
+            
+            // --- SORTING LOGIC ADDED HERE ---
+            // Sort records by date in descending order (Newest first)
+            const sortedRecords = records.sort((a, b) => {
+                const dateA = new Date(a.date || 0);
+                const dateB = new Date(b.date || 0);
+                return dateB - dateA;
+            });
+
             tbody.innerHTML = ""; 
 
             // Handle scenarios where no historical data is present.
-            if (!records || records.length === 0) {
+            if (!sortedRecords || sortedRecords.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 font-medium">No recent requests submitted.</td></tr>`;
                 return;
             }
 
             // Limit rendering to the five most recent requests to ensure interface conciseness.
-            const recentRecords = records.slice(0, 5);
+            const recentRecords = sortedRecords.slice(0, 5);
 
             recentRecords.forEach(record => {
-
-
                 let typeColor = "bg-slate-50 text-slate-600";
                 const typeUpper = (record.type || "").toUpperCase();
+                
                 if (typeUpper.includes("VENUE")) typeColor = "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400";
                 else if (typeUpper.includes("MOU")) typeColor = "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400";
                 else if (typeUpper.includes("PERMISSION")) typeColor = "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
-
 
                 // Map standard approval statuses to corresponding visual indicators.
                 let statusDot = "bg-slate-400"; 
@@ -445,7 +420,7 @@ View All Announcements
 
                 if (statusLower.includes("approved")) statusDot = "bg-emerald-400";
                 else if (statusLower.includes("rejected")) statusDot = "bg-rose-500";
-                else if (statusLower.includes("Pending")) statusDot = "bg-amber-400";
+                else if (statusLower.includes("pending")) statusDot = "bg-amber-400";
 
                 // Inject the structured row data into the table body.
                 tbody.innerHTML += `
@@ -472,7 +447,6 @@ View All Announcements
             tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-rose-500 bg-rose-50 font-medium">Failed to load recent requests.</td></tr>`;
         }
     }
-
     // Execute the request data fetch sequentially alongside other initializations.
     loadRecentRequests();
 </script>

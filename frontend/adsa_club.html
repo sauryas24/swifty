@@ -398,7 +398,7 @@
     // Attach functionality to terminate the user session securely
     document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.clear();
-        window.location.replace("select_role_login.html");
+        window.location.replace("Select_role_login.html");
     });
 
     // Identify which club to load based on the URL parameter, and highlight the matching sidebar link
@@ -544,7 +544,7 @@
         
         const linkBtn = document.getElementById("bill-modal-link");
         if (billData.receipt_url) {
-            linkBtn.href = `http://127.0.0.1:8000/${billData.receipt_url}`;
+            linkBtn.href = `${billData.receipt_url}`;
             linkBtn.classList.remove("hidden");
         } else {
             linkBtn.classList.add("hidden");

@@ -416,7 +416,7 @@
         // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
             localStorage.clear();
-            window.location.replace("select_role_login.html");
+            window.location.replace("Select_role_login.html");
         });
 
         // --- 1. STATE MANAGEMENT ---
@@ -622,7 +622,7 @@ function populateModal(reqData, isHistory = false) {
     if (docContainer && docLink) {
         if (reqData.document_url && reqData.document_url !== "N/A") {
             docContainer.classList.remove("hidden");
-            docLink.href = `http://127.0.0.1:8000/${reqData.document_url.replace(/\\/g, "/")}`;
+            docLink.href = `${reqData.document_url.replace(/\\/g, "/")}`;
         } else {
             docContainer.classList.add("hidden");
         }

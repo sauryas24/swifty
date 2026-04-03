@@ -35,20 +35,37 @@
         },
     }
 </script>
-<style>
-    body { font-family: 'Inter', sans-serif; background-color: #fdf2f8; }
+<style type="text/tailwindcss">
+    :root {
+            --bg-pink: #fdf2f8;
+            --sidebar-width: 260px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: var(--bg-pink);
+        }
+        
+        /* Defines positioning for side navigation drawers to slide correctly when clicked. */
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: var(--sidebar-width);
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
+        }
+        .dark .watermark-bg {
+            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
+        }
     
-    /* Execute standardized transitions dictating sidebar component visibility */
-    #sidebar { transition: transform 0.3s ease-in-out; }
-    .sidebar-closed { transform: translateX(-100%); }
-    .sidebar-open { transform: translateX(0); }
-    
-    /* 260px gap fix applied specifically for MOU's flex layout */
-    @media (min-width: 768px) {
-        .sidebar-closed { margin-left: -260px; transform: none; }
-        .sidebar-open { margin-left: 0; transform: none; }
-    }
-
     input[type="date"]::-webkit-calendar-picker-indicator {
         position: absolute;
         top: 0;
@@ -59,71 +76,35 @@
         cursor: pointer;
         z-index: 20;
     }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background-color: rgba(219, 39, 119, 0.2); border-radius: 20px; }
+    
 </style>
 </head>
-<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200 overflow-hidden">
-
-<header class="fixed top-0 left-0 w-full h-20 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
-    <button id="menuBtn" class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors">
-        <span class="material-icons-round text-2xl">menu</span>
-    </button>
-    <div class="flex items-center gap-4">
-        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
-        <span class="h-6 w-px bg-slate-700"></span>
-        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
-    </div>
-    <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
-        <span class="material-symbols-outlined text-[20px]">logout</span>
-        <span>Logout</span>
-    </button>
-</header>
-
-<div class="flex h-screen pt-20">
-    
-    <aside id="sidebar" class="sidebar-open fixed md:static inset-y-0 left-0 w-[260px] bg-white border-r border-pink-100 flex flex-col justify-between shrink-0 h-full overflow-y-auto z-50 transition-all duration-300 shadow-sm">
-        <div class="py-6 px-4 flex flex-col gap-6">
-            <nav class="flex-1 px-4 py-4 space-y-1">
-                <a id="dashboard" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">dashboard</span>
-                    <span class="text-sm">Dashboard</span>
-                </a>
-                <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">account_balance_wallet</span>
-                    <span class="text-sm">Finances</span>
-                </a>
-                <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">description</span>
-                    <span class="text-sm">Permission Letter</span>
-                </a>
-                <a class="MOU_form flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">assignment</span>
-                    <span class="text-sm">MOU Form</span>
-                </a>
-                <a class="venue_booking flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">event_seat</span>
-                    <span class="text-sm">Venue Booking</span>
-                </a>
-                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors" href="#">
-                    <span class="material-icons-round text-xl">history</span>
-                    <span class="text-sm">Past Requests</span>
-                </a>
-            </nav>
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200">
+<input checked class="hidden" id="sidebar-toggle" type="checkbox"/>
+<header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
+        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+    <span class="material-icons-round text-2xl">menu</span>
+</label>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
         </div>
-    </aside>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
+        </button>
+    </header>
 
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+    <div id="sidebar-container"></div>
 
-    <main class="flex-1 flex flex-col h-full overflow-y-auto relative bg-[#fdf2f8] dark:bg-background-dark">
-        <div class="flex-1 px-4 md:px-10 lg:px-16 pt-12 pb-10 flex justify-center">
-            <div class="w-full max-w-[960px] flex flex-col gap-6">
-                <div class="bg-white dark:bg-surface-dark rounded-2xl p-6 md:p-10 shadow-sm border border-pink-100 dark:border-gray-800">
-                    <div class="mb-8 text-center border-b border-pink-50 dark:border-gray-800 pb-6">
-                        <h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight">Memorandum of Understanding (MOU)</h2>
-                        <p class="text-slate-500 dark:text-gray-400 mt-2 text-sm">Submit a new request for sponsorships or collaborations</p>
-                    </div>
+    <main class="main-content mt-16 min-h-screen overflow-y-auto p-4 md:p-8 relative watermark-bg">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-10 shadow-sm border border-pink-100 dark:border-pink-900/20">
+                
+                <div class="mb-8 text-center border-b border-pink-50 dark:border-gray-800 pb-6">
+                    <h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight">Memorandum of Understanding (MOU)</h2>
+                </div>
                     
                     <form class="flex flex-col gap-6" id="mouForm">
                         <div class="flex flex-col w-full gap-2">
@@ -164,114 +145,134 @@
             </div>
         </div>
     </main>
-</div>
-
 <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
 
-    function toggleSidebar() {
-        if (window.innerWidth < 768) {
-            sidebar.classList.toggle('sidebar-closed'); 
-            sidebar.classList.toggle('sidebar-open');
-            sidebarOverlay.classList.toggle('hidden');
+    // --- NAVIGATION LOGIC (Fixed using Event Delegation) ---
+    // This ensures clicks work even if sidebar.js loads the HTML asynchronously
+    document.body.addEventListener("click", function(event) {
+        const target = event.target.closest('a, button, li'); // Adjust based on what your sidebar items are
+        if (!target) return;
+
+        if (target.classList.contains("finances")) { event.preventDefault(); window.location.href = "Finances.html"; }
+        else if (target.classList.contains("MOU_form")) { event.preventDefault(); window.location.href = "Mou.html"; }
+        else if (target.classList.contains("venue_booking")) { event.preventDefault(); window.location.href = "Venue_booking.html"; }
+        else if (target.classList.contains("permission_letter")) { event.preventDefault(); window.location.href = "permissionletter.html"; }
+        else if (target.classList.contains("past_requests")) { event.preventDefault(); window.location.href = "past requests.html"; }
+        else if (target.id === "dashboard") { event.preventDefault(); window.location.href = "Coordinator_homepage.html"; }
+    });
+
+    // --- FILE UPLOAD & DRAG/DROP LOGIC ---
+    const docFileInput = document.getElementById("docFile");
+    const fileNameDisplay = document.getElementById("fileNameDisplay");
+    const dropZone = docFileInput.closest('.border-dashed'); // Selects the container
+
+    // 1. Handle normal click-to-upload
+    docFileInput.addEventListener("change", function(e) {
+        handleFiles(e.target.files);
+    });
+
+    // 2. Prevent default browser behavior for drag events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // 3. Add visual styling when hovering with a file
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('bg-pink-100', 'dark:bg-white/10'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.remove('bg-pink-100', 'dark:bg-white/10'), false);
+    });
+
+    // 4. Handle the actual drop
+    dropZone.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        docFileInput.files = files; // Assign dropped files to the hidden input
+        handleFiles(files);
+    }, false);
+
+    // Helper to update UI
+    function handleFiles(files) {
+        if(files.length > 0) {
+            fileNameDisplay.textContent = files[0].name;
+            fileNameDisplay.classList.add("text-primary"); 
         } else {
-            sidebar.classList.toggle('sidebar-closed');
-            sidebar.classList.toggle('sidebar-open');
+            fileNameDisplay.textContent = "Click to upload or drag and drop";
+            fileNameDisplay.classList.remove("text-primary");
         }
     }
 
-    menuBtn.addEventListener('click', toggleSidebar);
-    sidebarOverlay.addEventListener('click', toggleSidebar);
-
-    const finances = document.querySelectorAll(".finances");
-    const permission_letter= document.querySelectorAll(".permission_letter");
-    const MOU_form= document.querySelectorAll(".MOU_form");
-    const venue_booking= document.querySelectorAll(".venue_booking");
-    const past_requests=document.querySelectorAll(".past_requests");
-    const dashboard= document.getElementById("dashboard");
-    
-    if(dashboard){
-        dashboard.addEventListener("click", function(){
-            window.location.href= "Coordinator_homepage.html";
-        });
-    }
-    finances.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Finances.html"; }); });
-    MOU_form.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Mou.html"; }); });
-    venue_booking.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "Venue_booking.html"; }); });
-    permission_letter.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "permissionletter.html"; }); });
-    past_requests.forEach((button) => { button.addEventListener("click", function(event) { event.preventDefault(); window.location.href = "past requests.html"; }); });
-
-    const docFileInput = document.getElementById("docFile");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    
-    if (docFileInput) {
-        docFileInput.addEventListener("change", function(e) {
-            if(e.target.files.length > 0) {
-                fileNameDisplay.textContent = e.target.files[0].name;
-                fileNameDisplay.classList.add("text-primary"); 
-            } else {
-                fileNameDisplay.textContent = "Click to upload or drag and drop";
-                fileNameDisplay.classList.remove("text-primary");
-            }
-        });
-    }
-
+    // --- FORM SUBMISSION LOGIC ---
     const submitBtn = document.getElementById("submitBtn");
-    if (submitBtn) {
-        submitBtn.addEventListener("click", async function(event) {
-            event.preventDefault();
+    submitBtn.addEventListener("click", async function(event) {
+        event.preventDefault();
 
-            const orgName = document.getElementById("orgName").value;
-            const purpose = document.getElementById("purpose").value;
-            const docFile = document.getElementById("docFile").files[0];
+        const orgName = document.getElementById("orgName").value;
+        const purpose = document.getElementById("purpose").value;
+        const docFile = document.getElementById("docFile").files[0];
 
-            if (!orgName || !purpose || !docFile) {
-                alert("Please fill in all fields and attach a document.");
-                return;
+        if (!orgName || !purpose || !docFile) {
+            alert("Please fill in all fields and attach a document.");
+            return;
+        }
+        
+        const freshToken = localStorage.getItem("token");
+        if (!freshToken) {
+            alert("Security Error: No token found. Please log in again.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("organization_name", orgName);
+        formData.append("purpose", purpose);
+        formData.append("document", docFile);
+
+        const originalBtnHtml = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>Submitting...</span>`;
+
+        try {
+            // NOTE: Make sure API_BASE_URL is properly defined in your config.js
+            const response = await fetch(`${API_BASE_URL}/api/mou/submit`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${freshToken}` },
+                body: formData // DO NOT set Content-Type header manually here; fetch does it automatically for FormData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert("MoU Request submitted successfully!");
+                document.getElementById("mouForm").reset(); 
+                handleFiles([]); // Reset file display
+            } else {
+                alert(`Backend Error: ${data.detail || "Unauthorized"}`);
             }
-            
-            const freshToken = localStorage.getItem("token");
-            if (!freshToken) {
-                alert("Security Error: No token found. Please log in again.");
-                return;
-            }
+        } catch (error) {
+            console.error("Submission Error:", error);
+            alert("A network error occurred. Please try again.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+        }
+    });
 
-            const formData = new FormData();
-            formData.append("organization_name", orgName);
-            formData.append("purpose", purpose);
-            formData.append("document", docFile);
-
-            const originalBtnHtml = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<span>Submitting...</span>`;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/mou/submit`, {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${freshToken}` },
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert("MoU Request submitted successfully!");
-                    document.getElementById("mouForm").reset(); 
-                    fileNameDisplay.textContent = "Click to upload or drag and drop";
-                    fileNameDisplay.classList.remove("text-primary");
-                } else {
-                    alert(`Backend Error: ${data.detail || "Unauthorized"}`);
-                }
-            } catch (error) {
-                console.error("Submission Error:", error);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnHtml;
-            }
+    // --- CANCEL BUTTON LOGIC ---
+    const cancelBtn = document.querySelector('button[type="button"]:not(#submitBtn)');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            document.getElementById("mouForm").reset();
+            handleFiles([]);
         });
     }
 </script>
+<script src="components/sidebar.js"></script>
 </body>
 </html>
