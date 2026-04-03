@@ -125,6 +125,10 @@
         #modal-otp-toggle:checked ~ body { 
             overflow: hidden; 
         }
+
+        /* Detail Modal Toggle Logic */
+        #modal-announcement-detail-toggle:checked ~ #modal-announcement-detail-overlay { display: flex; }
+        #modal-announcement-detail-toggle:checked ~ body { overflow: hidden; }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
@@ -392,6 +396,10 @@
             </div>
         </div>
     </div>
+
+
+
+    
 
     <script>
         // System variables needed for network calls

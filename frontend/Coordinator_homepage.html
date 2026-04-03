@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="light" lang="en"><head>
-    <script src="components/auth.js"></script>
+      <script src="components/auth.js"></script>  
   <script>
     protectPage(["coordinator"]); 
   </script>
@@ -18,14 +18,14 @@
       // Validate session authentication upon initialization.
       // Redirect unauthenticated users to the login portal immediately to prevent unauthorized access.
       if (!localStorage.getItem("token")) {
-            window.location.replace("select_role_login.html"); 
+            window.location.replace("Select_role_login.html"); 
         }
         
         // Prevent access via the browser's "Back" button after a user has logged out.
         window.addEventListener('pageshow', function(event) {
             // The persisted property indicates if the page was loaded from the browser's Back/Forward cache.
             if (event.persisted && !localStorage.getItem("token")) {
-                window.location.replace("select_role_login.html");
+                window.location.replace("Select_role_login.html");
             }
         });
     
@@ -111,6 +111,9 @@
         .arrow-icon {
             transition: transform 0.2s ease-in-out;
         }
+        /* Modal Toggle Logic */
+        #modal-announcement-detail-toggle:checked ~ #modal-announcement-detail-overlay { display: flex; }
+        #modal-announcement-detail-toggle:checked ~ body { overflow: hidden; }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
@@ -221,6 +224,30 @@ View All Announcements
 </div>
 </div>
 </div>
+
+<input class="hidden" id="modal-announcement-detail-toggle" type="checkbox"/>
+<div class="hidden fixed inset-0 z-[110] bg-slate-900/60 backdrop-blur-sm items-center justify-center p-4" id="modal-announcement-detail-overlay">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-pink-100 flex flex-col max-h-[90vh]">
+        <div class="flex items-center justify-between p-6 border-b border-pink-50 bg-pink-50/50 rounded-t-2xl">
+            <h2 class="font-bold text-lg text-slate-900" id="detail-announcement-title">Announcement Title</h2>
+            <label class="p-1.5 hover:bg-pink-100 rounded-md cursor-pointer transition-colors text-slate-500" for="modal-announcement-detail-toggle">
+                <span class="material-icons-round text-[20px]">close</span>
+            </label>
+        </div>
+        <div class="p-6 overflow-y-auto custom-scrollbar">
+            <div class="flex items-center gap-4 mb-4 text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-4">
+                <span id="detail-announcement-sender" class="flex items-center gap-1"><span class="material-icons-round text-[16px]">person</span>Sender</span>
+                <span id="detail-announcement-date" class="flex items-center gap-1"><span class="material-icons-round text-[16px]">schedule</span>Date</span>
+            </div>
+            <p id="detail-announcement-message" class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">Message goes here...</p>
+        </div>
+        <div class="p-5 border-t border-pink-100 flex items-center justify-end bg-pink-50/30 rounded-b-2xl">
+            <label class="px-5 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer shadow-sm" for="modal-announcement-detail-toggle">
+                Close Window
+            </label>
+        </div>
+    </div>
+</div>
 </main>
 <script src="components/sidebar.js"></script>
 </body>
@@ -245,21 +272,23 @@ View All Announcements
             localStorage.removeItem("userRole");
             localStorage.removeItem("club");
             localStorage.removeItem("club_id");
-            window.location.href="select_role_login.html";
+            window.location.href="Select_role_login.html";
         });
     }
 
     // Asynchronously retrieve and display recent announcements targeted to the authenticated coordinator.
+    // 1. Create a global array to store announcements so the modal can read them
+    let globalAnnouncements = [];
+
+    // Asynchronously retrieve and display recent announcements targeted to the authenticated coordinator.
     async function addAnnouncements() {
         try {
-            // Ensure the request includes the required authorization token.
             const token = localStorage.getItem("token");
             if (!token) {
-                document.getElementById("addAnnouncements").innerHTML = "<p class='text-slate-500 text-sm'>Please log in to view announcements.</p>";
+                document.getElementById("addAnnouncements").innerHTML = "<p class='text-slate-500 text-sm font-medium'>Please log in to view announcements.</p>";
                 return;
             }
 
-            // Execute the network call to the announcements endpoint.
             const response = await fetch(`${API_BASE_URL}/api/announcements/my-announcements`, {
                 method: "GET",
                 headers: {
@@ -271,35 +300,37 @@ View All Announcements
             if (!response.ok) throw new Error("Failed to fetch announcements");
 
             const result = await response.json();
+            
+            // 2. Save the fetched data to our global variable
+            globalAnnouncements = result; 
+            
             const container = document.getElementById("addAnnouncements");
-            container.innerHTML = ""; // Clear preliminary loading text.
+            container.innerHTML = ""; 
 
             if (result.length === 0) {
-                container.innerHTML = "<p class='text-slate-500 text-sm'>No recent announcements.</p>";
+                container.innerHTML = "<p class='text-slate-500 text-sm font-medium'>No recent announcements.</p>";
                 return;
             }
 
-            // Restrict the rendered view to the three most recent items to preserve layout structure.
             const topAnnouncements = result.slice(0, 3);
 
             topAnnouncements.forEach((announcement) => {
-                // Convert timestamp data into standardized, user-readable formats.
                 const dateObj = new Date(announcement.timestamp);
                 const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                 const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
-                // Construct and append the HTML representation for the announcement.
+                // 3. Added onclick="openAnnouncementDetail(${announcement.id})" to the parent div
                 const cardHTML = `
-                <div class="mb-4 p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200 dark:hover:border-pink-800 transition-all group cursor-pointer">
-                    <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${announcement.heading}</h4>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">${announcement.message}</p>
+                <div onclick="openAnnouncementDetail(${announcement.id})" class="mb-4 p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-white hover:bg-pink-50/50 hover:border-pink-200 transition-all group cursor-pointer shadow-sm">
+                    <h4 class="font-bold text-slate-900 group-hover:text-pink-600 transition-colors text-sm">${announcement.heading}</h4>
+                    <p class="text-xs font-medium text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">${announcement.message}</p>
                     
-                    <div class="flex items-center justify-between mt-3 border-t border-pink-100 dark:border-pink-900/20 pt-3">
-                        <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    <div class="flex items-center justify-between mt-3 border-t border-slate-100 pt-3">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
                             <span class="material-icons-round text-[14px]">schedule</span> 
                             ${dateStr} at ${timeStr}
                         </p>
-                        <p class="text-[10px] font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
                             <span class="material-symbols-outlined text-[14px]">person</span>
                             ${announcement.sender_username || "Admin"}
                         </p>
@@ -311,9 +342,32 @@ View All Announcements
             
         } catch(error) {
             console.error("Failed to load announcements:", error);
-            document.getElementById("addAnnouncements").innerHTML = "<p class='text-red-500 text-sm'>Failed to load announcements.</p>";
+            document.getElementById("addAnnouncements").innerHTML = "<p class='text-red-500 text-sm font-medium'>Failed to load announcements.</p>";
         }
     }
+    
+    // 4. Add the global function to populate and open the modal when clicked
+    window.openAnnouncementDetail = function(id) {
+        // Find the specific announcement in our global array
+        const ann = globalAnnouncements.find(a => a.id === id);
+        if (!ann) return;
+
+        const dateObj = new Date(ann.timestamp);
+        const dateStr = dateObj.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+        const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+
+        // Inject the text into the modal
+        document.getElementById('detail-announcement-title').innerText = ann.heading;
+        document.getElementById('detail-announcement-sender').innerHTML = `<span class="material-icons-round text-[16px]">person</span> ${ann.sender_username || "Admin"}`;
+        document.getElementById('detail-announcement-date').innerHTML = `<span class="material-icons-round text-[16px]">schedule</span> ${dateStr} at ${timeStr}`;
+        document.getElementById('detail-announcement-message').innerText = ann.message;
+
+        // Toggle the checkbox to open the window
+        document.getElementById('modal-announcement-detail-toggle').checked = true;
+    };
+    
+    // Execute the announcement data fetch on page load.
+
     
     // Execute the announcement data fetch on page load.
     addAnnouncements();
