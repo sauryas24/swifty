@@ -146,44 +146,41 @@
         </button>
     </header>
 
-    <aside class="sidebar-drawer fixed left-0 top-20 h-[calc(100%-3.5rem)] w-[260px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto flex flex-col">
-
+    <aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100vh-4rem)] w-[260px] bg-white border-r border-slate-200 z-50 overflow-y-auto flex flex-col">
+        
         <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-            <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-4" href="#">
-                <span class="material-icons-round text-xl">dashboard</span>
-                <span class="text-sm">Dashboard</span>
-            </a>
+            <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-slate-900 font-bold rounded-xl mb-4 hover:bg-slate-300 transition-colors">
+    <span class="material-icons-round text-xl">dashboard</span>
+    <span class="text-sm">Dashboard</span>
+</a>
             
             <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
             
             <a href="adsa_club.html?club_id=1" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">music_note</span> Music Club
+                <span class="material-icons-round text-[16px] text-slate-500">music_note</span> Music Club
             </a>
             <a href="adsa_club.html?club_id=2" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">directions_run</span> Dance Club
+                <span class="material-icons-round text-[16px] text-slate-500">directions_run</span> Dance Club
             </a>
             <a href="adsa_club.html?club_id=3" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">theater_comedy</span> Dramatics Club
+                <span class="material-icons-round text-[16px] text-slate-500">theater_comedy</span> Dramatics Club
             </a>
             <a href="adsa_club.html?club_id=4" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">terminal</span> Programming Club
+                <span class="material-icons-round text-[16px] text-slate-500">terminal</span> Programming Club
             </a>
         </nav>
-
-        <div class="p-4 border-t border-pink-50 dark:border-pink-900/10 space-y-2 bg-slate-50 dark:bg-slate-900/50">
-            <button class="w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors rounded-lg hover:bg-pink-50 dark:hover:bg-pink-900/10" onclick="document.documentElement.classList.toggle('dark')">
-                <span class="material-icons-round text-[18px]">dark_mode</span>
-                <span>Toggle Theme</span>
-            </button>
-        </div>
     </aside>
 
-    <main class="main-content ml-0 mt-20 p-0 relative watermark-bg min-h-screen">
-        <div class="w-full bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-            <div>
-                <h1 id="main-dashboard-title" class="text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Dashboard</h1>
-            </div>
-        </div>
+    <main class="main-content ml-0 mt-16 p-0 relative watermark-bg min-h-screen">
+        <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 w-full px-8 py-5 flex justify-between items-center sticky top-16 z-40 shadow-sm">
+    <div class="flex flex-col">
+        <p id="main-dashboard-title" class="text-lg font-bold tracking-wide text-slate-900 mb-0">
+</p>
+        <h1 id="clubName" class="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+        </h1>
+    </div>
+    <div class="flex items-center gap-4"></div>
+</div>
         
         <div class="px-8 pt-8 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div class="lg:col-span-2 space-y-8">
@@ -405,9 +402,19 @@
         };
 
         // Match UI elements to represent the authenticated individual's role
-        const displayRole = localStorage.getItem("displayRoleName") || localStorage.getItem("userRole") || "Authority";
-        document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
-        document.getElementById("main-dashboard-title").innerText = displayRole.toUpperCase() + " DASHBOARD";
+        const roleMap = {
+    authority: "Authority Dashboard",
+    adsa: "ADSA Dashboard",
+    gensec: "General Secretary Dashboard",
+    president: "President Dashboard",
+    facad: "Faculty Advisor Dashboard"
+};
+
+const rawRole = localStorage.getItem("userRole") || "authority";
+const dashboardTitle = roleMap[rawRole.toLowerCase()] || "Authority Dashboard";
+
+document.getElementById("header-role-badge").innerText = dashboardTitle.replace(" Dashboard", "").toUpperCase();
+document.getElementById("main-dashboard-title").innerText = dashboardTitle;
 
         // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
