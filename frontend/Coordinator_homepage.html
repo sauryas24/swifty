@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html class="light" lang="en"><head>
+    <script src="components/auth.js"></script>
+  <script>
+    protectPage(["coordinator"]); 
+  </script>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -241,7 +245,7 @@ View All Announcements
             localStorage.removeItem("userRole");
             localStorage.removeItem("club");
             localStorage.removeItem("club_id");
-            window.location.href="Select_role_login.html";
+            window.location.href="select_role_login.html";
         });
     }
 
