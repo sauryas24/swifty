@@ -36,11 +36,13 @@
         :root { --bg-pink: #fdf2f8; }
         body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
         .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
-        }
-        .dark .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
-        }
+    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+    background-attachment: fixed;
+}
+.dark .watermark-bg {
+    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+    background-attachment: fixed;
+}
         .otp-input {
             width: 3rem;
             height: 3.5rem;
