@@ -3,15 +3,24 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from dotenv import load_dotenv
 
-# 1. Load the hidden variables from the .env file
-load_dotenv()
+# 1. Force Python to find the .env file explicitly
+# This gets the absolute path of the folder that database.py is sitting in
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 2. Get the database URL (Fallback to local SQLite if .env is missing)
+# If your .env is one folder OUTSIDE of your app folder, we go up one level
+ENV_PATH = os.path.join(os.path.dirname(BASE_DIR), ".env") 
+
+load_dotenv(ENV_PATH)
+
+# 2. Get the database URL 
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./swifty.db")
+
+print(f"🔗 database.py is connecting to: {SQLALCHEMY_DATABASE_URL[:15]}...")
 
 # SQLAlchemy 1.4+ requires 'postgresql://' instead of 'postgres://'
 if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 
 # 3. Connect to the Database
 if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):

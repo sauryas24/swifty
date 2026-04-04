@@ -1,55 +1,69 @@
 import sys
 import os
 
-# Tell Python to look in the parent folder for the 'app' module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import SessionLocal, engine
-from app.models import Base, User
+from app.models import Base, User, Club # <--- Don't forget to import Club!
 from app.utils.security import get_password_hash
 
-def restore_users():
+def seed_database():
     print("🔍 Checking database tables...")
     
-    # create_all is safe: It ONLY creates tables that are missing.
-    # It will NOT drop, overwrite, or touch your existing tables (like forms or ledgers).
+    # Safely creates only MISSING tables. Does not overwrite existing ones.
     Base.metadata.create_all(bind=engine)
 
     db = SessionLocal()
 
     try:
-        # Prevent accidental duplicates if the users are actually still there
-        existing_user = db.query(User).first()
-        if existing_user:
-            print("⚠️ Users already exist in the database! Aborting to prevent duplicates.")
-            return
+        # ==========================================
+        # 1. SAFELY SEED USERS (Independent Check)
+        # ==========================================
+        if db.query(User).first():
+            print("⏭️  Users already exist. Skipping User creation.")
+        else:
+            print("👤 Restoring Users...")
+            coordinator_music = User(username="Music Club", email_id="gymkhana.swifty@gmail.com", password=get_password_hash("music123"), role="coordinator")
+            #coordinator_dance = User(username="Dance Club", email_id="gymkhana.swifty@gmail.com", password=get_password_hash("dance123"), role="coordinator")
+            gensec = User(username="General Secretary", email_id="gensec.swifty@gmail.com", password=get_password_hash("admin123"), role="gensec")
+            
+            db.add_all([coordinator_music, gensec])
+            db.commit()
+            print("✅ Users seeded successfully.")
 
-        print("👤 Restoring Users...")
-        # Coordinators
-        coordinator_music = User(username="Music Club", email_id="vanshikaag24@iitk.ac.in", password=get_password_hash("music123"), role="coordinator")
-        coordinator_dance = User(username="Dance Club", email_id="dance@iitk.ac.in", password=get_password_hash("dance123"), role="coordinator")
-        coordinator_drama = User(username="Dramatics Club", email_id="drama@iitk.ac.in", password=get_password_hash("drama123"), role="coordinator")
-        coordinator_prog = User(username="Programming Club", email_id="prog@iitk.ac.in", password=get_password_hash("prog123"), role="coordinator")
-        
-        # Authorities
-        gensec = User(username="General Secretary", email_id="mharsh24@iitk.ac.in", password=get_password_hash("admin123"), role="gensec")
-        president = User(username="President Gymkhana", email_id="hmalgatte@gmail.com", password=get_password_hash("psg123"), role="president")
-        facad = User(username="Faculty Advisor", email_id="vanshikaagrawal1901@gmail.com", password=get_password_hash("admin123"), role="facad")
-        adsa = User(username="ADSA", email_id="vanshikaagrawal868@gmail.com", password=get_password_hash("admin123"), role="adsa")
-
-        db.add_all([
-            coordinator_music, coordinator_dance, coordinator_drama, coordinator_prog, 
-            gensec, president, facad, adsa
-        ])
-        
-        db.commit()
-        print("\n✅ SUCCESS! All users have been restored to the Neon database.")
+        # ==========================================
+        # 2. SAFELY SEED CLUBS (Independent Check)
+        # ==========================================
+       # ==========================================
+        # 2. SAFELY SEED OR UPDATE CLUBS
+        # ==========================================
+        if db.query(Club).first():
+            print("⏭️  Clubs already exist. Checking for missing emails...")
+            
+            # Find the specific club we want to update
+            music_club = db.query(Club).filter(Club.name == "Music Club").first()
+            
+            if music_club:
+                # Update just the email field
+                music_club.email = "gymkhana.swifty@gmail.com"
+                db.commit()
+                print("✅ Successfully updated the Music Club's email!")
+            else:
+                print("⚠️ Music Club not found in the database.")
+                
+        else:
+            print("🏢 Restoring Clubs...")
+            club_music = Club(name="Music Club", email="gymkhana.swifty@gmail.com", user_id=1, total_allocated=500000.0)
+            
+            db.add_all([club_music])
+            db.commit()
+            print("✅ Clubs seeded successfully.")
 
     except Exception as e:
-        print(f"\n❌ An error occurred while restoring users: {e}")
+        print(f"\n❌ An error occurred: {e}")
         db.rollback()
     finally:
         db.close()
 
 if __name__ == "__main__":
-    restore_users()
+    seed_database()
