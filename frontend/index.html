@@ -21,7 +21,7 @@
                             "pink-hover": "#fce7f3", 
                         },
                         "baby-pink": "#fdf2f8", 
-                        "background-dark": "#1a1013", 
+                        "background-dark": "#0f172a", 
                     },
                     fontFamily: {
                         display: ["Inter", "sans-serif"],
@@ -49,17 +49,17 @@
             background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
         }
         .dark .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
-        }
-        
+    /* Fades from the navy blue to an even deeper midnight blue for depth */
+    background-image: linear-gradient(to bottom right, #0f172a, #020617);
+}
         .event-card-hover:hover {
-            border-color: #f472b6;
-            background-color: #fdf2f8;
-        }
-        .dark .event-card-hover:hover {
-            background-color: rgba(244, 114, 182, 0.05);
-            border-color: #f472b6;
-        }
+    border-color: #cbd5e1; /* slate-300 */
+    background-color: #f8fafc; /* slate-50 */
+}
+.dark .event-card-hover:hover {
+    background-color: rgba(51, 65, 85, 0.4); /* slate-700 with opacity */
+    border-color: #475569; /* slate-600 */
+}
         .date-hover {
             @apply transition-colors duration-200 cursor-pointer;
         }
@@ -194,7 +194,7 @@
                 clearBtn.classList.remove('hidden');
             } else {
                 filteredEvents = [...allEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
-                document.getElementById('side-month-display').innerText = `Upcoming Events`;
+                document.getElementById('side-month-display').innerText = `View all the Upcoming Events of Students' Gymkhana.`;
                 clearBtn.classList.add('hidden');
             }
 
@@ -208,34 +208,109 @@
                 const [year, month, day] = event.date.split('-');
                 const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
                 const monthShort = monthNames[parseInt(month, 10) - 1];
+                
+                // Fallback ID if your API doesn't provide one natively in the initial fetch
+                const eventId = event.id || `evt-${event.date}-${event.event_title.replace(/\\s+/g, '')}`;
 
                 const cardHTML = `
-                <div class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex items-center space-x-8 transition-all cursor-pointer event-card-hover">
-                    <div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">${monthShort}</span>
-                        <span class="text-3xl font-black text-slate-800 dark:text-white">${day}</span>
-                        <span class="text-[10px] text-slate-400">${year}</span>
-                    </div>
-                    <div class="flex-grow">
-                        <div class="flex space-x-2 mb-2">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">${event.event_type}</span>
+                <div onclick="toggleEventDetails('${eventId}')" class="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 flex flex-col transition-all cursor-pointer event-card-hover">
+                    <div class="flex items-center space-x-8 w-full">
+                        <div class="flex-shrink-0 w-24 h-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">${monthShort}</span>
+                            <span class="text-3xl font-black text-slate-800 dark:text-white">${day}</span>
+                            <span class="text-[10px] text-slate-400">${year}</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">${event.event_title}</h3>
-                        <div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
-                            <div class="flex items-center">
-                                <span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
-                                ${event.venue_name}
+                        <div class="flex-grow">
+                            <div class="flex space-x-2 mb-2">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded transition-colors group-hover:bg-pink-100 group-hover:text-pink-600 dark:group-hover:bg-pink-900/40">${event.event_type}</span>
                             </div>
-                            <div class="flex items-center">
-                                <span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
-                                ${event.time}
+                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-slate-700 dark:group-hover:text-pink-300">${event.event_title}</h3>
+                            <div class="flex items-center space-x-6 mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                <div class="flex items-center">
+                                    <span class="material-symbols-outlined text-[16px] mr-1">location_on</span>
+                                    ${event.venue_name}
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="material-symbols-outlined text-[16px] mr-1">schedule</span>
+                                    ${event.time}
+                                </div>
                             </div>
+                        </div>
+                        <div class="flex-shrink-0 text-slate-400 transition-transform duration-300" id="icon-${eventId}">
+                            <span class="material-symbols-outlined text-2xl">expand_more</span>
+                        </div>
+                    </div>
+                    
+                    <div id="details-${eventId}" class="hidden w-full mt-6 pt-6 border-t border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm">
+                        <div class="flex items-center justify-center py-4">
+                            <span class="material-symbols-outlined animate-spin mr-2">progress_activity</span> Loading details...
                         </div>
                     </div>
                 </div>
                 `;
                 container.innerHTML += cardHTML;
             });
+        }
+
+        // Toggles the expansion of the event card and fetches detailed data
+        async function toggleEventDetails(eventId) {
+            const detailsContainer = document.getElementById(`details-${eventId}`);
+            const icon = document.getElementById(`icon-${eventId}`);
+            
+            // Toggle UI state
+            if (!detailsContainer.classList.contains('hidden')) {
+                detailsContainer.classList.add('hidden');
+                icon.style.transform = "rotate(0deg)";
+                return;
+            }
+            
+            detailsContainer.classList.remove('hidden');
+            icon.style.transform = "rotate(180deg)";
+            
+            // Prevent re-fetching if data is already loaded
+            if (detailsContainer.dataset.loaded === "true") {
+                return;
+            }
+            
+            try {
+                // Adjust this URL to match your exact backend route for single-event details
+                const response = await fetch(`${API_BASE_URL}/api/calendar/events/${eventId}`);
+                
+                if (!response.ok) throw new Error("Failed to fetch event details");
+                
+                const eventDetails = await response.json();
+                
+                // Populate the container with the fetched data
+                detailsContainer.innerHTML = `
+                    <div class="space-y-4 animate-fade-in">
+                        <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                            ${eventDetails.description || 'No additional description provided for this event.'}
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg">
+                            <div>
+                                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Organized By</span>
+                                <span class="font-medium text-slate-800 dark:text-slate-200">${eventDetails.organizer || 'N/A'}</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Contact</span>
+                                <span class="font-medium text-slate-800 dark:text-slate-200">${eventDetails.contact_email || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Mark as loaded so it doesn't fetch again on the next toggle
+                detailsContainer.dataset.loaded = "true";
+                
+            } catch (error) {
+                console.error("Error fetching event details:", error);
+                detailsContainer.innerHTML = `
+                    <div class="text-red-500 py-2 flex items-center">
+                        <span class="material-symbols-outlined mr-2">error</span>
+                        Could not load event details. Please try again later.
+                    </div>
+                `;
+            }
         }
 
         // Adjusts the calendar to view future or past cycles based on user input.

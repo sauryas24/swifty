@@ -168,4 +168,12 @@ class OTPVerify(BaseModel):
     email_id: str
     otp_code: str    
 
+# Add this schema for the detailed event fetch
+class CalendarEventDetailResponse(BaseModel):
+    id: int
+    description: str
+    organizer: str
+    contact_email: str
+
+    model_config = ConfigDict(from_attributes=True)
 

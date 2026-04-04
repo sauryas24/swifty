@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
-
+import string
+import secrets
 from .. import database, models, schemas
 from ..utils import security, email_service
 from .calendar import approve_and_publish_event
@@ -189,12 +190,24 @@ def process_mou_approval(
 
 # PERMISSION LETTER APPROVALS
 def _generate_permission_letter_id(db: Session) -> str:
-    # Generates a sequential ID for finalized permission letters.
+    """Generates a random, unique ID for finalized permission letters."""
     year = datetime.now().year
     prefix = f"PL-{year}-"
-    approved_this_year = db.query(models.PermissionLetter).filter(models.PermissionLetter.generated_id.like(f"{prefix}%")).count()
-    sequence = approved_this_year + 1
-    return f"{prefix}{sequence:04d}" 
+    
+    while True:
+        # Generate a random 6-character uppercase alphanumeric string
+        alphabet = string.ascii_uppercase + string.digits
+        random_suffix = ''.join(secrets.choice(alphabet) for _ in range(6))
+        generated_id = f"{prefix}{random_suffix}"
+        
+        # Query the database to ensure this random ID hasn't been used before
+        existing_letter = db.query(models.PermissionLetter).filter(
+            models.PermissionLetter.generated_id == generated_id
+        ).first()
+        
+        # If no match is found, the ID is unique and safe to use
+        if not existing_letter:
+            return generated_id
 
 @router.put("/permission/{letter_id}/process")
 def process_permission_approval(
