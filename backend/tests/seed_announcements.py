@@ -3,8 +3,6 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from unittest.mock import patch
-
-# Adjust these imports based on your actual project structure
 from app.main import app
 from app.database import get_db, Base
 from app.models import User, Announcement
