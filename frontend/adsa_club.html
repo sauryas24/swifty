@@ -21,13 +21,13 @@
         
         // Redirect to login if the user is unauthenticated or unauthorized
         if (!currentToken || !validRoles.includes(currentRole)) {
-            window.location.replace("select_role_login.html");
+            window.location.replace("Select_role_login.html");
         }
         
         // Re-check authentication when navigating via browser history
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
-                window.location.replace("select_role_login.html");
+                window.location.replace("Select_role_login.html");
             }
         });
     </script>
@@ -49,18 +49,31 @@
         };
     </script>
     <style type="text/tailwindcss">
-        /* Define global CSS variables and base styles */
-        :root { --bg-pink: #fdf2f8; --sidebar-width: 280px; }
-        body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
+        :root {
+            --bg-pink: #fdf2f8;
+            --sidebar-width: 260px;
+        }
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: var(--bg-pink);
+        }
         
-        /* Sidebar animation and layout adjustments */
-        .sidebar-drawer { transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
-        #sidebar-toggle:checked ~ .sidebar-drawer { transform: translateX(0); }
-        #sidebar-toggle:checked ~ .main-content { margin-left: var(--sidebar-width); }
-        .main-content { transition: margin-left 0.3s ease-in-out; }
+        /* Sidebar transition rules */
+        .sidebar-drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #sidebar-toggle:checked ~ .sidebar-drawer {
+            transform: translateX(0);
+        }
+        #sidebar-toggle:checked ~ .main-content {
+            margin-left: 260px;
+        }
+        .main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
         
-        /* Background gradient styling */
- .watermark-bg {
+        .watermark-bg {
     background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
     background-attachment: fixed;
 }
@@ -270,66 +283,53 @@
 
 <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
 
-<header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
-    <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-        <span class="material-icons-round">menu</span>
-    </label>
-    <div class="flex items-center gap-2">
-        <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase text-white">SWIFTY</span>
-        <span id="header-role-badge" class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2 uppercase">AUTHORITY</span>
-    </div>
-    <button id="logoutBtn" style="margin-left: auto; display: flex; align-items: center; background-color: #4b5563; color: white; border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500; text-transform: uppercase; border: none; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-        <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px;">logout</span>
-        <span>Logout</span>
-    </button>
-</header>
+<header class="fixed top-0 left-0 w-full h-16 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
 
-<aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto flex flex-col">
-    <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-        <div class="flex flex-col">
-            <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">DOSA OFFICE</span>
-            <span class="text-xs text-slate-500">Administration Module</span>
+        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+            <span class="material-icons-round text-2xl">menu</span>
+        </label>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">AUTHORITY</span>
         </div>
-    </div>
-    
-    <nav class="flex-1 px-4 py-4 space-y-1 custom-scrollbar">
-        <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-pink-700 dark:hover:text-white hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl mb-4 transition-colors">
-            <span class="material-icons-round text-xl">dashboard</span>
-            <span class="text-sm font-bold">Dashboard</span>
-        </a>
-        
-        <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Select Club</div>
-        
-        <a href="adsa_club.html?club_id=1" class="nav-club-link block px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2" data-id="1">
-            <span class="material-icons-round text-[16px] text-pink-500">music_note</span> Music Club
-        </a>
-        <a href="adsa_club.html?club_id=2" class="nav-club-link block px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2" data-id="2">
-            <span class="material-icons-round text-[16px] text-pink-500">directions_run</span> Dance Club
-        </a>
-        <a href="adsa_club.html?club_id=3" class="nav-club-link block px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2" data-id="3">
-            <span class="material-icons-round text-[16px] text-pink-500">theater_comedy</span> Dramatics Club
-        </a>
-        <a href="adsa_club.html?club_id=4" class="nav-club-link block px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2" data-id="4">
-            <span class="material-icons-round text-[16px] text-pink-500">terminal</span> Programming Club
-        </a>
-    </nav>
-    <div class="p-4 border-t border-pink-50 dark:border-pink-900/10 space-y-2 bg-slate-50 dark:bg-slate-900/50">
-        <button class="w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors rounded-lg hover:bg-pink-50 dark:hover:bg-pink-900/10" onclick="document.documentElement.classList.toggle('dark')">
-            <span class="material-icons-round text-[18px]">dark_mode</span>
-            <span>Toggle Theme</span>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
         </button>
-    </div>
-</aside>
+    </header>
 
-<main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-    <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-        <div>
-            <h1 class="text-2xl md:text-3xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">
-                <span id="role-title">AUTHORITY</span> / <span class="text-pink-600" id="club-title">Loading...</span>
-            </h1>
-        </div>
-    </div>
+<aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100vh-4rem)] w-[260px] bg-white border-r border-slate-200 z-50 overflow-y-auto flex flex-col">
+        
+        <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+            <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-slate-900 font-bold rounded-xl mb-4 hover:bg-slate-300 transition-colors">
+    <span class="material-icons-round text-xl">dashboard</span>
+    <span class="text-sm">Dashboard</span>
+</a>
+            
+            <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
+            
+            <a href="adsa_club.html?club_id=1" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-slate-500">music_note</span> Music Club
+            </a>
+            <a href="adsa_club.html?club_id=2" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-slate-500">directions_run</span> Dance Club
+            </a>
+            <a href="adsa_club.html?club_id=3" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-slate-500">theater_comedy</span> Dramatics Club
+            </a>
+            <a href="adsa_club.html?club_id=4" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-icons-round text-[16px] text-slate-500">terminal</span> Programming Club
+            </a>
+        </nav>
+    </aside>
 
+<main class="main-content ml-0 mt-16 p-0 relative watermark-bg min-h-screen">
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 w-full px-8 py-5 flex items-center sticky top-16 z-40 shadow-sm sb-6">
+    <h1 id="club-title" class="text-xl md:text-2xl font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
+        Loading...
+    </h1>
+</div>
     <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 pb-12">
         <div class="lg:col-span-2 space-y-8">
             
@@ -342,7 +342,7 @@
                     <div class="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div id="budget-progress-bar" class="h-full bg-pink-500 transition-all duration-1000" style="width: 0%"></div>
                     </div>
-                    <p id="budget-percent-text" class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider">0% of annual budget utilized</p>
+                    <p id="budget-percent-text" class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider"> Budget utilized: 0%</p>
                 </div>
             </div>
 
@@ -397,7 +397,7 @@
 
     // Dynamically apply the user's role to the interface elements
     const displayRole = localStorage.getItem("displayRoleName") || "ADSA";
-    document.getElementById("role-title").innerText = displayRole.toUpperCase();
+    //document.getElementById("main-dashboard-title").innerText = displayRole + " Dashboard";
     document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
 
     // Attach functionality to terminate the user session securely
@@ -440,7 +440,7 @@
             
             const percent = Math.min(100, Math.round(finData.utilization_percentage));
             document.getElementById("budget-progress-bar").style.width = `${percent}%`;
-            document.getElementById("budget-percent-text").innerText = `${percent}% of annual budget utilized`;
+            document.getElementById("budget-percent-text").innerText = `Budget utilized: ${percent}% `;
 
             const billsTbody = document.getElementById("bills-tbody");
             billsTbody.innerHTML = "";
@@ -495,13 +495,27 @@
         }
 
         data.forEach(req => {
-            const dateStr = new Date(req.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
-            
+            const lowerStatus = (req.status || "").toLowerCase();
+            const isPending = lowerStatus.includes("pending");
+
+            // SMART DATE LOGIC: Use updated_at for processed items, fallback to timestamp for pending
+            let displayDate = req.timestamp;
+            if (!isPending && req.updated_at && req.updated_at !== "N/A") {
+                displayDate = req.updated_at;
+            }
+
+            // Safely parse the determined date
+            let dateStr = "N/A";
+            if (displayDate) {
+                const dateObj = new Date(displayDate);
+                if (!isNaN(dateObj)) {
+                    dateStr = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                }
+            }
             // Determine the visual style depending on the current status of the request
             let borderClass = "border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 hover:border-pink-200";
             let badgeClass = "bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400";
             
-            const lowerStatus = req.status.toLowerCase();
             if(lowerStatus.includes('approved')) { 
                 borderClass = "border-pink-50 dark:border-pink-900/10 bg-pink-50/30 dark:bg-pink-900/5 hover:border-pink-200"; 
                 badgeClass = "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400"; 
@@ -511,9 +525,8 @@
                 badgeClass = "bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400"; 
             }
 
-            const isPending = lowerStatus.includes("pending");
-            const clickEvent = isPending ? `onclick="openApprovalModal(${req.id})"` : "";
-            const cursorClass = isPending ? "cursor-pointer hover:shadow-md" : "cursor-default opacity-90";
+            const clickEvent = `onclick="openApprovalModal(${req.id})"`; 
+            const cursorClass = "cursor-pointer hover:shadow-md opacity-90";
 
             sideList.innerHTML += `
                 <div ${clickEvent} class="p-4 rounded-xl border ${borderClass} transition-all group ${cursorClass}">
@@ -527,7 +540,7 @@
             `;
 
             fullTbody.innerHTML += `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                <tr onclick="openApprovalModal(${req.id})" class="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 whitespace-nowrap">${dateStr}</td>
                     <td class="px-6 py-4 text-sm font-bold text-slate-800 dark:text-slate-200">${req.type}</td>
                     <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 truncate max-w-xs">${req.event_title || req.details || "N/A"}</td>
@@ -680,13 +693,35 @@
         }
 
         // Fill the standard text fields
+        // Fill the standard text fields
         titleInput.value = reqData.event_title || "N/A";
         detailsInput.value = reqData.details || "No details provided.";
         
-        // Reset Rejection UI block
-        document.getElementById("rejection-reason-container").classList.add("hidden");
+        const isPending = reqData.status.toLowerCase().includes("pending");
+        const isRejected = reqData.status.toLowerCase().includes("reject");
+
+        // 1. Toggle Action Buttons based on status
+        if (isPending) {
+            document.getElementById("default-action-buttons").classList.remove("hidden");
+        } else {
+            document.getElementById("default-action-buttons").classList.add("hidden");
+        }
+        
+        // 2. Handle Rejection Reason UI
+        const rejectContainer = document.getElementById("rejection-reason-container");
+        const rejectInput = document.getElementById("rejection-reason-input");
+        
+        if (isRejected && reqData.comments) {
+            rejectContainer.classList.remove("hidden");
+            rejectInput.value = reqData.comments;
+            rejectInput.readOnly = true; // Lock it so they can just read it
+        } else {
+            rejectContainer.classList.add("hidden");
+            rejectInput.value = "";
+            rejectInput.readOnly = false; // Reset for pending requests
+        }
+
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
-        document.getElementById("default-action-buttons").classList.remove("hidden");
 
         document.getElementById("modal-request-review-toggle").checked = true;
     }
@@ -725,8 +760,12 @@
     // Setup interface state when the user selects the 'Reject' option
     document.getElementById("btn-initial-reject").addEventListener("click", () => {
         document.getElementById("default-action-buttons").classList.add("hidden");
+        const rejectInput = document.getElementById("rejection-reason-input");
+        rejectInput.readOnly = false; // Unlock for typing
+        rejectInput.value = ""; 
         document.getElementById("rejection-reason-container").classList.remove("hidden");
         document.getElementById("confirm-reject-buttons").classList.remove("hidden");
+        rejectInput.focus();
     });
     
     // Cancel the rejection process and return to normal review options
@@ -734,6 +773,7 @@
         document.getElementById("rejection-reason-container").classList.add("hidden");
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
         document.getElementById("default-action-buttons").classList.remove("hidden");
+
     });
 
     // Processes the final rejection of a request after a reason is provided

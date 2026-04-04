@@ -36,11 +36,13 @@
         :root { --bg-pink: #fdf2f8; }
         body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
         .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
-        }
-        .dark .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
-        }
+    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+    background-attachment: fixed;
+}
+.dark .watermark-bg {
+    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+    background-attachment: fixed;
+}
         .otp-input {
             width: 3rem;
             height: 3.5rem;
@@ -65,21 +67,22 @@
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 watermark-bg flex flex-col">
 
-    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
-        <div class="flex items-center gap-2">
-            <span class="font-display font-bold text-lg tracking-widest uppercase">SWIFTY</span>
-            <span class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2">COORDINATOR</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider cursor-pointer" href="#">
-                <span class="material-icons-round text-sm">arrow_back</span>
-                Back
-            </a>
-            <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
-                <span class="material-icons-round text-xl">dark_mode</span>
-            </button>
-        </div>
-    </header>
+<header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 dark:bg-black text-white flex items-center justify-between px-6 z-[60] shadow-md border-b border-pink-900/20">
+    <div class="flex items-center gap-4 h-full">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+
+    </div>
+
+    <div class="flex items-center gap-4">
+        <a id="goBack" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider" href="#">
+            <span class="material-icons-round text-sm">calendar_today</span>
+            Calendar
+        </a>
+        <button class="text-slate-400 hover:text-pink-500 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+            <span class="material-icons-round text-xl">dark_mode</span>
+        </button>
+    </div>
+</header>
 
     <main class="flex-1 flex items-center justify-center p-6 mt-14">
         <div class="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-10 md:p-14 text-center">
@@ -109,7 +112,7 @@
                 </div>
                 
                 <button id="verifyButton" class="w-full bg-slate-900 dark:bg-primary text-white h-12 rounded-xl font-display font-bold text-sm uppercase tracking-wide flex items-center justify-center space-x-3 hover:bg-primary dark:hover:bg-pink-700 transition-all mt-8 shadow-lg shadow-slate-900/10" type="submit">
-                    <span>Verify & Continue</span>
+                    <span>Verify</span>
                     <span class="material-icons-round text-sm">check_circle</span>
                 </button>
 

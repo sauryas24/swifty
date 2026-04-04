@@ -1,42 +1,54 @@
 import os
-import smtplib
-from email.message import EmailMessage
+import requests
 from dotenv import load_dotenv
 
+load_dotenv()
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-env_path = r"D:\vs code\CS_253 project\swifty\backend\app\utils\.env"
-env_path = "/Users/vasugoyal/SWIFTY/swifty/backend/app/utils/hi.env"
-
-
-load_dotenv(dotenv_path=env_path)
-
-SMTP_SERVER = os.getenv("SMTP_SERVER")
-print(f"DEBUG - My SMTP Server is: {SMTP_SERVER}")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+# Grab the credentials from Render
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL") 
 
 def send_notification_email(to_email: str, subject: str, body: str):
-    # # --- DEV BYPASS: Comment this out when deploying to production! ---
-    # print(f"\n" + "="*50)
-    # print(f"📧 PRETENDING TO SEND EMAIL TO: {to_email}")
-    # print(f"📝 EMAIL CONTENT:\n{body}")
-    # print("="*50 + "\n")
-    # return True 
-    # ------------------------------------------------------------------
-    msg = EmailMessage()
-    msg.set_content(body)
-    msg['Subject'] = subject
-    msg['From'] = SENDER_EMAIL
-    msg['To'] = to_email
+    print("\n" + "="*50)
+    print(f"🚀 PREPARING TO SEND EMAIL TO: {to_email}")
+    
+    if not BREVO_API_KEY:
+        print("❌ ERROR: BREVO_API_KEY is missing from environment variables!")
+        return False
+
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+
+    payload = {
+        "sender": {"email": SENDER_EMAIL, "name": "Swifty App"},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        # We wrap your body text in basic HTML so it formats nicely
+        "htmlContent": f"<html><body><p>{body}</p></body></html>" 
+    }
 
     try:
-        server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT)
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.send_message(msg)
-        server.quit()
+        print("🌐 Connecting to Brevo API over Port 443 (HTTPS)...")
+        # Send the web request (Render cannot block this!)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        
+        # If Brevo replies with an error (like an invalid email), this catches it
+        response.raise_for_status() 
+        
+        print("✅ SUCCESS! Email delivered via API.")
+        print("="*50 + "\n")
         return True
+        
     except Exception as e:
+        print("\n" + "!"*40)
+        print("❌ API EMAIL FAILED! EXACT ERROR:")
         print(e)
+        # If Brevo sends back a specific error message, print it out
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Brevo says: {e.response.text}")
+        print("!"*40 + "\n")
         return False

@@ -37,6 +37,15 @@
         }
     </script>
     <style type="text/tailwindcss">
+        .watermark-bg {
+            background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+            background-attachment: fixed;
+        }
+        .dark .watermark-bg {
+            background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+            background-attachment: fixed;
+        }
+
         /* Creates the subtle dotted background pattern effect for depth. */
         .dot-pattern {
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
@@ -54,17 +63,17 @@
         }
     </style>
 </head>
-<body class="font-display bg-background-light dark:bg-background-dark min-h-screen transition-colors duration-200">
-    <header class="fixed top-0 left-0 right-0 h-16 bg-[#0E1116] dark:bg-[#050505] flex items-center justify-between px-6 z-50">
-        <div class="flex items-center">
-            <span class="text-white swifty-logo text-xl">SWIFTY</span>
+
+<body class="font-display watermark-bg min-h-screen transition-colors duration-200">
+    <header class="fixed top-0 left-0 right-0 h-16 bg-[#0E1116] dark:bg-[#050505] flex items-center justify-between px-6 z-50 border-b border-pink-900/20 shadow-md">
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
         </div>
-        <div class="flex items-center space-x-6 text-gray-300">
-            <a id="back-to-calendar" class="flex items-center space-x-2 text-sm hover:text-white transition-colors cursor-pointer">
-                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                <span class="font-medium">Back to Calendar</span>
-            </a>
-        </div>
+
+        <a id="back-to-calendar" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+            <span class="font-medium">Calendar</span>
+        </a>
     </header>
     
     <main class="relative pt-16 min-h-screen flex items-center justify-center overflow-hidden">
@@ -108,10 +117,8 @@
             </div>
         </div>
     </main>
+    
     <div class="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-pink-100/30 dark:from-pink-900/5 to-transparent pointer-events-none z-0"></div>
-
-</body>
-<div class="fixed bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-pink-100/30 dark:from-pink-900/5 to-transparent pointer-events-none z-0"></div>
 
     <script>
         // Configures the structural back path out of the login portal.    

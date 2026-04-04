@@ -6,28 +6,22 @@
     <title>Venue Booking - SWIFTY</title>
     <script src="config.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: "#db2777", // Pink-600
-                        "baby-pink": "#fdf2f8",
-                        "accent-pink": "#fce7f3",
-                        "background-dark": "#1a1013",
-                        "swifty-blue": "#2563eb",
-                        "swifty-purple": "#7c3aed",
+                        primary: "#db2777", // Swifty Pink
+                        "baby-pink": "#fdf2f8", // Original Background
                     },
                     fontFamily: {
-                        display: ["Outfit", "Inter", "sans-serif"],
                         sans: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "12px",
                     },
                 },
             },
@@ -36,7 +30,7 @@
     <style type="text/tailwindcss">
         :root {
             --bg-pink: #fdf2f8;
-            --sidebar-width: 280px;
+            --sidebar-width: 260px;
         }
         body {
             font-family: "Inter", sans-serif;
@@ -58,71 +52,37 @@
             transition: margin-left 0.3s ease-in-out;
         }
         .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
-        }
-        .dark .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
-        }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background-color: rgba(219, 39, 119, 0.2); border-radius: 20px; }
+    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+    background-attachment: fixed;
+}
+.dark .watermark-bg {
+    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+    background-attachment: fixed;
+}
+
     </style>
 </head>
-<body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+<body class="bg-[#fdf2f8] text-slate-900 min-h-screen transition-colors duration-200">
     
     <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
     
-    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+    <header class="fixed top-0 left-0 right-0 h-16 bg-slate-900 text-white flex items-center px-6 z-[60] shadow-md border-b border-pink-900/20">
         <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-            <span class="material-icons-round">menu</span>
+            <span class="material-icons-round text-2xl">menu</span>
         </label>
-        <div class="flex items-center gap-2">
-            <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">COORDINATOR</span>
         </div>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
+            <span>Logout</span>
+        </button>
     </header>
-
-    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto">
-        <div class="flex flex-col h-full">
-            <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-                <div class="flex flex-col">
-                    <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">SWIFTY</span>
-                </div>
-            </div>
-            <nav class="flex-1 px-4 py-4 space-y-1">
-                <a id="dashboard" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">dashboard</span>
-                    <span class="text-sm">Dashboard</span>
-                </a>
-                <a class="finances flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">account_balance_wallet</span>
-                    <span class="text-sm">Finances</span>
-                </a>
-                <a class="permission_letter flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">description</span>
-                    <span class="text-sm">Permission Letter</span>
-                </a>
-                <a class="MOU_form flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">assignment</span>
-                    <span class="text-sm">MOU Form</span>
-                </a>
-                <a class="venue_booking flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">event_seat</span>
-                    <span class="text-sm">Venue Booking</span>
-                </a>
-                <a class="past_requests flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-xl transition-colors mt-2" href="#">
-                    <span class="material-icons-round text-xl">history</span>
-                    <span class="text-sm">Past Requests</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
-
-    <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-        
-        <div class="bg-white dark:bg-slate-900 px-6 py-6 md:px-10 lg:px-16 shadow-sm border-b border-pink-100 dark:border-gray-800 sticky top-0 z-10">
-            <h1 id="clubName" class="text-slate-900 dark:text-white uppercase tracking-tighter text-3xl font-bold leading-tight"></h1>
-        </div>
-
+    <div id="sidebar-container"></div>
+    <main class="main-content ml-0 mt-20 p-0 relative min-h-screen">
+    
         <div class="px-8 pt-8 pb-32 max-w-6xl mx-auto relative z-10">
             
             <form id="booking-form" class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden">
@@ -194,7 +154,7 @@
                     <div class="space-y-5 max-w-3xl">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="event-title">Event Title</label>
-                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="event-title" placeholder="e.g. End Semester Jam Session" type="text"/>
+                            <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="event-title" placeholder="Provide the name of your event" type="text"/>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
@@ -213,12 +173,12 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="details">Purpose / Additional Details</label>
-                            <textarea class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="details" placeholder="Please describe the equipment needed or any special requests..." rows="4"></textarea>
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="details">Logistics & Special Requests</label>
+                            <textarea class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="details" placeholder="Let us know about any specific equipment, layout needs or other accommodations required." rows="4"></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="permission-id">
-                                Permission Letter ID <span class="text-pink-600 font-normal text-xs ml-1">(Must be fully Approved)</span>
+                                Approved Permission Letter ID <span class="text-pink-600 font-normal text-xs ml-1">(Required)</span>
                             </label>
                             <input class="w-full rounded-xl border-pink-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-pink-500 focus:ring-pink-500 shadow-sm placeholder:text-slate-400" id="permission-id" placeholder="e.g. PL-2026-0001" type="text"/>
                         </div>
@@ -226,7 +186,7 @@
                 </div>
 
                 <div class="p-6 bg-pink-50/30 dark:bg-slate-900 border-t border-pink-100 dark:border-pink-900/10 flex items-center justify-between">
-                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md">By clicking submit, you agree to the Institute Venue Policy. Request will be sent to the DOSA office for final approval.</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md">By submitting, you agree to the Institute Venue Policy. Request will be sent to the DOSA office for final approval.</p>
                     <button id="submit-booking-btn" class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3 rounded-xl font-bold text-sm shadow-lg shadow-pink-500/30 transition-all flex items-center gap-2" type="button">
                         <span>Submit Booking Request</span>
                         <span class="material-icons-round text-[18px]">send</span>
@@ -238,20 +198,30 @@
     </main>
     <script>
         // Maps the sidebar links to correctly transition context safely.
-        const finances = document.querySelectorAll(".finances");
-        const permission_letter = document.querySelectorAll(".permission_letter");
-        const MOU_form = document.querySelectorAll(".MOU_form");
-        const venue_booking = document.querySelectorAll(".venue_booking");
-        const past_requests = document.querySelectorAll(".past_requests");
-        const dashboard = document.getElementById("dashboard");
-        
-        if(dashboard) dashboard.addEventListener("click", (e) => { e.preventDefault(); window.location.href= "Coordinator_homepage.html"; });
-        finances.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Finances.html"; }));
-        MOU_form.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "Mou.html"; }));
-        venue_booking.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }));
-        permission_letter.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "permissionletter.html"; }));
-        past_requests.forEach(b => b.addEventListener("click", (e) => { e.preventDefault(); window.location.href = "past requests.html"; }));
+        // --- 1. NAVIGATION & LOGOUT LOGIC ---
+        // Using event delegation to safely handle clicks, even for dynamically loaded sidebar items
+        document.body.addEventListener("click", function(event) {
+            const target = event.target.closest('a, button, li'); 
+            if (!target) return;
 
+            // Logout Logic
+            if (target.id === "logoutBtn") {
+                event.preventDefault();
+                localStorage.clear();
+                window.location.replace("Select_role_login.html"); 
+                return;
+            }
+            
+            // Sidebar Navigation Logic
+            if(target.id === "dashboard") { event.preventDefault(); window.location.href= "Coordinator_homepage.html"; }
+            else if (target.classList.contains("finances")) { event.preventDefault(); window.location.href = "Finances.html"; }
+            else if (target.classList.contains("MOU_form")) { event.preventDefault(); window.location.href = "Mou.html"; }
+            else if (target.classList.contains("venue_booking")) { event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+            else if (target.classList.contains("permission_letter")) { event.preventDefault(); window.location.href = "permissionletter.html"; }
+            else if (target.classList.contains("past_requests")) { event.preventDefault(); window.location.href = "past requests.html"; }
+        });
+
+        // --- 2. USER CONTEXT LOGIC ---
         // Accesses logged credentials to customize and authenticate user operations.
         const clubName = document.getElementById("clubName");
         const enterName = localStorage.getItem("club");
@@ -261,6 +231,7 @@
             clubName.textContent = enterName.toUpperCase();
         }
 
+        // --- 3. VENUE BOOKING STATE LOGIC ---
         // Maintains the currently selected scheduling boundaries.
         let selectedDate = null;
         let selectedTime = null;
@@ -273,7 +244,6 @@
         timeButtons.forEach(btn => {
             btn.dataset.time = btn.innerText.trim();
         });
-        
         // Binds event listeners onto the date selector, restricting historical bookings.
         if (dateInput) {
             const today = new Date().toISOString().split('T')[0];
@@ -485,5 +455,6 @@
             });
         }
     </script>
+    <script src="components/sidebar.js"></script>
 </body>
 </html>

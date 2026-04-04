@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
+    <script src="components/auth.js"></script>
+  <script>
+    protectPage(["adsa", "gensec", "facad", "president"]); 
+  </script>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     
@@ -20,13 +24,13 @@
         
         // If credentials are missing or incorrect, bounce back to the login screen
         if (!currentToken || !validRoles.includes(currentRole)) {
-            window.location.replace("select_role_login.html"); 
+            window.location.replace("Select_role_login.html"); 
         }
         
         // Re-validate token presence when using back/forward browser navigation
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
-                window.location.replace("select_role_login.html");
+                window.location.replace("Select_role_login.html");
             }
         });
     </script>
@@ -62,7 +66,7 @@
         /* Base application variables and styling */
         :root {
             --bg-pink: #fdf2f8;
-            --sidebar-width: 280px;
+            --sidebar-width: 260px;
         }
         body {
             font-family: "Inter", sans-serif;
@@ -78,7 +82,7 @@
             transform: translateX(0);
         }
         #sidebar-toggle:checked ~ .main-content {
-            margin-left: var(--sidebar-width);
+            margin-left: 260px;
         }
         .main-content {
             transition: margin-left 0.3s ease-in-out;
@@ -86,11 +90,13 @@
         
         /* Themed background properties */
         .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(251, 231, 239, 0.6), rgba(253, 242, 248, 0.9));
-        }
-        .dark .watermark-bg {
-            background-image: linear-gradient(to bottom right, rgba(26, 16, 19, 0.95), rgba(45, 27, 34, 0.9));
-        }
+    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+    background-attachment: fixed;
+}
+.dark .watermark-bg {
+    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+    background-attachment: fixed;
+}
         .nav-item-active {
             @apply bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold;
         }
@@ -121,6 +127,10 @@
         #modal-otp-toggle:checked ~ body { 
             overflow: hidden; 
         }
+
+        /* Detail Modal Toggle Logic */
+        #modal-announcement-detail-toggle:checked ~ #modal-announcement-detail-overlay { display: flex; }
+        #modal-announcement-detail-toggle:checked ~ body { overflow: hidden; }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
@@ -129,66 +139,60 @@
     <input class="hidden" id="request-review-toggle" type="checkbox"/>
     <input class="hidden" id="modal-otp-toggle" type="checkbox"/>
     
-    <header class="fixed top-0 left-0 right-0 h-14 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+
+    <header class="fixed top-0 left-0 w-full h-16 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
+
         <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-            <span class="material-icons-round">menu</span>
+            <span class="material-icons-round text-2xl">menu</span>
         </label>
-        <div class="flex items-center gap-2">
-            <span class="font-display font-bold text-xs md:text-sm tracking-widest uppercase">SWIFTY</span>
-            <span id="header-role-badge" class="text-xs text-pink-500 font-medium tracking-wide border-l border-slate-700 pl-2 ml-2 uppercase">AUTHORITY</span>
+        <div class="flex items-center gap-4">
+            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+            <span class="h-6 w-px bg-slate-700"></span>
+            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">AUTHORITY</span>
         </div>
-        <button id="logoutBtn" style="margin-left: auto;display: flex; align-items: center; background-color: #4b5563; color: white; border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500; text-transform: uppercase; border: none; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); outline: none;">
-            <span class="material-symbols-outlined" style="font-size: 16px; margin-right: 6px;">logout</span>
+        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">logout</span>
             <span>Logout</span>
         </button>
     </header>
 
-    <aside class="sidebar-drawer fixed left-0 top-14 h-[calc(100%-3.5rem)] w-[280px] bg-white dark:bg-slate-900 border-r border-pink-100 dark:border-pink-900/20 z-50 overflow-y-auto flex flex-col">
-        <div class="p-6 border-b border-pink-50 dark:border-pink-900/10">
-            <div class="flex flex-col">
-                <span class="font-display font-bold text-lg tracking-tight text-slate-900 dark:text-white">DOSA OFFICE</span>
-                <span class="text-xs text-slate-500">Administration Module</span>
-            </div>
-        </div>
+    <aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100vh-4rem)] w-[260px] bg-white border-r border-slate-200 z-50 overflow-y-auto flex flex-col">
         
         <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-            <a class="flex items-center gap-3 px-4 py-3 nav-item-active rounded-xl mb-4" href="#">
-                <span class="material-icons-round text-xl">dashboard</span>
-                <span class="text-sm">Dashboard</span>
-            </a>
+            <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-slate-900 font-bold rounded-xl mb-4 hover:bg-slate-300 transition-colors">
+    <span class="material-icons-round text-xl">dashboard</span>
+    <span class="text-sm">Dashboard</span>
+</a>
             
             <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
             
             <a href="adsa_club.html?club_id=1" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">music_note</span> Music Club
+                <span class="material-icons-round text-[16px] text-slate-500">music_note</span> Music Club
             </a>
             <a href="adsa_club.html?club_id=2" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">directions_run</span> Dance Club
+                <span class="material-icons-round text-[16px] text-slate-500">directions_run</span> Dance Club
             </a>
             <a href="adsa_club.html?club_id=3" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">theater_comedy</span> Dramatics Club
+                <span class="material-icons-round text-[16px] text-slate-500">theater_comedy</span> Dramatics Club
             </a>
             <a href="adsa_club.html?club_id=4" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-pink-500">terminal</span> Programming Club
+                <span class="material-icons-round text-[16px] text-slate-500">terminal</span> Programming Club
             </a>
         </nav>
-
-        <div class="p-4 border-t border-pink-50 dark:border-pink-900/10 space-y-2 bg-slate-50 dark:bg-slate-900/50">
-            <button class="w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 transition-colors rounded-lg hover:bg-pink-50 dark:hover:bg-pink-900/10" onclick="document.documentElement.classList.toggle('dark')">
-                <span class="material-icons-round text-[18px]">dark_mode</span>
-                <span>Toggle Theme</span>
-            </button>
-        </div>
     </aside>
 
-    <main class="main-content ml-0 mt-14 p-0 relative watermark-bg min-h-screen">
-        <div class="bg-white dark:bg-slate-900 border-b border-pink-100 dark:border-pink-900/20 w-full px-8 py-6 mb-8 flex justify-between items-center relative z-10 shadow-sm">
-            <div>
-                <h1 id="main-dashboard-title" class="text-4xl font-display font-black text-slate-900 dark:text-white uppercase tracking-tighter">Dashboard</h1>
-            </div>
-        </div>
+    <main class="main-content ml-0 mt-16 p-0 relative watermark-bg min-h-screen">
+        <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 w-full px-8 py-5 flex justify-between items-center sticky top-16 z-40 shadow-sm">
+    <div class="flex flex-col">
+        <p id="main-dashboard-title" class="text-lg font-bold tracking-wide text-slate-900 mb-0">
+</p>
+        <h1 id="clubName" class="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+        </h1>
+    </div>
+    <div class="flex items-center gap-4"></div>
+</div>
         
-        <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+        <div class="px-8 pt-8 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
             <div class="lg:col-span-2 space-y-8">
                 <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 overflow-hidden flex flex-col min-h-[500px]">
                     <div class="p-6 border-b border-pink-50 dark:border-pink-900/10 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900">
@@ -249,16 +253,16 @@
             
             <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar">
                 <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Subject Heading</label>
-                    <input id="input-announcement-title" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none" placeholder="e.g., Immediate Submission of Budgets" type="text"/>
+                    <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Announcement Title</label>
+                    <input id="input-announcement-title" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none" placeholder="Enter the Announcement Title" type="text"/>
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Message Content</label>
-                    <textarea id="input-announcement-content" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none resize-none" placeholder="Enter detailed instruction..." rows="4"></textarea>
+                    <textarea id="input-announcement-content" class="w-full bg-slate-50 dark:bg-slate-800 border-pink-50 dark:border-pink-900/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 transition-all text-sm outline-none resize-none" placeholder="Enter details" rows="4"></textarea>
                 </div>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Target Audience (Clubs)</label>
+                        <label class="text-sm font-bold text-slate-700 dark:text-slate-300">Select Recipients</label>
                         <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Scroll to select</span>
                     </div>
                     <div class="bg-slate-50 dark:bg-slate-800 rounded-xl border border-pink-50 dark:border-pink-900/10 p-3 max-h-40 overflow-y-auto custom-scrollbar">
@@ -395,6 +399,10 @@
         </div>
     </div>
 
+
+
+
+
     <script>
         // System variables needed for network calls
         const API_BASE = "http://127.0.0.1:8000/api"; 
@@ -408,9 +416,19 @@
         };
 
         // Match UI elements to represent the authenticated individual's role
-        const displayRole = localStorage.getItem("displayRoleName") || localStorage.getItem("userRole") || "Authority";
-        document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
-        document.getElementById("main-dashboard-title").innerText = displayRole.toUpperCase() + " DASHBOARD";
+        const roleMap = {
+    authority: "Authority Dashboard",
+    adsa: "ADSA Dashboard",
+    gensec: "General Secretary Dashboard",
+    president: "President Dashboard",
+    facad: "Faculty Advisor Dashboard"
+};
+
+const rawRole = localStorage.getItem("userRole") || "authority";
+const dashboardTitle = roleMap[rawRole.toLowerCase()] || "Authority Dashboard";
+
+document.getElementById("header-role-badge").innerText = dashboardTitle.replace(" Dashboard", "").toUpperCase();
+document.getElementById("main-dashboard-title").innerText = dashboardTitle;
 
         // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
@@ -505,23 +523,28 @@
 
                 let statusBadge = ""; 
                 let timeStampHtml = "";
-                
-                if (req.timestamp || req.updated_at) {
-                    const dateObj = new Date(req.updated_at || req.timestamp);
-                    const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-                    timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: ${dateStr}</div>`;
-                }
 
-                if (currentTab === 'processed') {
-                    const statusStr = (req.status || "").toLowerCase();
-                    const isApproved = statusStr.includes('approved');
-                    const sColor = isApproved ? 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded' : 'text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded';
-                    const sIcon = isApproved ? 'check_circle' : 'cancel';
-                    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
-                }
+if (currentTab === 'processed') {
+    // 1. STRICTLY use updated_at. Do NOT fall back to req.timestamp (the event date).
+    if (req.updated_at && req.updated_at !== "N/A") {
+        const dateObj = new Date(req.updated_at);
+        const dateStr = dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: ${dateStr}</div>`;
+    } else {
+        // Fallback if the database hasn't recorded an update time yet
+        timeStampHtml = `<div class="text-[10px] text-slate-400 font-medium mt-1">Processed: Date Unavailable</div>`;
+    }
 
-                const wrapStart = currentTab === 'pending' ? `<label class="cursor-pointer block w-full h-full" for="request-review-toggle">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
-                const wrapEnd = currentTab === 'pending' ? `</label>` : `</div>`;
+    // 2. Existing Status Badge Logic
+    const statusStr = (req.status || "").toLowerCase();
+    const isApproved = statusStr.includes('approved');
+    const sColor = isApproved ? 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded' : 'text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded';
+    const sIcon = isApproved ? 'check_circle' : 'cancel';
+    statusBadge = `<span class="flex items-center gap-1 ${sColor} text-[10px] font-bold uppercase tracking-wider ml-3"><span class="material-icons-round text-[14px]">${sIcon}</span> ${req.status}</span>`;
+}
+
+                const wrapStart = currentTab === 'pending' ? `<div class="cursor-pointer block w-full h-full">` : `<div class="block w-full h-full cursor-pointer" onclick="openHistoryModal(${req.id})">`;
+                const wrapEnd = `</div>`;
 
                 const tr = `
                     <tr data-id="${req.id}" class="transition-colors border-b border-pink-50 dark:border-pink-900/10 ${rowInteraction}">
@@ -534,7 +557,7 @@
                         <td class="px-6 py-5 text-sm max-w-[250px] truncate">
                             ${wrapStart}
                                 <div class="flex items-center">
-                                    <span class="block font-medium text-slate-700 dark:text-slate-300 truncate" title="${req.event_title || req.details || 'No Title'}">${req.event_title || req.details || 'No Title'}</span>
+                                 <span class="block font-medium text-slate-700 dark:text-slate-300 truncate" title="${req.event_title || req.details || 'No Title'}">${req.event_title || req.details || 'No Title'}</span>
                                     ${statusBadge}
                                 </div>
                                 ${currentTab === 'processed' ? timeStampHtml : ''}
