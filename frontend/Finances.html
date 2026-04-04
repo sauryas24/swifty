@@ -95,7 +95,7 @@
             <div class="w-full space-y-8">
                 
                 <div class="bg-white rounded-2xl p-8 border border-pink-100 dark:border-pink-900/20 shadow-sm">
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Club Budget Status</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Financial Overview</div>
                     <div class="flex items-baseline gap-4 mb-6">
                         <span id="spentAmount" class="text-4xl font-display font-bold text-slate-900">Loading...</span>
                         <span id="totalBudget" class="text-xl font-medium text-slate-400">/ Loading...</span>
@@ -179,7 +179,7 @@
             
             const percent = data.utilization_percentage || 0;
             document.getElementById("progressBar").style.width = `${percent}%`;
-            document.getElementById("budgetUtilized").textContent = `${percent}% of annual budget utilized`;
+            document.getElementById("budgetUtilized").textContent = ` Budget utilized: ${percent}%`;
 
             // Populate Table
             const tableBody = document.getElementById("transactionsTable");

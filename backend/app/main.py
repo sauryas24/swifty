@@ -33,12 +33,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # Configure Cross-Origin Resource Sharing (CORS)
+# Configure Cross-Origin Resource Sharing (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "*"
-],
-    allow_credentials=False,
+        "https://swifty-tau.vercel.app",  # <--- Explicitly allows your live Vercel site
+        "http://localhost:5500",          # Allows your local VS Code Live Server
+        "http://127.0.0.1:5500"
+    ],
+    allow_credentials=True,               # <--- MUST be True for login tokens to work on Vercel
     allow_methods=["*"],
     allow_headers=["*"],
 )
