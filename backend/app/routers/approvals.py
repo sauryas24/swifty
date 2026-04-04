@@ -67,13 +67,22 @@ def process_venue_approval(
     if current_user.role != required_role:
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
+    # --- DYNAMIC EMAIL LOOKUP ---
+    target_email = "goyalvasu63@gmail.com" # Safe fallback
+    linked_permission = db.query(models.PermissionLetter).filter(models.PermissionLetter.generated_id == booking.permission_letter_id).first()
+    if linked_permission:
+        club = db.query(models.Club).filter(models.Club.user_id == linked_permission.club_id).first()
+        if club and club.email:
+            target_email = club.email
+    # ----------------------------
+
     if action_data.action == "reject":
         booking.status = f"Rejected by {current_user.role}"
         booking.comments = action_data.message 
         db.commit()
         
         email_service.send_notification_email(
-            "gymkhana.swifty@gmail.com", 
+            target_email, 
             f"Update: Request '{booking.event_title}' Rejected",
             f"Your venue request was rejected by {current_user.role}. Reason: {action_data.message}"
         )
@@ -93,14 +102,14 @@ def process_venue_approval(
         if next_status == "Approved":
             approve_and_publish_event(booking.id, db)
             email_service.send_notification_email(
-                "gymkhana.swifty@gmail.com",
+                target_email,
                 f"Success! Request '{booking.event_title}' Approved",
                 "Your venue request has been fully approved and is now on the public calendar."
             )
             return {"message": "Final approval granted. Event published to calendar!"}
         else:
             email_service.send_notification_email(
-                "gymkhana.swifty@gmail.com",
+                target_email,
                 f"Progress: Request '{booking.event_title}' moved to {next_status}",
                 f"Your venue request was approved by {current_user.role} and is now {next_status}."
             )
@@ -128,6 +137,13 @@ def process_mou_approval(
     if current_user.role != required_role:
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
+    # --- DYNAMIC EMAIL LOOKUP ---
+    target_email = "goyalvasu63@gmail.com" # Safe fallback
+    club = db.query(models.Club).filter(models.Club.user_id == mou.coordinator_id).first()
+    if club and club.email:
+        target_email = club.email
+    # ----------------------------
+
     if action_data.action == "reject":
         mou.status = f"Rejected by {current_user.role}"
         if hasattr(mou, 'comments') and action_data.message:
@@ -135,7 +151,7 @@ def process_mou_approval(
         db.commit()
         
         email_service.send_notification_email(
-            "gymkhana.swifty@gmail.com", 
+            target_email, 
             f"Update: MoU Request '{mou.organization_name}' Rejected",
             f"Your MoU request was rejected by {current_user.role}. Reason: {action_data.message}"
         )
@@ -154,14 +170,14 @@ def process_mou_approval(
         
         if next_status == "Approved":
             email_service.send_notification_email(
-                "gymkhana.swifty@gmail.com",
+                target_email,
                 f"Success! MoU Request '{mou.organization_name}' Approved",
                 "Your MoU request has been fully approved."
             )
             return {"message": "Final approval granted for MoU!"}
         else:
             email_service.send_notification_email(
-                "gymkhana.swifty@gmail.com",
+                target_email,
                 f"Progress: MoU '{mou.organization_name}' moved to {next_status}",
                 f"Your MoU request was approved by {current_user.role} and is now {next_status}."
             )
@@ -169,7 +185,6 @@ def process_mou_approval(
             
     else:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'approve' or 'reject'.")
-
 
 
 # PERMISSION LETTER APPROVALS
@@ -200,11 +215,11 @@ def process_permission_approval(
     if current_user.role != required_role:
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
-    # Find the exact coordinator
-    coordinator = db.query(models.User).filter(models.User.id == letter.club_id).first()
-    # Fallback to a default just in case the user was deleted
-    coordinator_email = coordinator.email_id if coordinator else "gymkhana.swifty@gmail.com"
-    coordinator_name = coordinator.username if coordinator else "Coordinator"
+    # --- DYNAMIC EMAIL LOOKUP ---
+    club = db.query(models.Club).filter(models.Club.user_id == letter.club_id).first()
+    target_email = club.email if club and club.email else "goyalvasu63@gmail.com"
+    target_name = club.name if club else "Coordinator"
+    # ----------------------------
 
     if action_data.action == "reject":
         letter.status = f"Rejected by {current_user.role}"
@@ -212,10 +227,10 @@ def process_permission_approval(
         db.commit()
 
         email_service.send_notification_email(
-            coordinator_email, # Sends to the actual coordinator
+            target_email, 
             f"Update: Permission Letter '{letter.event_name}' Rejected",
             (
-                f"Hello {coordinator_name},\n\n"
+                f"Hello {target_name},\n\n"
                 f"Your permission letter for '{letter.event_name}' was rejected "
                 f"by {current_user.role}. Reason: {action_data.message}"
             )
@@ -239,10 +254,10 @@ def process_permission_approval(
             db.commit()
 
             email_service.send_notification_email(
-                coordinator_email, # Sends the ID directly to the actual coordinator
+                target_email, 
                 f"Permission Letter '{letter.event_name}' Approved",
                 (
-                    f"Hello {coordinator_name},\n\n"
+                    f"Hello {target_name},\n\n"
                     f"Your permission letter for '{letter.event_name}' has been fully approved!\n\n"
                     f"Your Official Permission Letter ID is: {generated_id}\n\n"
                     f"Please use this ID when submitting a Venue Booking request."
@@ -255,9 +270,9 @@ def process_permission_approval(
         else:
             db.commit()
             email_service.send_notification_email(
-                coordinator_email, # Sends to the actual coordinator
+                target_email, 
                 f"Progress: Permission Letter '{letter.event_name}' moved to {next_status}",
-                f"Hello {coordinator_name},\n\nYour permission letter was approved by {current_user.role} and is now {next_status}."
+                f"Hello {target_name},\n\nYour permission letter was approved by {current_user.role} and is now {next_status}."
             )
             return {"message": f"Permission letter approved and moved to {next_status}."}
 

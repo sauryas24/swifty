@@ -100,9 +100,7 @@
                         Public <br/>
                         <span class="text-primary dark:text-slate-400">Calendar</span>
                     </h1>
-                    <p class="text-slate-500 dark:text-slate-400 text-lg leading-relaxed max-w-sm">
-                        Browse the latest Students' Gymkhana activities and campus events for 2026.
-                    </p>
+                    
                     <div class="flex items-center space-x-2 pt-2">
                         <span class="w-2 h-2 rounded-full bg-brand-pink-accent"></span>
                         <span id="side-month-display" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Loading Schedule...</span>
@@ -196,7 +194,7 @@
                 clearBtn.classList.remove('hidden');
             } else {
                 filteredEvents = [...allEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
-                document.getElementById('side-month-display').innerText = `All Upcoming Events`;
+                document.getElementById('side-month-display').innerText = `Upcoming Events`;
                 clearBtn.classList.add('hidden');
             }
 

@@ -337,7 +337,7 @@
                     <div class="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div id="budget-progress-bar" class="h-full bg-pink-500 transition-all duration-1000" style="width: 0%"></div>
                     </div>
-                    <p id="budget-percent-text" class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider">0% of annual budget utilized</p>
+                    <p id="budget-percent-text" class="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-wider"> Budget utilized: 0%</p>
                 </div>
             </div>
 
@@ -435,7 +435,7 @@
             
             const percent = Math.min(100, Math.round(finData.utilization_percentage));
             document.getElementById("budget-progress-bar").style.width = `${percent}%`;
-            document.getElementById("budget-percent-text").innerText = `${percent}% of annual budget utilized`;
+            document.getElementById("budget-percent-text").innerText = `Budget utilized: ${percent}% `;
 
             const billsTbody = document.getElementById("bills-tbody");
             billsTbody.innerHTML = "";
