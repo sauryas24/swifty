@@ -1,74 +1,54 @@
-# import os
-# import smtplib
-# import traceback  # <--- 1. Import traceback
-# from email.message import EmailMessage
-# from dotenv import load_dotenv
+import os
+import requests
+from dotenv import load_dotenv
 
-# # 2. Fix the dotenv loading! 
-# # Using load_dotenv() without a path automatically finds the .env locally, 
-# # and safely ignores it on Render (where you should use the Dashboard Environment variables).
-# load_dotenv() 
+load_dotenv()
 
-# SMTP_SERVER = os.getenv("SMTP_SERVER")
-# print(f"DEBUG - My SMTP Server is: {SMTP_SERVER}")
-# SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
-# SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-# SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
-
-# def send_notification_email(to_email: str, subject: str, body: str):
-#     msg = EmailMessage()
-#     msg.set_content(body)
-#     msg['Subject'] = subject
-#     msg['From'] = SENDER_EMAIL
-#     msg['To'] = to_email
-
-#     try:
-#         print(f"Attempting SMTP_SSL connection to {SMTP_SERVER} on port {SMTP_PORT}...")
-#         server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT)
-#         server.login(SENDER_EMAIL, SENDER_PASSWORD)
-#         server.send_message(msg)
-#         server.quit()
-#         return True
-#     except Exception as e:
-#         print("\n" + "!"*40)
-#         print("EMAIL SENDING FAILED! HERE IS THE EXACT ERROR:")
-#         traceback.print_exc()  # <--- 3. This prints the exact system error!
-#         print("!"*40 + "\n")
-#         return False
-
-
-
-
-
-import socket
-
-def test_network_port(host: str, port: int):
-    print(f"Testing connection to {host} on port {port}...", end=" ")
-    try:
-        # Try to open a raw TCP socket with a 5-second timeout
-        sock = socket.create_connection((host, port), timeout=5)
-        sock.close()
-        print("✅ SUCCESS (Port is OPEN)")
-    except Exception as e:
-        print(f"❌ FAILED ({type(e).__name__}: {e})")
+# Grab the credentials from Render
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL") 
 
 def send_notification_email(to_email: str, subject: str, body: str):
     print("\n" + "="*50)
-    print("🚀 RUNNING RENDER NETWORK PORT DIAGNOSTICS")
-    print("="*50)
+    print(f"🚀 PREPARING TO SEND EMAIL TO: {to_email}")
     
-    # Test 1: Standard HTTPS (Should always succeed)
-    test_network_port("google.com", 443)
-    test_network_port("smtp.gmail.com", 443)
-    
-    # Test 2: Standard SMTP Ports (The suspected blocked ports)
-    test_network_port("smtp.gmail.com", 465)
-    test_network_port("smtp.gmail.com", 587)
-    
-    # Test 3: IITK Servers
-    test_network_port("mmtp.iitk.ac.in", 465)
-    test_network_port("mmtp.iitk.ac.in", 587)
-    
-    print("="*50 + "\n")
-    
-    return True # Return true so the backend doesn't crash during our test
+    if not BREVO_API_KEY:
+        print("❌ ERROR: BREVO_API_KEY is missing from environment variables!")
+        return False
+
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+
+    payload = {
+        "sender": {"email": SENDER_EMAIL, "name": "Swifty App"},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        # We wrap your body text in basic HTML so it formats nicely
+        "htmlContent": f"<html><body><p>{body}</p></body></html>" 
+    }
+
+    try:
+        print("🌐 Connecting to Brevo API over Port 443 (HTTPS)...")
+        # Send the web request (Render cannot block this!)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        
+        # If Brevo replies with an error (like an invalid email), this catches it
+        response.raise_for_status() 
+        
+        print("✅ SUCCESS! Email delivered via API.")
+        print("="*50 + "\n")
+        return True
+        
+    except Exception as e:
+        print("\n" + "!"*40)
+        print("❌ API EMAIL FAILED! EXACT ERROR:")
+        print(e)
+        # If Brevo sends back a specific error message, print it out
+        if hasattr(e, 'response') and e.response is not None:
+            print(f"Brevo says: {e.response.text}")
+        print("!"*40 + "\n")
+        return False
