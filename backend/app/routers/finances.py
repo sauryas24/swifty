@@ -30,6 +30,17 @@ def get_my_club_finances(
     if not club:
         raise HTTPException(status_code=404, detail="Finance ledger not found.")
     
+    # --- NEW: Auto-Heal Discrepancies ---
+    # Calculate the true total based ONLY on existing transaction records
+    actual_spent = sum(tx.amount for tx in club.transactions)
+    
+    # If the database tracker is out of sync, fix it automatically
+    if club.total_spent != actual_spent:
+        club.total_spent = actual_spent
+        db.commit()
+        db.refresh(club)
+    # ------------------------------------
+    
     remaining = club.total_allocated - club.total_spent
     utilization = (club.total_spent / club.total_allocated) * 100 if club.total_allocated > 0 else 0
     
@@ -56,6 +67,14 @@ def get_specific_club_finances(
     
     if not club:
         raise HTTPException(status_code=404, detail="Club ledger not found.")
+    
+    # --- NEW: Auto-Heal Discrepancies ---
+    actual_spent = sum(tx.amount for tx in club.transactions)
+    if club.total_spent != actual_spent:
+        club.total_spent = actual_spent
+        db.commit()
+        db.refresh(club)
+    # ------------------------------------
     
     remaining = club.total_allocated - club.total_spent
     utilization = (club.total_spent / club.total_allocated) * 100 if club.total_allocated > 0 else 0

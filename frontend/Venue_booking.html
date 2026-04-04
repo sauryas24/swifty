@@ -345,7 +345,7 @@
             available.forEach(room => {
                 availableContainer.innerHTML += `
                     <label class="cursor-pointer relative group h-full">
-                        <input class="peer sr-only" name="room" type="radio" value="${room.id}"/>
+                        <input class="peer sr-only" name="room" type="radio" value="${room.id}" data-capacity="${room.capacity}"/>
                         <div class="p-4 rounded-xl border-2 border-transparent peer-checked:border-pink-500 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md h-full flex flex-col">
                             <div class="flex justify-between items-start mb-2">
                                 <h4 class="font-bold text-lg text-slate-900 dark:text-white">${room.name}</h4>
@@ -412,7 +412,11 @@
                 if(!selectedRoomRadio) return alert("Please select an available room from the list.");
                 if(!eventTitle || !permissionId) return alert("Please fill in the Event Title and Permission Letter ID.");
                 if(attendees <= 0) return alert("Please enter a valid number of estimated attendees.");
-
+                // --- NEW: Capacity Check ---
+                const maxCapacity = parseInt(selectedRoomRadio.dataset.capacity);
+                if (attendees > maxCapacity) {
+                    return alert(`Capacity Error: Your expected attendees (${attendees}) exceeds the selected room's maximum capacity of ${maxCapacity}. Please lower the attendee count or select a larger venue.`);
+                }
                 const bookingData = {
                     date: selectedDate,
                     time: selectedTime,

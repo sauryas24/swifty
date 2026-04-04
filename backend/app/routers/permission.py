@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime # <-- NEW IMPORT
 
 from .. import models, database, schemas
 from ..utils import security
@@ -23,6 +24,13 @@ def submit_permission_letter(
     if current_user.role != "coordinator":
         raise HTTPException(status_code=403, detail="Only coordinators can submit permission letters.")
 
+    # --- NEW: Prevent Past Dates ---
+    # Compare the incoming date against today's date (formatted as YYYY-MM-DD)
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    if letter.date < today_str:
+        raise HTTPException(status_code=400, detail="Event date cannot be in the past.")
+    # -------------------------------
+
     # Create the letter object and set its status to the beginning of the administrative pipeline.
     new_letter = models.PermissionLetter(
         event_name=letter.event_name,
@@ -38,8 +46,6 @@ def submit_permission_letter(
     db.refresh(new_letter)
 
     return new_letter
-
-
 
 # Endpoint 2: Get a single permission letter by ID
 

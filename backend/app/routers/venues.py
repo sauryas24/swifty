@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-
+from datetime import datetime
 from .. import models, schemas
 from ..database import get_db
 
@@ -59,6 +59,7 @@ def check_availability(
     return {"available_rooms": available, "unavailable_rooms": unavailable}
 
 # CREATE BOOKING (Protected Route)
+# CREATE BOOKING (Protected Route)
 # Logs a new venue booking request. Confirms the user is a coordinator, holds a valid approved permission, and double checks room availability.
 @router.post("/book", status_code=status.HTTP_201_CREATED)
 def submit_venue_booking(
@@ -71,6 +72,27 @@ def submit_venue_booking(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Only Club Coordinators can book venues."
+        )
+    
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    if booking_data.date < today_str:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Venue booking date cannot be in the past."
+        )
+
+    # --- NEW: Capacity Check ---
+    target_room = db.query(models.Room).filter(models.Room.id == booking_data.room_id).first()
+    if not target_room:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Selected room does not exist."
+        )
+    
+    if booking_data.expected_attendees > target_room.capacity:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Expected attendees ({booking_data.expected_attendees}) exceeds the capacity of {target_room.name} ({target_room.capacity})."
         )
 
     # Search for the permission letter referencing this specific generated ID.
@@ -98,13 +120,27 @@ def submit_venue_booking(
             detail="This permission letter has not been fully approved yet."
         )
 
+    # --- Prevent Permission Letter Reuse ---
+    # Check if any active/approved venue booking already uses this ID.
+    existing_booking = db.query(models.VenueBooking).filter(
+        models.VenueBooking.permission_letter_id == booking_data.permission_letter_id,
+        models.VenueBooking.status.in_([
+            "Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"
+        ])
+    ).first()
+
+    if existing_booking:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This permission letter ID has already been used for an active or approved venue booking."
+        )
+
     # Perform a final check to guarantee no one secured the room in the time between searching and booking.
     time_variants = get_time_variants(booking_data.time) # Get both formats
     
-    # Perform a final check to guarantee no one secured the room...
     conflict = db.query(models.VenueBooking).filter(
         models.VenueBooking.date == booking_data.date,
-        models.VenueBooking.time.in_(time_variants), # <--- THE FIX
+        models.VenueBooking.time.in_(time_variants), 
         models.VenueBooking.room_id == booking_data.room_id,
         models.VenueBooking.status.in_([
             "Pending GenSec", "Pending President", "Pending FacAd", "Pending ADSA", "Approved"

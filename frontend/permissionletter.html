@@ -178,7 +178,14 @@
     if(clubName && enterName){
         clubName.textContent = enterName.toUpperCase();
     }
-
+    // --- PREVENT PAST DATES SELECTION ---
+    const eventDateInput = document.getElementById("eventDate");
+    if (eventDateInput) {
+        // Get today's date formatted as YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
+        // Set the minimum allowed date to today
+        eventDateInput.setAttribute('min', today);
+    }
     // --- CANCEL BUTTON LOGIC ---
     const cancelButton = document.getElementById("cancelButton");
     if (cancelButton) {
