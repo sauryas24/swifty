@@ -446,8 +446,15 @@
             billsTbody.innerHTML = "";
             if(finData.transactions.length === 0) {
                 billsTbody.innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">No bills recorded.</td></tr>`;
-            } else {
-                finData.transactions.forEach(tx => {
+            } 
+            else {
+                // --- NEW: Sort transactions by most recent first ---
+                const sortedTransactions = [...finData.transactions].sort((a, b) => {
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                });
+                
+                // Use the sorted array to build the table
+                sortedTransactions.forEach(tx => {
                     const dateStr = new Date(tx.timestamp).toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' });
                     billsTbody.innerHTML += `
                         <tr onclick="openBillModal(${tx.id})" class="group hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-colors cursor-pointer relative">
@@ -481,8 +488,6 @@
         }
     }
 
-    // --- RENDER REQUESTS LIST ---
-    // Builds the HTML for the sidebar list and full-history table based on the fetched requests
     function renderRequests(data) {
         const sideList = document.getElementById("sidebar-requests-list");
         const fullTbody = document.getElementById("full-history-tbody");
@@ -494,11 +499,15 @@
             return;
         }
 
-        data.forEach(req => {
+        const sortedData = [...data].sort((a, b) => {
+            const dateA = new Date(a.updated_at || a.timestamp || 0);
+            const dateB = new Date(b.updated_at || b.timestamp || 0);
+            return dateB - dateA;
+        });
+
+        sortedData.forEach(req => {
             const lowerStatus = (req.status || "").toLowerCase();
             const isPending = lowerStatus.includes("pending");
-
-            // SMART DATE LOGIC: Use updated_at for processed items, fallback to timestamp for pending
             let displayDate = req.timestamp;
             if (!isPending && req.updated_at && req.updated_at !== "N/A") {
                 displayDate = req.updated_at;
@@ -591,6 +600,9 @@
         // Basic Validation
         if (!amount || !description) {
             return alert("Please provide both an amount and a description.");
+        }
+        if (fileInput.files.length === 0) {
+            return alert("Please upload the bill/receipt attachment before submitting.");
         }
         
         // Construct FormData (Required for sending files to FastAPI)

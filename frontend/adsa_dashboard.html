@@ -138,7 +138,39 @@
     <input class="hidden" id="announcement-modal-toggle" type="checkbox"/>
     <input class="hidden" id="request-review-toggle" type="checkbox"/>
     <input class="hidden" id="modal-otp-toggle" type="checkbox"/>
-    
+    <input class="hidden" id="modal-announcement-detail-toggle" type="checkbox"/>
+    <div class="fixed inset-0 z-[150] hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4" id="modal-announcement-detail-overlay">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-pink-100 dark:border-pink-900/20 flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b border-pink-50 dark:border-pink-900/10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-pink-50 dark:bg-pink-900/20 rounded-xl flex items-center justify-center">
+                        <span class="material-icons-round text-pink-600">campaign</span>
+                    </div>
+                    <h2 class="font-display font-bold text-xl text-slate-900 dark:text-white">Announcement Details</h2>
+                </div>
+                <label class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" for="modal-announcement-detail-toggle">
+                    <span class="material-icons-round">close</span>
+                </label>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 id="detail-announcement-title" class="text-lg font-bold text-slate-900 dark:text-white">Title</h3>
+                    <p id="detail-announcement-date" class="text-xs text-slate-400 font-medium mt-1">Date</p>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-100 dark:border-slate-700">
+                    <p id="detail-announcement-content" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">Content</p>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Audience</p>
+                    <div id="detail-announcement-audience" class="flex flex-wrap gap-2">
+                        </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-pink-50 dark:border-pink-900/10 flex justify-end">
+                <label class="px-6 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" for="modal-announcement-detail-toggle">Close</label>
+            </div>
+        </div>
+    </div>
 
     <header class="fixed top-0 left-0 w-full h-16 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
 
@@ -503,7 +535,17 @@ document.getElementById("main-dashboard-title").innerText = dashboardTitle;
             const tbody = document.getElementById("dynamic-requests-body");
             tbody.innerHTML = "";
             
-            const dataToRender = currentTab === 'pending' ? globalRequestsData : processedRequestsData;
+            let dataToRender = currentTab === 'pending' ? globalRequestsData : processedRequestsData;
+
+            // --- NEW: Sort processed history by most recent first ---
+            if (currentTab === 'processed') {
+                dataToRender.sort((a, b) => {
+                    // Use updated_at if available, fallback to timestamp, or use 0 as a baseline
+                    const dateA = new Date(a.updated_at || a.timestamp || 0);
+                    const dateB = new Date(b.updated_at || b.timestamp || 0);
+                    return dateB - dateA; // Sorts in descending order (newest at the top)
+                });
+            }
 
             if(dataToRender.length === 0) {
                 const emptyMsg = currentTab === 'pending' ? "Inbox Zero! No pending requests across any clubs." : "No processed history to display.";
@@ -765,7 +807,8 @@ function populateModal(reqData, isHistory = false) {
         }
 
         // --- 5. DATA FETCHING & RENDERING (Announcements) ---
-        // Retrieves the latest system-wide messages intended for various clubs
+        let globalAnnouncementsData = []; // Store announcements to open them later
+
         async function fetchAnnouncements() {
             const container = document.getElementById("dynamic-announcements-container");
             try {
@@ -775,12 +818,16 @@ function populateModal(reqData, isHistory = false) {
                 });
                 if (!response.ok) throw new Error("API not ready");
                 const data = await response.json();
-                renderAnnouncements(data.slice(0, 2), container);
+                
+                // Sort by newest first
+                globalAnnouncementsData = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                renderAnnouncements(globalAnnouncementsData, container);
             } catch(e) {
-                // Provides fallback data safely if the database layer drops
-                renderAnnouncements([
-                    { heading: "URGENT: Semester Budget Audits", message: "All clubs must upload their final ledger receipts by Friday 5PM to the finance module.", timestamp: new Date().toISOString() }
-                ], container);
+                // Fallback dummy data
+                globalAnnouncementsData = [
+                    { heading: "URGENT: Semester Budget Audits", message: "All clubs must upload their final ledger receipts by Friday 5PM to the finance module.", timestamp: new Date().toISOString(), target_clubs: '["All Gymkhana Clubs"]' }
+                ];
+                renderAnnouncements(globalAnnouncementsData, container);
             }
         }
 
@@ -791,12 +838,12 @@ function populateModal(reqData, isHistory = false) {
                 return;
             }
 
-            data.forEach(ann => {
+            data.forEach((ann, index) => {
                 const dateObj = new Date(ann.timestamp);
                 const timeString = isNaN(dateObj) ? 'Recently' : dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
                 
                 const html = `
-                    <div class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-slate-50 dark:bg-slate-800/50 hover:border-pink-200 dark:hover:border-pink-800 transition-all group">
+                    <div onclick="openAnnouncementDetail(${index})" class="p-4 rounded-xl border border-pink-50 dark:border-pink-900/10 bg-slate-50 dark:bg-slate-800/50 hover:border-pink-200 dark:hover:border-pink-800 transition-all group cursor-pointer shadow-sm">
                         <h4 class="font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors text-sm">${ann.heading}</h4>
                         <p class="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed line-clamp-2">${ann.message}</p>
                         <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200 dark:border-slate-700/50">
@@ -809,6 +856,43 @@ function populateModal(reqData, isHistory = false) {
             });
         }
 
+        // Function to populate and open the Announcement Detail Modal
+        window.openAnnouncementDetail = function(index) {
+            const ann = globalAnnouncementsData[index];
+            if(!ann) return;
+
+            document.getElementById("detail-announcement-title").innerText = ann.heading;
+            document.getElementById("detail-announcement-content").innerText = ann.message;
+            
+            const dateObj = new Date(ann.timestamp);
+            document.getElementById("detail-announcement-date").innerText = isNaN(dateObj) ? 'Posted Recently' : 'Posted on ' + dateObj.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' });
+
+            const audienceContainer = document.getElementById("detail-announcement-audience");
+            audienceContainer.innerHTML = "";
+            
+            // Parse target clubs safely
+            let targets = [];
+            if (typeof ann.target_clubs === 'string') {
+                try {
+                    targets = JSON.parse(ann.target_clubs);
+                    if(!Array.isArray(targets)) targets = [ann.target_clubs];
+                } catch(e) {
+                    targets = ann.target_clubs.split(",").map(s => s.trim());
+                }
+            } else if (Array.isArray(ann.target_clubs)) {
+                targets = ann.target_clubs;
+            } else {
+                targets = ["All Gymkhana Clubs"];
+            }
+
+            targets.forEach(t => {
+                if(!t) return;
+                audienceContainer.innerHTML += `<span class="px-2.5 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-md text-[10px] font-bold uppercase tracking-wider">${t}</span>`;
+            });
+
+            document.getElementById("modal-announcement-detail-toggle").checked = true;
+        }
+
         // --- 6. POSTING A NEW ANNOUNCEMENT ---
         // Collects heading, message, and targets, then sends to backend via API
         document.getElementById("btn-submit-announcement").addEventListener("click", async function() {
@@ -818,6 +902,11 @@ function populateModal(reqData, isHistory = false) {
 
             if (!headingStr || !messageStr) {
                 alert("Error: Subject Heading and Message Content are required.");
+                return;
+            }
+            
+            if (checkedBoxes.length === 0) {
+                alert("Error: You must select at least one recipient club.");
                 return;
             }
 
