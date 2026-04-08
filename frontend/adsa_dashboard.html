@@ -19,8 +19,8 @@
     <script>
         // Enforce access control immediately upon page load
         const validRoles = ["authority", "adsa", "gensec", "president", "facad"];
-        const currentToken = sessionStorage.getItem("token");
-        const currentRole = sessionStorage.getItem("userRole");
+        const currentToken = localStorage.getItem("token");
+        const currentRole = localStorage.getItem("userRole");
         
         // If credentials are missing or incorrect, bounce back to the login screen
         if (!currentToken || !validRoles.includes(currentRole)) {
@@ -29,7 +29,7 @@
         
         // Re-validate token presence when using back/forward browser navigation
         window.addEventListener('pageshow', function(event) {
-            if (event.persisted && !sessionStorage.getItem("token")) {
+            if (event.persisted && !localStorage.getItem("token")) {
                 window.location.replace("Select_role_login.html");
             }
         });
@@ -441,7 +441,7 @@
         
         // --- 0. SECURITY & INIT LOGIC ---
         // Retrieve and pack the token securely so it is attached to all API queries
-        const authToken = sessionStorage.getItem("token");
+        const authToken = localStorage.getItem("token");
         const authHeaders = {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${authToken}`
@@ -456,7 +456,7 @@
     facad: "Faculty Advisor Dashboard"
 };
 
-const rawRole = sessionStorage.getItem("userRole") || "authority";
+const rawRole = localStorage.getItem("userRole") || "authority";
 const dashboardTitle = roleMap[rawRole.toLowerCase()] || "Authority Dashboard";
 
 document.getElementById("header-role-badge").innerText = dashboardTitle.replace(" Dashboard", "").toUpperCase();
@@ -464,7 +464,7 @@ document.getElementById("main-dashboard-title").innerText = dashboardTitle;
 
         // Simple logout handler
         document.getElementById("logoutBtn").addEventListener("click", function() {
-            sessionStorage.clear();
+            localStorage.clear();
             window.location.replace("Select_role_login.html");
         });
 

@@ -218,11 +218,11 @@
                 if(response.ok && result.requires_2fa === true){
                     
                     // Maintain verified email state mapping temporarily throughout sequence progression.
-                    sessionStorage.setItem("userEmail", loginData.email_id);
+                    localStorage.setItem("userEmail", loginData.email_id);
                     
                     // Assign presentation parameter parsing corresponding directly towards dropdown resolution string.
                     const selectedText = document.getElementById("role-select-text").innerText;
-                    sessionStorage.setItem("displayRoleName", selectedText);
+                    localStorage.setItem("displayRoleName", selectedText);
 
                     // Reassign user orientation redirecting actively to explicit authorization interface.
                     window.location.href = "./otp.html";

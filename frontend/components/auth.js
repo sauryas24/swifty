@@ -1,9 +1,9 @@
 function protectPage(allowedRoles) {
-  const token = sessionStorage.getItem("token");
-  const role = sessionStorage.getItem("userRole");
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("userRole");
 
   if (!token || !allowedRoles.includes(role)) {
-    sessionStorage.clear();
+    localStorage.clear();
     window.location.replace("Select_role_login.html");
   }
 }

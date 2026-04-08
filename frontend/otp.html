@@ -131,7 +131,7 @@
 </body>
 <script>
     // Access previously retained email credentials mapping within the local session object.
-    const storedEmail = sessionStorage.getItem('userEmail') || 'your-email@iitk.ac.in';
+    const storedEmail = localStorage.getItem('userEmail') || 'your-email@iitk.ac.in';
     document.getElementById('userEmail').textContent = storedEmail;
 
     // Direct interface navigation functionality bindings.
@@ -252,16 +252,16 @@
                     console.log("OTP Verified! Backend released the tokens:", result);
                     
                     if (result.access_token) {
-                        sessionStorage.setItem("token", result.access_token);
+                        localStorage.setItem("token", result.access_token);
                     }
                     
                     const rawRole = result.role || "missing";
                     const safeRole = rawRole.trim().toLowerCase();
                     
-                    sessionStorage.setItem("userRole", safeRole);
+                    localStorage.setItem("userRole", safeRole);
                     
-                    if (result.username) sessionStorage.setItem("club", result.username);
-                    if (result.id) sessionStorage.setItem("club_id", result.id);
+                    if (result.username) localStorage.setItem("club", result.username);
+                    if (result.id) localStorage.setItem("club_id", result.id);
 
                     // Route the user to the appropriate dashboard based on their designated role configuration.
                     const authorityRoles = ["authority", "adsa",  "gensec", "president", "facad"];

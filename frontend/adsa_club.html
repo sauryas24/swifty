@@ -16,8 +16,8 @@
     <script>
         // Define authorized roles for accessing this page
         const validRoles = ["authority", "adsa", "gensec", "president", "facad"];
-        const currentToken = sessionStorage.getItem("token");
-        const currentRole = sessionStorage.getItem("userRole");
+        const currentToken = localStorage.getItem("token");
+        const currentRole = localStorage.getItem("userRole");
         
         // Redirect to login if the user is unauthenticated or unauthorized
         if (!currentToken || !validRoles.includes(currentRole)) {
@@ -26,7 +26,7 @@
         
         // Re-check authentication when navigating via browser history
         window.addEventListener('pageshow', function(event) {
-            if (event.persisted && !sessionStorage.getItem("token")) {
+            if (event.persisted && !localStorage.getItem("token")) {
                 window.location.replace("Select_role_login.html");
             }
         });
@@ -392,17 +392,17 @@
 <script>
     // System configuration and authorization headers setup
     const API_BASE = "http://127.0.0.1:8000/api";
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     const authHeaders = { "Content-Type": "application/json", "Authorization": `Bearer ${token}` };
 
     // Dynamically apply the user's role to the interface elements
-    const displayRole = sessionStorage.getItem("displayRoleName") || "ADSA";
+    const displayRole = localStorage.getItem("displayRoleName") || "ADSA";
     //document.getElementById("main-dashboard-title").innerText = displayRole + " Dashboard";
     document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
 
     // Attach functionality to terminate the user session securely
     document.getElementById("logoutBtn").addEventListener("click", () => {
-        sessionStorage.clear();
+        localStorage.clear();
         window.location.replace("Select_role_login.html");
     });
 
