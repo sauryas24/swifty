@@ -64,9 +64,13 @@ def get_mou(
     db: Session = Depends(database.get_db),
     current_user: models.User = Depends(security.get_current_user)
 ):
-    mou = db.query(models.MoURequest).filter(models.MoURequest.id == mou_id).first()
+    #query to check both the MoU ID and the ownership
+    mou = db.query(models.MoURequest).filter(
+        models.MoURequest.id == mou_id,
+        models.MoURequest.coordinator_id == current_user.id
+    ).first()
 
     if not mou:
-        raise HTTPException(status_code=404, detail="MoU not found")
+        raise HTTPException(status_code=404, detail="MoU not found or access denied")
 
     return mou
