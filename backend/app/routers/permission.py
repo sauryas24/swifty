@@ -51,7 +51,11 @@ def submit_permission_letter(
 
 # Retrieves the full contents of a specific permission letter, generally used when an authority is reviewing it.
 @router.get("/{letter_id}", response_model=schemas.PermissionLetterResponse)
-def get_single_letter(letter_id: int, db: Session = Depends(database.get_db)):
+def get_single_letter(
+    letter_id: int, 
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(security.get_current_user) # Added authentication dependency
+):
     
     # Query the database for the exact letter ID provided.
     letter = db.query(models.PermissionLetter).filter(
@@ -60,5 +64,9 @@ def get_single_letter(letter_id: int, db: Session = Depends(database.get_db)):
 
     if not letter:
         raise HTTPException(status_code=404, detail="Permission letter not found")
+
+    # Added authorization check: ensure a coordinator can only view their own club's letters
+    if current_user.role == "coordinator" and letter.club_id != current_user.id:
+         raise HTTPException(status_code=403, detail="Not authorized to view this letter")
 
     return letter
