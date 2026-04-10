@@ -81,7 +81,18 @@ def submit_venue_booking(
             detail="Venue booking date cannot be in the past."
         )
 
-    # --- NEW: Capacity Check ---
+    # Added with_for_update() to lock the room row 
+    target_room = db.query(models.Room).filter(
+        models.Room.id == booking_data.room_id
+    ).with_for_update().first()
+    
+    if not target_room:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Selected room does not exist."
+        )
+
+    #Capacity Check 
     target_room = db.query(models.Room).filter(models.Room.id == booking_data.room_id).first()
     if not target_room:
         raise HTTPException(
