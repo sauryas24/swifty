@@ -180,7 +180,7 @@
         <div class="p-6 space-y-4">
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Amount (₹)</label>
-                <input id="new-bill-amount" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 focus:ring-pink-500 focus:border-pink-500 text-slate-900 dark:text-white" placeholder="0.00" type="number"/>
+                <input id="new-bill-amount" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 focus:ring-pink-500 focus:border-pink-500 text-slate-900 dark:text-white" placeholder="0.00" type="number" min="0.01"/>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Comments</label>
@@ -603,6 +603,9 @@
         }
         if (fileInput.files.length === 0) {
             return alert("Please upload the bill/receipt attachment before submitting.");
+        }
+        if (amount <= 0) {
+            return alert("Bill amount must be greater than zero.");
         }
         
         // Construct FormData (Required for sending files to FastAPI)

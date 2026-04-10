@@ -104,6 +104,9 @@ def submit_json_transaction(
 
     if (club.total_spent + transaction_data.amount) > club.total_allocated:
         raise HTTPException(status_code=400, detail="Insufficient budget!")
+    
+    if transaction_data.amount <= 0:
+        raise HTTPException(status_code=400, detail="Bill amount must be greater than zero.")
 
     club.total_spent += transaction_data.amount
     new_tx = models.Transaction(
@@ -143,6 +146,9 @@ async def upload_transaction_receipt(
     if (club.total_spent + amount) > club.total_allocated:
         raise HTTPException(status_code=400, detail="Insufficient budget available!")
 
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="Bill amount must be greater than zero.")
+    
     # 3. Handle the Cloudinary file upload securely
     secure_url = None
     if receipt:

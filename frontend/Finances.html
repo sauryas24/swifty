@@ -35,6 +35,25 @@
         },
     };
 </script>
+<script>
+    // Define authorized roles for accessing this page 
+    // (Note: I added "coordinator" here since your header badge says COORDINATOR)
+    const validRoles = ["authority", "adsa", "gensec", "president", "facad", "coordinator"];
+    const currentToken = localStorage.getItem("token");
+    const currentRole = localStorage.getItem("userRole");
+    
+    // Redirect to login if the user is unauthenticated or unauthorized
+    if (!currentToken || !validRoles.includes(currentRole)) {
+        window.location.replace("Select_role_login.html");
+    }
+    
+    // Re-check authentication when navigating via browser history (e.g., clicking the 'Back' button)
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted && !localStorage.getItem("token")) {
+            window.location.replace("Select_role_login.html");
+        }
+    });
+</script>
 
 <style>
     body { font-family: "Inter", sans-serif; background-color: #fdf2f8; }
