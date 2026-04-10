@@ -69,7 +69,7 @@ def process_venue_approval(
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
     # --- DYNAMIC EMAIL LOOKUP ---
-    target_email = "goyalvasu63@gmail.com" # Safe fallback
+    target_email = None 
     linked_permission = db.query(models.PermissionLetter).filter(models.PermissionLetter.generated_id == booking.permission_letter_id).first()
     if linked_permission:
         club = db.query(models.Club).filter(models.Club.user_id == linked_permission.club_id).first()
@@ -139,7 +139,7 @@ def process_mou_approval(
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
     # --- DYNAMIC EMAIL LOOKUP ---
-    target_email = "goyalvasu63@gmail.com" # Safe fallback
+    target_email = None 
     club = db.query(models.Club).filter(models.Club.user_id == mou.coordinator_id).first()
     if club and club.email:
         target_email = club.email
@@ -229,8 +229,10 @@ def process_permission_approval(
         raise HTTPException(status_code=403, detail=f"Not authorized. Current status requires role: {required_role}")
 
     # --- DYNAMIC EMAIL LOOKUP ---
+    target_email = None
     club = db.query(models.Club).filter(models.Club.user_id == letter.club_id).first()
-    target_email = club.email if club and club.email else "goyalvasu63@gmail.com"
+    if club and club.email:
+        target_email = club.email
     target_name = club.name if club else "Coordinator"
     # ----------------------------
 
