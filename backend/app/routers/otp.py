@@ -8,12 +8,16 @@ from ..utils import email_service, security
 
 router = APIRouter(prefix="/api/otp", tags=["OTP Verification"])
 
-# ==========================================
-# 1. LOGIN / REGISTRATION (Unauthenticated)
-# ==========================================
+#  LOGIN / REGISTRATION (Unauthenticated)
 # Generates and emails a 6-digit code for users trying to log in.
 @router.post("/send")
 def send_otp(request: schemas.OTPRequest, db: Session = Depends(database.get_db)):
+    
+    # Validate that the email exists in the users table to prevent abuse and database bloat
+    user = db.query(models.User).filter(models.User.email_id == request.email_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid request. Email not registered.")
+
     # Generate a random 6-digit number and set it to expire in 5 minutes.
     otp_code = f"{random.randint(0, 999999):06d}"
     expiration_time = datetime.now(timezone.utc) + timedelta(minutes=5)
@@ -71,9 +75,7 @@ def verify_otp(request: schemas.OTPVerify, db: Session = Depends(database.get_db
     return {"message": "Email successfully verified!"}
 
 
-# ==========================================
-# 2. APPROVALS (Authenticated & Secure)
-# ==========================================
+#  APPROVALS (Authenticated & Secure)
 # Employs a secondary OTP check to secure sensitive administrative decisions (like approving an event).
 @router.post("/send-approval")
 def send_approval_otp(
