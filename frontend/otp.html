@@ -5,6 +5,23 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>OTP Verification - SWIFTY</title>
     <script src="config.js"></script>
+    <script>
+    // 1. If they already have a token, bounce them to the dashboard
+    if (localStorage.getItem("token")) {
+        const role = localStorage.getItem("userRole");
+        if (role === "coordinator") {
+            window.location.replace("Coordinator_homepage.html");
+        } else {
+            window.location.replace("adsa_dashboard.html");
+        }
+    }
+    
+    // --> THE FIX: 2. Look at the URL. If "?auth=pending" is missing, kick them to login
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("auth") !== "pending") {
+        window.location.replace("Select_role_login.html");
+    }
+</script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>

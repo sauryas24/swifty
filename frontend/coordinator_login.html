@@ -229,7 +229,7 @@
                 
                 if (loginResponse.ok && loginResult.requires_2fa === true) {
                     localStorage.setItem("userEmail", loginResult.email_id);
-                    window.location.href = "./otp.html";
+                    window.location.href = "./otp.html?auth=pending";
                 } else {
                     alert(loginResult.detail || loginResult.message || "Invalid credentials");
                     loginBtn.innerHTML = originalText;
