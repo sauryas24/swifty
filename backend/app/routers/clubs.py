@@ -15,6 +15,6 @@ def get_all_clubs(db: Session = Depends(database.get_db)):
         result.append({
             "id": club.id,
             "name": club.name,
-            "email": club.user.email_id if club.user else "" 
+            "email": club.email 
         })
     return result

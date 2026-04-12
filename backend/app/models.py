@@ -57,7 +57,7 @@ class Club(Base):
     total_spent = Column(Float, default=0.0)
     
     transactions = relationship("Transaction", back_populates="club")
-    user = relationship("User")
+    email = Column(String, index = True)
     
 class Transaction(Base):
     __tablename__ = "transactions"
