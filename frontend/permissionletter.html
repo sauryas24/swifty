@@ -5,6 +5,13 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>New Permission Letter Form - SWIFTY</title>
 <script src="config.js"></script>
+<script>
+    // Immediate Authentication Check: Prevent access without a token
+    if (!localStorage.getItem("token")) {
+        // Replace current history state so the user can't use the "Back" button to bypass this
+        window.location.replace("Select_role_login.html");
+    }
+</script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>

@@ -267,10 +267,10 @@
                     const authorityRoles = ["authority", "adsa",  "gensec", "president", "facad"];
 
                     if (safeRole === "coordinator") {
-                        window.location.href = "Coordinator_homepage.html";
+                        window.location.replace("Coordinator_homepage.html");
                     } else if (authorityRoles.includes(safeRole)) {
                         // Standardize the dashboard environment presentation explicitly across all authority variants.
-                        window.location.href = "adsa_dashboard.html"; 
+                        window.location.replace("adsa_dashboard.html"); 
                     } else {
                         alert(`Wait! The backend sent your role as: "${rawRole}". I don't know where to send you!`);
                         window.location.href = "index.html"; 

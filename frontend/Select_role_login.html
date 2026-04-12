@@ -5,6 +5,12 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Swifty - Login</title>
     <script src="config.js"></script>
+    <script>
+    // If the user lands back on the login page (e.g., by hitting the Back button 
+    // from the homepage), immediately destroy their session token so they must log in again.
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+</script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
