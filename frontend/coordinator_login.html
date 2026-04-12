@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
-        // Set up framework configurations to support standard UI themes.
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -36,13 +35,13 @@
         :root { --bg-pink: #fdf2f8; }
         body { font-family: "Inter", sans-serif; background-color: var(--bg-pink); }
        .watermark-bg {
-    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
-    background-attachment: fixed;
-}
-.dark .watermark-bg {
-    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
-    background-attachment: fixed;
-}
+            background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+            background-attachment: fixed;
+        }
+        .dark .watermark-bg {
+            background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+            background-attachment: fixed;
+        }
     </style>
 </head>
 <body class="bg-baby-pink dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200 watermark-bg flex flex-col">
@@ -89,9 +88,7 @@
                         </div>
                         
                         <div id="club-options-list" class="absolute left-0 right-0 top-[calc(100%+8px)] bg-white dark:bg-slate-800 border border-pink-100 dark:border-pink-900/20 rounded-xl shadow-xl z-50 hidden overflow-hidden flex flex-col py-2 transition-all opacity-0 origin-top text-sm">
-                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="gymkhana.swifty@gmail.com">Music Club</div>
-                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="dance@iitk.ac.in">Dance Club</div>
-                            <div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="dramatics@iitk.ac.in">Dramatics Club</div>
+                            <div class="px-4 py-3 text-slate-400 font-medium">Loading clubs...</div>
                         </div>
                         
                         <input type="hidden" id="clubDrop" value="">
@@ -118,7 +115,6 @@
     </main>
 </body>
 <script>
-    // Initialize navigation handlers for interfacing elements.
     const back = document.getElementById('goBack');
     if (back) {
         back.addEventListener("click", function(e) {
@@ -127,7 +123,6 @@
         });
     }
 
-    // Configure the toggle logic to mask or unmask user password inputs.
     const passwordInput = document.getElementById('passwordEntered');
     const togglePassword = document.getElementById('visibilityToggle');
     if (togglePassword && passwordInput) {
@@ -138,14 +133,12 @@
         });
     }
 
-    // Execute state management and interaction logic for the custom organizational dropdown menu.
     const clubBtn = document.getElementById("club-select-button");
     const clubList = document.getElementById("club-options-list");
     const clubText = document.getElementById("club-select-text");
     const clubHidden = document.getElementById("clubDrop");
     const clubArrow = document.getElementById("club-dropdown-arrow");
     const clubContainer = document.getElementById("club-dropdown-container");
-    const clubOptions = clubList.querySelectorAll("div[data-value]");
 
     clubBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -160,14 +153,16 @@
         }
     });
 
-    clubOptions.forEach(option => {
-        option.addEventListener("click", () => {
+    // Event delegation to handle dynamically added options
+    clubList.addEventListener("click", (e) => {
+        const option = e.target.closest("div[data-value]");
+        if (option) {
             clubText.textContent = option.textContent;
             clubHidden.value = option.getAttribute("data-value");
             clubList.classList.add("opacity-0");
             setTimeout(() => clubList.classList.add("hidden"), 150);
             clubArrow.style.transform = "rotate(0deg)";
-        });
+        }
     });
 
     document.addEventListener("click", (e) => {
@@ -178,9 +173,26 @@
         }
     });
 
-    // Handle the authentication submission process and subsequent routing paths.
-    const loginBtn = document.getElementById("loginButton");
+    // Fetch dynamic clubs for dropdown
+    async function fetchClubs() {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/clubs`);
+            if (res.ok) {
+                const clubs = await res.json();
+                clubList.innerHTML = "";
+                clubs.forEach(club => {
+                    // Expects backend to return 'email' for login processing
+                    clubList.innerHTML += `<div class="px-4 py-3 hover:bg-pink-50 dark:hover:bg-slate-700 cursor-pointer text-slate-800 dark:text-white font-medium transition-colors" data-value="${club.email}">${club.name}</div>`;
+                });
+            }
+        } catch(e) { 
+            console.error("Failed to fetch clubs", e);
+            clubList.innerHTML = `<div class="px-4 py-3 text-red-500 font-medium">Failed to load clubs.</div>`;
+        }
+    }
+    fetchClubs();
 
+    const loginBtn = document.getElementById("loginButton");
     if (loginBtn) {
         loginBtn.addEventListener("click", async (event) => {
             event.preventDefault();
@@ -207,7 +219,6 @@
             loginBtn.disabled = true;
 
             try {
-                // Initial Authentication: Validate user credentials with the primary security endpoint.
                 const loginResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -216,17 +227,10 @@
                 
                 const loginResult = await loginResponse.json();
                 
-                // Secondary Authentication: Verify whether multi-factor authorization is enforced for the session.
                 if (loginResponse.ok && loginResult.requires_2fa === true) {
-                    
-                    // Retain the authenticated email identifier securely for the subsequent OTP challenge.
                     localStorage.setItem("userEmail", loginResult.email_id);
-
-                    // Redirect the user interface flow to execute the OTP challenge.
                     window.location.href = "./otp.html";
-
                 } else {
-                    // Display error feedback gracefully if authorization parameters fail to resolve.
                     alert(loginResult.detail || loginResult.message || "Invalid credentials");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;

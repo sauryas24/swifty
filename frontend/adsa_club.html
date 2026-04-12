@@ -14,17 +14,14 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
     
     <script>
-        // Define authorized roles for accessing this page
         const validRoles = ["authority", "adsa", "gensec", "president", "facad"];
         const currentToken = localStorage.getItem("token");
         const currentRole = localStorage.getItem("userRole");
         
-        // Redirect to login if the user is unauthenticated or unauthorized
         if (!currentToken || !validRoles.includes(currentRole)) {
             window.location.replace("Select_role_login.html");
         }
         
-        // Re-check authentication when navigating via browser history
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem("token")) {
                 window.location.replace("Select_role_login.html");
@@ -37,7 +34,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <script>
-        // Configure custom Tailwind theme properties
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -58,7 +54,6 @@
             background-color: var(--bg-pink);
         }
         
-        /* Sidebar transition rules */
         .sidebar-drawer {
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
@@ -74,28 +69,24 @@
         }
         
         .watermark-bg {
-    background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
-    background-attachment: fixed;
-}
-.dark .watermark-bg {
-    background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
-    background-attachment: fixed;
-}
+            background: linear-gradient(135deg, #fce7f3 0%, #f8fafc 40%, #e2e8f0 75%, #cbd5e1 100%);
+            background-attachment: fixed;
+        }
+        .dark .watermark-bg {
+            background: linear-gradient(135deg, #1a1013 0%, #0f172a 45%, #1e293b 100%);
+            background-attachment: fixed;
+        }
         
-        /* Icon styling standardization */
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         
-        /* Pure CSS modal toggle logic using hidden checkboxes */
         .modal-toggle:checked + .modal-overlay { display: flex; }
         #modal-request-review-toggle:checked ~ #modal-request-review-overlay,
         #modal-otp-toggle:checked ~ #modal-otp-overlay { display: flex; }
         
-        /* Prevent body scrolling when a modal is open */
         .modal-toggle:checked ~ body,
         #modal-request-review-toggle:checked ~ body,
         #modal-otp-toggle:checked ~ body { overflow: hidden; }
 
-        /* Custom scrollbar aesthetics */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
@@ -127,7 +118,7 @@
                     </tr>
                 </thead>
                 <tbody id="full-history-tbody" class="divide-y divide-pink-50 dark:divide-pink-900/10">
-                    </tbody>
+                </tbody>
             </table>
         </div>
         <div class="px-8 py-6 border-t border-pink-50 dark:border-pink-900/10 flex justify-end">
@@ -187,14 +178,14 @@
                 <textarea id="new-bill-desc" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 h-24 focus:ring-pink-500 focus:border-pink-500 text-slate-900 dark:text-white" placeholder="Enter bill description..."></textarea>
             </div>
             <div>
-    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
-    <label for="new-bill-file" class="w-full border-2 border-dashed border-pink-200 dark:border-slate-700 rounded-2xl p-6 text-center group cursor-pointer hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-all flex flex-col items-center gap-2">
-        <span class="material-icons-round text-4xl text-pink-500">cloud_upload</span>
-        <span id="file-name-display" class="text-sm font-bold text-pink-600">Upload File</span>
-        <p class="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
-        <input id="new-bill-file" type="file" class="hidden" accept=".jpg,.jpeg,.png,.pdf" />
-    </label>
-</div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Attachment</label>
+                <label for="new-bill-file" class="w-full border-2 border-dashed border-pink-200 dark:border-slate-700 rounded-2xl p-6 text-center group cursor-pointer hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-900/10 transition-all flex flex-col items-center gap-2">
+                    <span class="material-icons-round text-4xl text-pink-500">cloud_upload</span>
+                    <span id="file-name-display" class="text-sm font-bold text-pink-600">Upload File</span>
+                    <p class="text-[10px] text-slate-400">JPG, PNG or PDF (Max 5MB)</p>
+                    <input id="new-bill-file" type="file" class="hidden" accept=".jpg,.jpeg,.png,.pdf" />
+                </label>
+            </div>
         </div>
         <div class="px-6 py-4 bg-slate-50/50 dark:bg-slate-800/50 border-t border-pink-50 dark:border-pink-900/10 flex justify-end gap-3">
             <label class="px-6 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-all" for="modal-bill-add">Cancel</label>
@@ -284,55 +275,43 @@
 <input checked="" class="hidden" id="sidebar-toggle" type="checkbox"/>
 
 <header class="fixed top-0 left-0 w-full h-16 bg-slate-900 dark:bg-black text-white flex items-center px-4 z-[60] shadow-md border-b border-pink-900/20">
-
-        <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
-            <span class="material-icons-round text-2xl">menu</span>
-        </label>
-        <div class="flex items-center gap-4">
-            <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
-            <span class="h-6 w-px bg-slate-700"></span>
-            <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">AUTHORITY</span>
-        </div>
-        <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
-            <span class="material-symbols-outlined text-[20px]">logout</span>
-            <span>Logout</span>
-        </button>
-    </header>
+    <label class="p-2 mr-4 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors" for="sidebar-toggle">
+        <span class="material-icons-round text-2xl">menu</span>
+    </label>
+    <div class="flex items-center gap-4">
+        <img src="swifty_logo.png" alt="Swifty Logo" class="h-16 object-contain drop-shadow-sm" />
+        <span class="h-6 w-px bg-slate-700"></span>
+        <span id="header-role-badge" class="text-lg text-pink-400 font-black uppercase tracking-wider bg-slate-800/80 px-4 py-1.5 rounded-lg shadow-inner">AUTHORITY</span>
+    </div>
+    <button id="logoutBtn" class="ml-auto flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span>Logout</span>
+    </button>
+</header>
 
 <aside class="sidebar-drawer fixed left-0 top-16 h-[calc(100vh-4rem)] w-[260px] bg-white border-r border-slate-200 z-50 overflow-y-auto flex flex-col">
+    <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+        <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-slate-900 font-bold rounded-xl mb-4 hover:bg-slate-300 transition-colors">
+            <span class="material-icons-round text-xl">dashboard</span>
+            <span class="text-sm">Dashboard</span>
+        </a>
         
-        <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-            <a href="adsa_dashboard.html" class="flex items-center gap-3 px-4 py-3 bg-slate-200 text-slate-900 font-bold rounded-xl mb-4 hover:bg-slate-300 transition-colors">
-    <span class="material-icons-round text-xl">dashboard</span>
-    <span class="text-sm">Dashboard</span>
-</a>
-            
-            <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
-            
-            <a href="adsa_club.html?club_id=1" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-slate-500">music_note</span> Music Club
-            </a>
-            <a href="adsa_club.html?club_id=2" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-slate-500">directions_run</span> Dance Club
-            </a>
-            <a href="adsa_club.html?club_id=3" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-slate-500">theater_comedy</span> Dramatics Club
-            </a>
-            <a href="adsa_club.html?club_id=4" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2">
-                <span class="material-icons-round text-[16px] text-slate-500">terminal</span> Programming Club
-            </a>
-        </nav>
-    </aside>
+        <div class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 mt-4">Gymkhana Clubs</div>
+        
+        <div id="dynamic-sidebar-clubs" class="space-y-1">
+            <p class="px-4 py-2 text-xs text-slate-400">Loading clubs...</p>
+        </div>
+    </nav>
+</aside>
 
 <main class="main-content ml-0 mt-16 p-0 relative watermark-bg min-h-screen">
     <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 w-full px-8 py-5 flex items-center sticky top-16 z-40 shadow-sm sb-6">
-    <h1 id="club-title" class="text-xl md:text-2xl font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
-        Loading...
-    </h1>
-</div>
+        <h1 id="club-title" class="text-xl md:text-2xl font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
+            Loading...
+        </h1>
+    </div>
     <div class="px-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 pb-12">
         <div class="lg:col-span-2 space-y-8">
-            
             <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-pink-100 dark:border-pink-900/20 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                     <h2 class="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-widest mb-2">Club Budget Status</h2>
@@ -390,42 +369,58 @@
 </main>
 
 <script>
-    // System configuration and authorization headers setup
     const API_BASE = "http://127.0.0.1:8000/api";
     const token = localStorage.getItem("token");
     const authHeaders = { "Content-Type": "application/json", "Authorization": `Bearer ${token}` };
 
-    // Dynamically apply the user's role to the interface elements
     const displayRole = localStorage.getItem("displayRoleName") || "ADSA";
-    //document.getElementById("main-dashboard-title").innerText = displayRole + " Dashboard";
     document.getElementById("header-role-badge").innerText = displayRole.toUpperCase();
 
-    // Attach functionality to terminate the user session securely
     document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.clear();
         window.location.replace("Select_role_login.html");
     });
 
-    // Identify which club to load based on the URL parameter, and highlight the matching sidebar link
     const urlParams = new URLSearchParams(window.location.search);
     const targetClubId = urlParams.get('club_id') || 1;
 
-    document.querySelectorAll(".nav-club-link").forEach(link => {
-        if (link.getAttribute("data-id") == targetClubId) {
-            link.classList.remove("text-slate-600", "dark:text-slate-400");
-            link.classList.add("bg-pink-50", "dark:bg-pink-900/20", "text-pink-700", "dark:text-white", "border-r-4", "border-pink-600");
-        }
-    });
-
-    // Global arrays to hold data fetched from the API
     let clubRequestsData = [];
     let clubFinancesData = [];
 
-    // --- CORE DATA FETCHER ---
-    // Retrieves financial and request data for the selected club from the backend server
+    async function loadClubs() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/clubs`, { headers: authHeaders });
+            if (!response.ok) throw new Error("Failed to fetch clubs");
+            const clubs = await response.json();
+            
+            const sidebarContainer = document.getElementById("dynamic-sidebar-clubs");
+            if (sidebarContainer) {
+                sidebarContainer.innerHTML = "";
+                clubs.forEach(club => {
+                    const icon = "local_activity"; 
+                    sidebarContainer.innerHTML += `
+                        <a href="adsa_club.html?club_id=${club.id}" class="block px-4 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 hover:bg-pink-50 dark:hover:bg-pink-900/10 rounded-lg transition-colors flex items-center gap-2 nav-club-link" data-id="${club.id}">
+                            <span class="material-icons-round text-[16px] text-slate-500">${icon}</span> ${club.name}
+                        </a>
+                    `;
+                });
+
+                if (typeof targetClubId !== 'undefined') {
+                    document.querySelectorAll(".nav-club-link").forEach(link => {
+                        if (link.getAttribute("data-id") == targetClubId) {
+                            link.classList.remove("text-slate-600", "dark:text-slate-400");
+                            link.classList.add("bg-pink-50", "dark:bg-pink-900/20", "text-pink-700", "dark:text-white", "border-r-4", "border-pink-600");
+                        }
+                    });
+                }
+            }
+        } catch(e) {
+            console.error(e);
+            document.getElementById("dynamic-sidebar-clubs").innerHTML = '<p class="px-4 text-xs text-red-500">Failed to load clubs.</p>';
+        }
+    }
+
     async function loadClubProfile() {
-        
-        // Fetch financial data and update the budget UI
         try {
             const finRes = await fetch(`${API_BASE_URL}/api/finances/${targetClubId}`, { headers: authHeaders });
             if (!finRes.ok) throw new Error("Finance API Failed");
@@ -448,12 +443,10 @@
                 billsTbody.innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-400">No bills recorded.</td></tr>`;
             } 
             else {
-                // --- NEW: Sort transactions by most recent first ---
                 const sortedTransactions = [...finData.transactions].sort((a, b) => {
                     return new Date(b.timestamp) - new Date(a.timestamp);
                 });
                 
-                // Use the sorted array to build the table
                 sortedTransactions.forEach(tx => {
                     const dateStr = new Date(tx.timestamp).toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' });
                     billsTbody.innerHTML += `
@@ -466,7 +459,6 @@
                 });
             }
         } catch(e) { 
-            // Handle errors by showing failure states in the UI
             document.getElementById("club-title").innerText = "DATA UNAVAILABLE";
             document.getElementById("budget-spent").innerText = "₹0";
             document.getElementById("budget-total").innerText = "₹0";
@@ -475,7 +467,6 @@
             document.getElementById("bills-tbody").innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-red-500">Failed to load financial records.</td></tr>`;
         }
 
-        // Fetch club requests and delegate to the rendering function
         try {
             const reqRes = await fetch(`${API_BASE_URL}/api/requests/club/${targetClubId}`, { headers: authHeaders });
             if (!reqRes.ok) throw new Error("Requests API Failed");
@@ -513,7 +504,6 @@
                 displayDate = req.updated_at;
             }
 
-            // Safely parse the determined date
             let dateStr = "N/A";
             if (displayDate) {
                 const dateObj = new Date(displayDate);
@@ -521,7 +511,6 @@
                     dateStr = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
                 }
             }
-            // Determine the visual style depending on the current status of the request
             let borderClass = "border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 hover:border-pink-200";
             let badgeClass = "bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400";
             
@@ -559,9 +548,6 @@
         });
     }
 
-    // --- MODAL CONTROLLERS ---
-
-    // Populates and displays the specific details of a financial bill
     function openBillModal(txId) {
         const billData = clubFinancesData.find(b => b.id === txId);
         if (!billData) return;
@@ -580,24 +566,20 @@
         document.getElementById("modal-bill-view").checked = true;
     }
 
-    // Placeholder behavior for the 'Add Bill' interface
-    // Update the visual text when a user selects a file so they know it worked
     document.getElementById("new-bill-file").addEventListener("change", function(e) {
         const fileNameDisplay = document.getElementById("file-name-display");
         if (this.files && this.files.length > 0) {
-            fileNameDisplay.innerText = this.files[0].name; // Show the file name
+            fileNameDisplay.innerText = this.files[0].name;
         } else {
             fileNameDisplay.innerText = "Upload File";
         }
     });
 
-    // The actual submission logic
     document.getElementById("btn-submit-bill").addEventListener("click", async () => {
         const amount = document.getElementById("new-bill-amount").value;
         const description = document.getElementById("new-bill-desc").value;
         const fileInput = document.getElementById("new-bill-file");
         
-        // Basic Validation
         if (!amount || !description) {
             return alert("Please provide both an amount and a description.");
         }
@@ -608,25 +590,21 @@
             return alert("Bill amount must be greater than zero.");
         }
         
-        // Construct FormData (Required for sending files to FastAPI)
         const formData = new FormData();
         formData.append("amount", amount);
         formData.append("description", description);
-        formData.append("club_id", targetClubId); // Automatically tie it to the club being viewed
+        formData.append("club_id", targetClubId); 
         
         if (fileInput.files.length > 0) {
             formData.append("receipt", fileInput.files[0]);
         }
         
-        // UI Loading State
         const submitBtn = document.getElementById("btn-submit-bill");
         const originalText = submitBtn.innerText;
         submitBtn.innerHTML = `Uploading <span class="material-icons-round text-sm animate-spin">refresh</span>`;
         submitBtn.disabled = true;
 
         try {
-            // NOTE: Do NOT set "Content-Type": "application/json" here. 
-            // The browser will automatically set it to "multipart/form-data" when it sees FormData.
             const response = await fetch(`${API_BASE_URL}/api/finances/transaction`, {
                 method: "POST",
                 headers: {
@@ -639,13 +617,11 @@
                 alert("Bill uploaded successfully!");
                 document.getElementById("modal-bill-add").checked = false;
                 
-                // Clear the form for next time
                 document.getElementById("new-bill-amount").value = "";
                 document.getElementById("new-bill-desc").value = "";
                 document.getElementById("new-bill-file").value = "";
                 document.getElementById("file-name-display").innerText = "Upload File";
                 
-                // Reload the club profile so the new bill instantly appears in the table!
                 loadClubProfile();
             } else {
                 const err = await response.json();
@@ -660,10 +636,6 @@
         }
     });
 
-    // --- OTP & APPROVAL LOGIC ---
-    
-    // Populates the modal allowing an authority to review a pending request
-    // Populates the modal allowing an authority to review a pending request
     function openApprovalModal(reqId) {
         const reqData = clubRequestsData.find(r => r.id === reqId);
         if (!reqData) return;
@@ -673,67 +645,58 @@
         const reqType = (reqData.type || "GENERAL").toUpperCase();
         document.getElementById("modal-display-type").innerText = reqType + " REQUEST";
 
-        // 1. Grab the input fields
         const titleInput = document.getElementById("modal-event-title");
         const detailsInput = document.getElementById("modal-event-details");
         const permInput = document.getElementById("modal-perm-id");
         const capacityInput = document.getElementById("modal-event-attendees");
         
-        // 2. Grab their labels and the grid holding Permission/Capacity
         const titleLabel = titleInput.previousElementSibling;
         const detailsLabel = detailsInput.previousElementSibling;
         const permContainer = permInput.closest('.space-y-2');
         const gridContainer = permContainer.parentElement;
 
-        // Reset visibility before mapping
         gridContainer.classList.remove("hidden");
 
-        // 3. DYNAMIC RENDERING: Adjust labels and hide irrelevant boxes
         if (reqType.includes("MOU")) {
             titleLabel.innerText = "Organization Name";
             detailsLabel.innerText = "Purpose / Scope of Work";
-            gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+            gridContainer.classList.add("hidden"); 
             
         } else if (reqType.includes("PERMISSION")) {
             titleLabel.innerText = "Event Name";
             detailsLabel.innerText = "Reason / Description";
-            gridContainer.classList.add("hidden"); // Hides Permission & Capacity
+            gridContainer.classList.add("hidden");
             
         } else {
-            // VENUE BOOKING
             titleLabel.innerText = "Event Title";
             detailsLabel.innerText = "Full Justification & Details";
             permInput.value = reqData.permission_letter_id || "N/A";
             capacityInput.value = reqData.expected_attendees || 0;
         }
 
-        // Fill the standard text fields
-        // Fill the standard text fields
         titleInput.value = reqData.event_title || "N/A";
         detailsInput.value = reqData.details || "No details provided.";
         
         const isPending = reqData.status.toLowerCase().includes("pending");
         const isRejected = reqData.status.toLowerCase().includes("reject");
 
-        // 1. Toggle Action Buttons based on status
         if (isPending) {
             document.getElementById("default-action-buttons").classList.remove("hidden");
         } else {
             document.getElementById("default-action-buttons").classList.add("hidden");
         }
         
-        // 2. Handle Rejection Reason UI
         const rejectContainer = document.getElementById("rejection-reason-container");
         const rejectInput = document.getElementById("rejection-reason-input");
         
         if (isRejected && reqData.comments) {
             rejectContainer.classList.remove("hidden");
             rejectInput.value = reqData.comments;
-            rejectInput.readOnly = true; // Lock it so they can just read it
+            rejectInput.readOnly = true; 
         } else {
             rejectContainer.classList.add("hidden");
             rejectInput.value = "";
-            rejectInput.readOnly = false; // Reset for pending requests
+            rejectInput.readOnly = false; 
         }
 
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
@@ -741,7 +704,6 @@
         document.getElementById("modal-request-review-toggle").checked = true;
     }
 
-    // Requests an OTP from the backend to authorize the approval action
     document.getElementById("btn-trigger-otp").addEventListener("click", async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/api/otp/send-approval`, {
@@ -760,7 +722,6 @@
         }
     });
 
-    // Validates the entered OTP and processes the approval if correct
     document.getElementById("btn-verify-otp").addEventListener("click", async () => {
         const code = document.getElementById("input-otp-code").value;
 
@@ -772,18 +733,16 @@
         await submitFinalAction("approve", null, code);
     });
 
-    // Setup interface state when the user selects the 'Reject' option
     document.getElementById("btn-initial-reject").addEventListener("click", () => {
         document.getElementById("default-action-buttons").classList.add("hidden");
         const rejectInput = document.getElementById("rejection-reason-input");
-        rejectInput.readOnly = false; // Unlock for typing
+        rejectInput.readOnly = false; 
         rejectInput.value = ""; 
         document.getElementById("rejection-reason-container").classList.remove("hidden");
         document.getElementById("confirm-reject-buttons").classList.remove("hidden");
         rejectInput.focus();
     });
     
-    // Cancel the rejection process and return to normal review options
     document.getElementById("btn-cancel-reject").addEventListener("click", () => {
         document.getElementById("rejection-reason-container").classList.add("hidden");
         document.getElementById("confirm-reject-buttons").classList.add("hidden");
@@ -791,15 +750,12 @@
 
     });
 
-    // Processes the final rejection of a request after a reason is provided
     document.getElementById("btn-confirm-reject").addEventListener("click", async () => {
         const reason = document.getElementById("rejection-reason-input").value;
         if (!reason) return alert("Must provide a reason to reject.");
         await submitFinalAction("reject", reason, null);
     });
 
-    // --- THE MASTER SUBMIT FUNCTION ---
-    // Constructs the final payload and sends the decision (approve or reject) to the correct backend route
     async function submitFinalAction(actionState, reason = null, otpCode = null) {
         const reqId = parseInt(document.getElementById("modal-hidden-req-id").value);
         const reqData = clubRequestsData.find(r => r.id === reqId);
@@ -809,7 +765,6 @@
         if (reason) payload.message = reason;
         if (otpCode) payload.otp_code = otpCode;
 
-        // Determine which specific backend route should handle this type of request
         let routeType = "venue";
         const rawType = (reqData.type || "").toLowerCase();
         
@@ -828,7 +783,6 @@
             });
 
             if (res.ok) {
-                // Update local data array and re-render the view
                 reqData.status = actionState === "approve" ? "Approved" : "Rejected";
                 renderRequests(clubRequestsData); 
                 alert(`Successfully processed as ${actionState}!`);
@@ -845,8 +799,10 @@
         document.getElementById("modal-request-review-toggle").checked = false;
     }
 
-    // Initialize the page logic once the document is fully loaded
-    document.addEventListener("DOMContentLoaded", loadClubProfile);
+    document.addEventListener("DOMContentLoaded", () => {
+        loadClubs();
+        loadClubProfile();
+    });
 </script>
 </body>
 </html>

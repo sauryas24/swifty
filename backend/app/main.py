@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from . import models
 from .database import engine
-from .routers import venues, auth, finances
 import os
 from fastapi.middleware.cors import CORSMiddleware
+
 # Import your routers
 from .routers import venues
 from .routers import auth
@@ -16,7 +16,7 @@ from .routers import permission
 from .routers import MoU
 from .routers import calendar
 from .routers import otp
-
+from .routers import clubs  # <--- Added new clubs router
 
 # Initialize database schemas
 models.Base.metadata.create_all(bind=engine)
@@ -33,15 +33,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # Configure Cross-Origin Resource Sharing (CORS)
-# Configure Cross-Origin Resource Sharing (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://swifty-tau.vercel.app",  # <--- Explicitly allows your live Vercel site
-        "http://localhost:5500",          # Allows your local VS Code Live Server
+        "https://swifty-tau.vercel.app",  
+        "http://localhost:5500",          
         "http://127.0.0.1:5500"
     ],
-    allow_credentials=True,               # <--- MUST be True for login tokens to work on Vercel
+    allow_credentials=True,               
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -57,6 +56,7 @@ app.include_router(requests.router)
 app.include_router(permission.router)
 app.include_router(otp.router)
 app.include_router(calendar.router)
+app.include_router(clubs.router)  
 
 @app.get("/")
 def root():

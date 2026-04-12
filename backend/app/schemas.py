@@ -27,6 +27,12 @@ class BookingCreate(BaseModel):
     description: str
     permission_letter_id: str
     
+class ClubResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+
+    model_config = ConfigDict(from_attributes=True)
     
 # What the frontend sends
 class LoginRequest(BaseModel):
