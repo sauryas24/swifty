@@ -15,7 +15,8 @@
 - [Repo Structure](#project-structure)
 - [Installation & Setup](#installation--setup)
 - [Security & Compliance](#security--compliance)
-
+- [Team](#team)
+- [Documentation](#documentation)
 ---
 
 ## Overview
@@ -92,7 +93,7 @@ swifty/
 ```
 ---
 
-## Installation & Setup
+## Local Installation & Setup
 
 ### **Prerequisites**
 * **Python 3.10+** (Required for the FastAPI backend)
@@ -171,3 +172,30 @@ To open the website locally, type: **http://127.0.0.1:5500/index.html** in the w
 * **Data Integrity & Anti-Fraud:** Immutable, append-only financial ledgers and duplicate invoice detection backed by PostgreSQL's ACID compliance. 
 * **Concurrency Control:** Atomic transactions and row-level database locking physically prevent venue double-booking and race conditions.
 * **Audit & Compliance:** DOSA-compliant workflows featuring mandatory rejection comments, immutable approval histories, and encrypted 24-hour automated backups.
+---
+## Documentation
+
+Below are the key documents detailing the system architecture, API specifications, and user guidelines for the Swifty platform. 
+
+* **[Software Requirements Specification](docs/SRS_doc_Swifty.pdf)**
+* **[Design Document](docs/Design_doc_Swifty.pdf)**
+* **[Implementation Document](docs/Implementation_doc_Swifty.pdf)**
+* **[Test Document](docs/test_document_Swifty.pdf)**
+* **[User Manual](docs/Swifty_User_Manual.pdf)**
+---
+## Team
+
+| Name | Roll No. |
+|-----------|-----------|
+| **Vanshika Agrawal** | 241140 | 
+| **Shruti Sahu** | 241005 | 
+| **Harsh Malgatte** | 240611 |
+| **Sreeja Srinivasan** | 241041 |
+| **Pulkit Biyani** | 240814 |
+| **Vasu Goyal** | 241148 |
+| **Saurya Singh** | 240950 |
+| **Diya Patel** | 240739 | 
+| **Rishitesh Kesri** | 240871 |
+| **Divya Prakash Pandey** | 240369 |
+---
+
