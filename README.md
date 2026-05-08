@@ -1,5 +1,5 @@
 # Swifty - Gymkhana Automation System
-> **Course Project for the course CS253-Software Development and Operations**<\br>
+> **Course Project for the course CS253-Software Development and Operations**<br>
 > **A centralized web application digitizing the administrative lifecycle for IIT Kanpur Student Gymkhana**
 
 **Live Demo:** https://swifty-tau.vercel.app
